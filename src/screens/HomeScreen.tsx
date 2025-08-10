@@ -1,8 +1,8 @@
 // src/screens/HomeScreen.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Chip } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Space, PlanningOption } from '../types';
@@ -59,20 +59,50 @@ const planningOptions: PlanningOption[] = [
   { id: 1, title: 'Party', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&h=150&fit=crop' },
   { id: 2, title: 'Anniversary', image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=150&h=150&fit=crop' },
   { id: 3, title: 'Hobby Club', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=150&h=150&fit=crop' },
-  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' }
+  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' },
 ];
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const handleSearch = (query: string) => {
-    console.log('Search query:', query);
-  };
+  const [activeTab, setActiveTab] = useState('search');
 
   const handleSpacePress = (space: Space) => {
-    console.log('Space selected:', space.id);
+    console.log('Space pressed:', space.title);
+    // Navigate to space details
   };
 
   const handleMessageHost = (space: Space) => {
-    console.log('Message host for space:', space.id);
+    console.log('Message host for:', space.title);
+    // Navigate to messaging
+  };
+
+  const handleTabPress = (tabId: string) => {
+    setActiveTab(tabId);
+    console.log('Tab pressed:', tabId);
+    
+    // Future navigation logic for different tabs
+    switch (tabId) {
+      case 'search':
+        // Already on home/search screen
+        break;
+      case 'bookings':
+        // Navigate to bookings screen
+        console.log('Navigate to Bookings');
+        break;
+      case 'saved':
+        // Navigate to saved/favorites screen
+        console.log('Navigate to Saved');
+        break;
+      case 'messages':
+        // Navigate to messages screen
+        console.log('Navigate to Messages');
+        break;
+      case 'profile':
+        // Navigate to profile screen
+        console.log('Navigate to Profile');
+        break;
+      default:
+        break;
+    }
   };
 
   const renderPlanningOption = ({ item }: { item: PlanningOption }) => (
@@ -94,7 +124,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar />
         
         {/* What are you planning? */}
         <View style={styles.section}>
@@ -147,7 +177,10 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.bottomSpacer} />
       </ScrollView>
       
-      <BottomNavigation />
+      <BottomNavigation 
+        activeTab={activeTab}
+        onTabPress={handleTabPress}
+      />
     </SafeAreaView>
   );
 };
@@ -155,7 +188,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.backgroundSecondary,
   },
   scrollView: {
     flex: 1,

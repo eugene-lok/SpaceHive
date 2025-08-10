@@ -269,8 +269,8 @@ const styles = StyleSheet.create({
   },
   exploreButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: 'white',
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.background,
   },
 });
 

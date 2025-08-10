@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     marginVertical: theme.spacing.md,
   },
   searchbar: {
-    backgroundColor: theme.colors.surfaceVariant,
-    borderRadius: theme.borderRadius.md,
-    elevation: 0,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.lg,
+    elevation: 2,
     paddingRight: 60,
   },
   input: {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     margin: 0,
     width: 32,
     height: 32,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: theme.borderRadius.lg,
   },
 });
 

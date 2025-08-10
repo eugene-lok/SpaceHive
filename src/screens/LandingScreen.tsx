@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { useTheme } from '../hooks/useTheme'; // ← Import the hook
+import { useTheme } from '../hooks/useTheme'; 
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
