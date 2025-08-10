@@ -1,7 +1,8 @@
+// src/screens/OnboardingScreen.tsx
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Button, IconButton } from 'react-native-paper';
+import { Text, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
@@ -37,6 +38,8 @@ const onboardingData: OnboardingData[] = [
 const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const flatListRef = useRef<FlatList>(null);
+  
+  const isLastPage = currentPage === onboardingData.length - 1;
 
   const handleNext = () => {
     if (currentPage < onboardingData.length - 1) {
@@ -60,14 +63,18 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
         resizeMode="cover"
       >
         <View style={styles.overlay}>
+          {/* Top Section - Hide close button on last page */}
           <View style={styles.topSection}>
-            <IconButton
-              icon={() => <MaterialIcons name="close" size={24} color="white" />}
-              onPress={handleSkip}
-              style={styles.closeButton}
-            />
+            {!isLastPage && (
+              <IconButton
+                icon={() => <MaterialIcons name="close" size={24} color="white" />}
+                onPress={handleSkip}
+                style={styles.closeButton}
+              />
+            )}
           </View>
           
+          {/* Content */}
           <View style={styles.content}>
             <Text variant="headlineLarge" style={styles.title}>
               {item.title}
@@ -76,12 +83,9 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
               {item.subtitle}
             </Text>
             
-            <View style={styles.bottomSection}>
-              <TouchableOpacity onPress={handleSkip}>
-                <Text style={styles.skipText}>Skip</Text>
-              </TouchableOpacity>
-              
-              <View style={styles.paginationContainer}>
+            {/* Pagination Dots - Centered for last page, otherwise in navigation row */}
+            {isLastPage ? (
+              <View style={styles.paginationContainerCentered}>
                 {onboardingData.map((_, index) => (
                   <View
                     key={index}
@@ -94,17 +98,44 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
                   />
                 ))}
               </View>
-              
-              <IconButton
-                icon={() => currentPage === onboardingData.length - 1 
-                  ? <Text style={styles.exploreText}>Explore</Text>
-                  : <MaterialIcons name="arrow-forward" size={20} color="white" />
-                }
-                onPress={handleNext}
-                style={styles.nextButton}
-              />
-            </View>
+            ) : (
+              /* Navigation Section - Only for first two pages */
+              <View style={styles.bottomSection}>
+                <TouchableOpacity onPress={handleSkip}>
+                  <Text style={styles.skipText}>Skip</Text>
+                </TouchableOpacity>
+                
+                <View style={styles.paginationContainer}>
+                  {onboardingData.map((_, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.paginationDot,
+                        index === currentPage 
+                          ? styles.paginationDotActive 
+                          : styles.paginationDotInactive
+                      ]}
+                    />
+                  ))}
+                </View>
+                
+                <IconButton
+                  icon={() => <MaterialIcons name="arrow-forward" size={20} color="white" />}
+                  onPress={handleNext}
+                  style={styles.nextButton}
+                />
+              </View>
+            )}
           </View>
+          
+          {/* Large Explore Now Button - Only on last page */}
+          {isLastPage && (
+            <View style={styles.exploreButtonContainer}>
+              <TouchableOpacity onPress={handleNext} style={styles.exploreButton}>
+                <Text style={styles.exploreButtonText}>Explore Now</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -148,6 +179,7 @@ const styles = StyleSheet.create({
   topSection: {
     alignItems: 'flex-end',
     paddingTop: theme.spacing.lg,
+    minHeight: 60, // Reserve space even when button is hidden
   },
   closeButton: {
     margin: 0,
@@ -155,14 +187,14 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 60, // Mobile-first: adequate spacing from bottom
+    paddingBottom: 40,
   },
   title: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: theme.spacing.md,
-    fontSize: 28, // Mobile-optimized font size
+    fontSize: 28,
     lineHeight: 34,
   },
   subtitle: {
@@ -170,31 +202,50 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 60,
     lineHeight: 22,
-    fontSize: 16, // Mobile-first readable size
-    paddingHorizontal: 8, // Add padding for better mobile readability
+    fontSize: 16,
+    paddingHorizontal: 20,
   },
+  
+  /* Navigation for first two pages */
   bottomSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    minHeight: 48, // Ensure touch targets are large enough
+    minHeight: 48,
   },
   skipText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '500',
-    padding: 8, // Add padding for better touch area
+    padding: 8,
   },
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  nextButton: {
+    backgroundColor: theme.colors.primary,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    margin: 0,
+  },
+  
+  /* Centered pagination for last page */
+  paginationContainerCentered: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  
+  /* Larger pagination dots */
   paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
+    width: 12,        // ✨ Increased from 8px
+    height: 12,       // ✨ Increased from 8px  
+    borderRadius: 6,  // ✨ Increased from 4px
+    marginHorizontal: 6, // ✨ Increased spacing
   },
   paginationDotActive: {
     backgroundColor: theme.colors.accent,
@@ -202,17 +253,24 @@ const styles = StyleSheet.create({
   paginationDotInactive: {
     backgroundColor: 'rgba(255,255,255,0.5)',
   },
-  nextButton: {
-    backgroundColor: theme.colors.primary,
-    width: 48, // Larger touch target for mobile
-    height: 48,
-    borderRadius: 24,
-    margin: 0,
+  
+  /* Large Explore Now Button */
+  exploreButtonContainer: {
+    paddingBottom: theme.spacing.xl,
+    paddingHorizontal: 0, // Use full width
   },
-  exploreText: {
-    color: 'white',
-    fontSize: 12,
+  exploreButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.md,
+    height: 56, // Same as Get Started button
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 0, // Full width within container
+  },
+  exploreButtonText: {
+    fontSize: 16,
     fontWeight: '600',
+    color: 'white',
   },
 });
 
