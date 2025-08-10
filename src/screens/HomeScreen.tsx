@@ -1,0 +1,209 @@
+// src/screens/HomeScreen.tsx
+import React from 'react';
+import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, Chip } from 'react-native-paper';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../App';
+import { Space, PlanningOption } from '../types';
+import SearchBar from '../components/SearchBar';
+import SpaceCard from '../components/SpaceCard';
+import BottomNavigation from '../components/BottomNavigation';
+import { theme } from '../theme/theme';
+
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
+interface Props {
+  navigation: HomeScreenNavigationProp;
+}
+
+// Mock data
+const trendingSpaces: Space[] = [
+  {
+    id: 1,
+    title: 'Cozy Private City View Condo',
+    price: '$35/hour',
+    rating: 4.92,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+    location: '6-10PM, Jul 4 • 5 Adults • Downtown, Calgary',
+    instantBooking: true,
+  },
+  {
+    id: 2,
+    title: 'High-rise Cozy Room',
+    price: '$30/hour',
+    rating: 4.86,
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop',
+    location: 'Modern & Minimal',
+  }
+];
+
+const justForYouSpaces: Space[] = [
+  {
+    id: 3,
+    title: 'Modern Office Space',
+    price: '$25/hour',
+    rating: 4.75,
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop',
+  },
+  {
+    id: 4,
+    title: 'Cozy Living Room',
+    price: '$20/hour',
+    rating: 4.68,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+  }
+];
+
+const planningOptions: PlanningOption[] = [
+  { id: 1, title: 'Party', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&h=150&fit=crop' },
+  { id: 2, title: 'Anniversary', image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=150&h=150&fit=crop' },
+  { id: 3, title: 'Hobby Club', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=150&h=150&fit=crop' },
+  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' }
+];
+
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const handleSearch = (query: string) => {
+    console.log('Search query:', query);
+  };
+
+  const handleSpacePress = (space: Space) => {
+    console.log('Space selected:', space.id);
+  };
+
+  const handleMessageHost = (space: Space) => {
+    console.log('Message host for space:', space.id);
+  };
+
+  const renderPlanningOption = ({ item }: { item: PlanningOption }) => (
+    <View style={styles.planningOption}>
+      <View style={styles.planningImagePlaceholder} />
+      <Text variant="bodySmall" style={styles.planningText}>
+        {item.title}
+      </Text>
+    </View>
+  );
+
+  const renderJustForYouSpace = ({ item }: { item: Space }) => (
+    <View style={styles.justForYouSpace}>
+      <View style={styles.justForYouImagePlaceholder} />
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Search Bar */}
+        <SearchBar onSearch={handleSearch} />
+        
+        {/* What are you planning? */}
+        <View style={styles.section}>
+          <Text variant="headlineSmall" style={styles.sectionTitle}>
+            What are you planning?
+          </Text>
+          <FlatList
+            data={planningOptions}
+            renderItem={renderPlanningOption}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+        
+        {/* Trending Spaces */}
+        <View style={styles.section}>
+          <Text variant="headlineSmall" style={styles.sectionTitle}>
+            Trending in your area
+          </Text>
+          <FlatList
+            data={trendingSpaces}
+            renderItem={({ item }) => (
+              <SpaceCard
+                space={item}
+                onPress={() => handleSpacePress(item)}
+                onMessageHost={() => handleMessageHost(item)}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+        
+        {/* Just for you */}
+        <View style={styles.section}>
+          <Text variant="headlineSmall" style={styles.sectionTitle}>
+            Just for you
+          </Text>
+          <FlatList
+            data={justForYouSpaces}
+            renderItem={renderJustForYouSpace}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+        
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
+      
+      <BottomNavigation />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  section: {
+    marginVertical: theme.spacing.md,
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    color: theme.colors.onSurface,
+    marginHorizontal: theme.spacing.md,
+    marginBottom: theme.spacing.md,
+  },
+  horizontalList: {
+    paddingHorizontal: theme.spacing.md,
+  },
+  planningOption: {
+    alignItems: 'center',
+    marginRight: theme.spacing.md,
+    width: 80,
+  },
+  planningImagePlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surfaceVariant,
+    marginBottom: theme.spacing.sm,
+  },
+  planningText: {
+    textAlign: 'center',
+    fontWeight: '500',
+    color: theme.colors.onSurface,
+  },
+  justForYouSpace: {
+    width: 160,
+    height: 120,
+    marginRight: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    overflow: 'hidden',
+  },
+  justForYouImagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: theme.colors.surfaceVariant,
+  },
+  bottomSpacer: {
+    height: 100, // Space for bottom navigation
+  },
+});
+
+export default HomeScreen;
