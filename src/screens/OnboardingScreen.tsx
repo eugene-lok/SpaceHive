@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Button, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -28,7 +28,7 @@ const onboardingData: OnboardingData[] = [
     subtitle: 'Flexible, affordable rentals made simple —\nbook by the hour or day.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=600&fit=crop',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=600&fit=crop',
     title: 'Discover what\'s nearby.',
     subtitle: 'Start browsing nearby spaces or share your\nown with the SpaceHive community.'
   }
@@ -54,57 +54,59 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
 
   const renderOnboardingItem = ({ item }: { item: OnboardingData }) => (
     <View style={styles.slide}>
-      <View style={styles.imageContainer}>
-        {/* Background image would be implemented with ImageBackground */}
-        <View style={styles.imagePlaceholder} />
-      </View>
-      <View style={styles.overlay}>
-        <View style={styles.topSection}>
-          <IconButton
-            icon={() => <MaterialIcons name="close" size={24} color="white" />}
-            onPress={handleSkip}
-            style={styles.closeButton}
-          />
-        </View>
-        
-        <View style={styles.content}>
-          <Text variant="headlineLarge" style={styles.title}>
-            {item.title}
-          </Text>
-          <Text variant="bodyLarge" style={styles.subtitle}>
-            {item.subtitle}
-          </Text>
-          
-          <View style={styles.bottomSection}>
-            <TouchableOpacity onPress={handleSkip}>
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
-            
-            <View style={styles.paginationContainer}>
-              {onboardingData.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.paginationDot,
-                    index === currentPage 
-                      ? styles.paginationDotActive 
-                      : styles.paginationDotInactive
-                  ]}
-                />
-              ))}
-            </View>
-            
+      <ImageBackground
+        source={{ uri: item.image }}
+        style={styles.imageBackground}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay}>
+          <View style={styles.topSection}>
             <IconButton
-              icon={() => currentPage === onboardingData.length - 1 
-                ? <Text style={styles.exploreText}>Explore</Text>
-                : <MaterialIcons name="arrow-forward" size={20} color="white" />
-              }
-              onPress={handleNext}
-              style={styles.nextButton}
+              icon={() => <MaterialIcons name="close" size={24} color="white" />}
+              onPress={handleSkip}
+              style={styles.closeButton}
             />
           </View>
+          
+          <View style={styles.content}>
+            <Text variant="headlineLarge" style={styles.title}>
+              {item.title}
+            </Text>
+            <Text variant="bodyLarge" style={styles.subtitle}>
+              {item.subtitle}
+            </Text>
+            
+            <View style={styles.bottomSection}>
+              <TouchableOpacity onPress={handleSkip}>
+                <Text style={styles.skipText}>Skip</Text>
+              </TouchableOpacity>
+              
+              <View style={styles.paginationContainer}>
+                {onboardingData.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.paginationDot,
+                      index === currentPage 
+                        ? styles.paginationDotActive 
+                        : styles.paginationDotInactive
+                    ]}
+                  />
+                ))}
+              </View>
+              
+              <IconButton
+                icon={() => currentPage === onboardingData.length - 1 
+                  ? <Text style={styles.exploreText}>Explore</Text>
+                  : <MaterialIcons name="arrow-forward" size={20} color="white" />
+                }
+                onPress={handleNext}
+                style={styles.nextButton}
+              />
+            </View>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 
@@ -116,11 +118,8 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
         renderItem={renderOnboardingItem}
         horizontal
         pagingEnabled
+        scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const page = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-          setCurrentPage(page);
-        }}
       />
     </SafeAreaView>
   );
@@ -135,19 +134,13 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: '100%',
   },
-  imageContainer: {
+  imageBackground: {
     flex: 1,
-  },
-  imagePlaceholder: {
-    flex: 1,
-    backgroundColor: '#333',
+    width: '100%',
+    height: '100%',
   },
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'space-between',
     padding: theme.spacing.md,
@@ -162,31 +155,40 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingBottom: 60, // Mobile-first: adequate spacing from bottom
   },
   title: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: theme.spacing.md,
+    fontSize: 28, // Mobile-optimized font size
+    lineHeight: 34,
   },
   subtitle: {
     color: 'white',
     textAlign: 'center',
     marginBottom: 60,
     lineHeight: 22,
+    fontSize: 16, // Mobile-first readable size
+    paddingHorizontal: 20, // Add padding for better mobile readability
   },
   bottomSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    minHeight: 48, // Ensure touch targets are large enough
   },
   skipText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '500',
+    padding: 8, // Add padding for better touch area
   },
   paginationContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paginationDot: {
     width: 8,
@@ -202,9 +204,9 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: theme.colors.primary,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48, // Larger touch target for mobile
+    height: 48,
+    borderRadius: 24,
     margin: 0,
   },
   exploreText: {
