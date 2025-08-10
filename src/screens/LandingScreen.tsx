@@ -1,12 +1,10 @@
 // src/screens/LandingScreen.tsx
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Button, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { theme } from '../theme/theme';
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
@@ -19,44 +17,33 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate('Onboarding');
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <IconButton
-        icon={() => <MaterialIcons name="arrow-back" size={24} color="#000" />}
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
-      />
+      {/* Back Button */}
+      <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+        <MaterialIcons name="arrow-back" size={24} color="#000" />
+      </TouchableOpacity>
       
-      <View style={styles.centerContent}>
-        <Text variant="headlineMedium" style={styles.welcomeTitle}>
-          Welcome to SpaceHive!
-        </Text>
-        <Text variant="bodyLarge" style={styles.welcomeSubtitle}>
-          Your account is ready to go.
-        </Text>
+      {/* Main Content */}
+      <View style={styles.content}>
+        {/* Welcome Text */}
+        <Text style={styles.welcomeTitle}>Welcome to SpaceHive!</Text>
+        <Text style={styles.welcomeSubtitle}>Your account is ready to go.</Text>
         
-        {/* SpaceHive Logo */}
+        {/* Logo */}
         <View style={styles.logoContainer}>
-          <View style={styles.hexagonGrid}>
-            <View style={[styles.hexagon, { backgroundColor: theme.colors.primary }]} />
-            <View style={[styles.hexagon, { backgroundColor: theme.colors.secondary }]} />
-            <View style={[styles.hexagon, { backgroundColor: theme.colors.accent }]} />
-            <View style={[styles.hexagon, { backgroundColor: '#6C7B7F' }]} />
-            <View style={[styles.hexagon, { backgroundColor: theme.colors.primary }]} />
-            <View style={[styles.hexagon, { backgroundColor: theme.colors.secondary }]} />
-          </View>
           <Text style={styles.logoText}>SPACEHIVE</Text>
         </View>
       </View>
       
-      <Button
-        mode="contained"
-        onPress={handleGetStarted}
-        style={styles.getStartedButton}
-        labelStyle={styles.buttonText}
-      >
-        Get Started
-      </Button>
+      {/* Get Started Button */}
+      <TouchableOpacity onPress={handleGetStarted} style={styles.getStartedButton}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -64,62 +51,58 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 20,
   },
   backButton: {
     alignSelf: 'flex-start',
-    marginTop: theme.spacing.md,
+    marginTop: 8,
+    marginLeft: -8,
+    padding: 8,
   },
-  centerContent: {
+  content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 16,
   },
   welcomeTitle: {
+    fontSize: 28,
     fontWeight: 'bold',
-    color: theme.colors.onSurface,
+    color: '#000',
     textAlign: 'center',
-    marginBottom: theme.spacing.sm,
+    marginBottom: 12,
   },
   welcomeSubtitle: {
+    fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    marginBottom: 60,
+    marginBottom: 80,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 80,
-  },
-  hexagonGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: 120,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: theme.spacing.md,
-  },
-  hexagon: {
-    width: 30,
-    height: 30,
-    margin: 2,
-    borderRadius: theme.borderRadius.sm,
+    marginBottom: 60,
   },
   logoText: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: theme.colors.accent,
-    letterSpacing: 2,
+    color: '#F4D03F',
+    letterSpacing: 3,
+    textAlign: 'center',
   },
   getStartedButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.md,
-    marginBottom: theme.spacing.xl,
+    backgroundColor: '#4A90A4',
+    borderRadius: 12,
+    marginBottom: 32,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    paddingVertical: theme.spacing.sm,
+    color: 'white',
   },
 });
 
