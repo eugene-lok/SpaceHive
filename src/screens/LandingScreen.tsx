@@ -1,6 +1,6 @@
 // src/screens/LandingScreen.tsx
-import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,12 +13,19 @@ interface Props {
 }
 
 const LandingScreen: React.FC<Props> = ({ navigation }) => {
+  const [imageError, setImageError] = useState(false);
+
   const handleGetStarted = () => {
     navigation.navigate('Onboarding');
   };
 
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  const handleImageError = () => {
+    console.log('Logo failed to load, showing fallback text');
+    setImageError(true);
   };
 
   return (
@@ -36,7 +43,16 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
         
         {/* Logo */}
         <View style={styles.logoContainer}>
-          <Text style={styles.logoText}>SPACEHIVE</Text>
+          {imageError ? (
+            <Text style={styles.logoText}>SPACEHIVE</Text>
+          ) : (
+            <Image 
+              source={require('../../assets/images/SpaceHiveLogo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+              onError={handleImageError}
+            />
+          )}
         </View>
       </View>
       
@@ -64,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
   },
   welcomeTitle: {
     fontSize: 28,
@@ -83,6 +99,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 60,
+  },
+  logo: {
+    height: 160,
+    maxWidth: '100%', // Match button width
+    maxHeight: 200,
   },
   logoText: {
     fontSize: 32,

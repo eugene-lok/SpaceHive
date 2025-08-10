@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#4A90A4"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,8 +23,17 @@
         "backgroundColor": "#4A90A4"
       }
     },
+    "fonts": [
+      "./assets/fonts/SFProDisplay-Regular.otf",
+      "./assets/fonts/SFProDisplay-Medium.otf", 
+      "./assets/fonts/SFProDisplay-Semibold.otf",
+      "./assets/fonts/SFProDisplay-Bold.otf"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
