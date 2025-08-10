@@ -8,22 +8,22 @@ export const theme = {
     regular: Platform.select({
       ios: 'SF Pro Display',
       android: 'SFProDisplay-Regular',
-      default: 'System',
+      default: 'SFProDisplay-Regular',
     }),
     medium: Platform.select({
       ios: 'SF Pro Display',
       android: 'SFProDisplay-Medium', 
-      default: 'System',
+      default: 'SFProDisplay-Medium',
     }),
     semibold: Platform.select({
       ios: 'SF Pro Display',
       android: 'SFProDisplay-Semibold',
-      default: 'System',
+      default: 'SFProDisplay-Semibold',
     }),
     bold: Platform.select({
       ios: 'SF Pro Display',
       android: 'SFProDisplay-Bold',
-      default: 'System',
+      default: 'SFProDisplay-Bold',
     }),
   },
 
@@ -106,17 +106,17 @@ export const theme = {
   // Color System (from your design system)
   colors: {
     // Brand Primary (Teal variations)
-    primary: '#419A90',      // Primary 01
+    primary: '#419E9D',      // Primary 01
     primaryHover: '#357A71',
     primaryPressed: '#2B6159',
     primaryContainer: '#E0F2F1',
     
     // Brand Secondary (Navy)
-    secondary: '#485072',     // Primary 02
+    secondary: '#485C72',     // Primary 02
     secondaryContainer: '#E8EAF0',
     
     // Brand Accent (Gold)
-    accent: '#EEDC1B',       // Primary 02 (Gold)
+    accent: '#EDC51B',       // Primary 02 (Gold)
     accentContainer: '#FDF6B8',
     
     // Neutrals (from design system)
@@ -142,14 +142,14 @@ export const theme = {
     successBackground: '#E6F5EA',
     warning: '#FF9800',
     warningBackground: '#FFF3E0',
-    error: '#CC362C',        // Error Text  
+    error: '#C0362C',        // Error Text  
     errorBackground: '#FFEBEE',
     info: '#2196F3',
     infoBackground: '#E3F2FD',
     
     // Component Specific
-    buttonPrimary: '#419A90',
-    buttonSecondary: '#FFFFFF',
+    buttonPrimary: '#43A3A2',
+    buttonSecondary: '#43A093',
     buttonDisabled: '#B2B2B2',
     
     // Overlays

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: 60,
     lineHeight: 22,
     fontSize: 16, // Mobile-first readable size
-    paddingHorizontal: 20, // Add padding for better mobile readability
+    paddingHorizontal: 8, // Add padding for better mobile readability
   },
   bottomSection: {
     flexDirection: 'row',
