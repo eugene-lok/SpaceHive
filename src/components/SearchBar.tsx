@@ -1,100 +1,147 @@
 // src/components/SearchBar.tsx
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Searchbar, IconButton } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity, Platform, Pressable } from 'react-native';
+import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 
 interface SearchBarProps {
   placeholder?: string;
-  onSearch?: (query: string) => void;
-  showClearButton?: boolean;
+  onPress?: () => void;
+  disabled?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ 
   placeholder = "Plan your next gathering — start here!",
-  onSearch,
-  showClearButton = true 
+  onPress,
+  disabled = false
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isPressed, setIsPressed] = useState(false);
 
-  const handleSearch = () => {
-    onSearch?.(searchQuery);
+  const handlePressIn = () => {
+    setIsPressed(true);
   };
 
-  const handleClear = () => {
-    setSearchQuery('');
-    onSearch?.('');
+  const handlePressOut = () => {
+    setIsPressed(false);
+  };
+
+  const handlePress = () => {
+    if (!disabled && onPress) {
+      onPress();
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Searchbar
-        placeholder={placeholder}
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={styles.searchbar}
-        inputStyle={styles.input}
-        iconColor={theme.colors.onSurface}
-        placeholderTextColor="#999"
-        onSubmitEditing={handleSearch}
-        icon={() => null}
-      />
-      <View style={styles.iconContainer}>
-        {showClearButton && searchQuery.length > 0 && (
-          <IconButton
-            icon={() => <MaterialIcons name="close" size={20} color="#999" />}
-            size={20}
-            onPress={handleClear}
-            style={styles.clearButton}
-          />
-        )}
-        <IconButton
-          icon={() => <MaterialIcons name="search" size={20} color="white" />}
-          size={20}
-          onPress={handleSearch}
-          style={styles.searchButton}
-        />
-      </View>
+      <Pressable
+        style={[
+          styles.searchButton,
+          isPressed && styles.searchButtonPressed,
+          disabled && styles.searchButtonDisabled
+        ]}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={disabled}
+        accessibilityRole="button"
+        accessibilityLabel={placeholder}
+        accessibilityHint="Tap to start planning your gathering"
+      >
+        <View style={styles.content}>
+          <Text 
+            style={[
+              styles.placeholderText,
+              disabled && styles.placeholderTextDisabled
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {placeholder}
+          </Text>
+          <View style={styles.actionIcon}>
+            <MaterialIcons
+              name="search"
+              size={20}
+              color={theme.colors.surface}
+            />
+          </View>
+        </View>
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
     marginHorizontal: theme.spacing.md,
     marginVertical: theme.spacing.md,
   },
-  searchbar: {
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.borderRadius.lg,
-    elevation: 2,
-    paddingRight: 60,
+  searchButton: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: 28, // Pill shape (height/2)
+    height: 56,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    // Normal elevation/shadow
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowColor: theme.colors.shadowDark,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  input: {
-    fontSize: 14,
-    color: theme.colors.onSurface,
+  searchButtonPressed: {
+    // Stronger elevation/shadow when pressed
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        shadowColor: theme.colors.shadowDark,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+    // Slight scale effect for better feedback
+    transform: [{ scale: 0.98 }],
   },
-  iconContainer: {
-    position: 'absolute',
-    right: 4,
-    top: 4,
-    bottom: 4,
+  searchButtonDisabled: {
+    backgroundColor: theme.colors.surfaceVariant,
+    opacity: 0.6,
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    height: '100%',
   },
-  clearButton: {
-    margin: 0,
-    width: 32,
-    height: 32,
+  searchIcon: {
+    marginRight: theme.spacing.sm,
   },
-  searchButton: {
+  placeholderText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.onSurface,
+  },
+  placeholderTextDisabled: {
+    color: theme.colors.onSurfaceDisabled,
+  },
+  actionIcon: {
     backgroundColor: theme.colors.primary,
-    margin: 0,
-    width: 32,
-    height: 32,
-    borderRadius: theme.borderRadius.lg,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: theme.spacing.sm,
   },
 });
 

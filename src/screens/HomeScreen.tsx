@@ -65,6 +65,13 @@ const planningOptions: PlanningOption[] = [
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('search');
 
+  // Handler for when the search button is pressed
+  const handleSearchPress = () => {
+    console.log('Search button pressed - navigating to search screen');
+    // TODO: Navigate to search/planning screen when implemented
+    // navigation.navigate('SearchScreen');
+  };
+
   const handleSpacePress = (space: Space) => {
     console.log('Space pressed:', space.title);
     // Navigate to space details
@@ -123,8 +130,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Search Bar */}
-        <SearchBar />
+        {/* Search Button */}
+        <SearchBar 
+          placeholder="Plan your next gathering — start here!"
+          onPress={handleSearchPress}
+        />
         
         {/* What are you planning? */}
         <View style={styles.section}>
@@ -188,7 +198,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.backgroundSecondary,
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
