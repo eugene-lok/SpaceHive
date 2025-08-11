@@ -8,8 +8,14 @@ export interface BookingFormData {
   dateTime: {
     date: Date | null;
     time: {
-      start: string;
-      end: string;
+      start: {
+        time: string;  // "06:00"
+        period: 'AM' | 'PM';
+      };
+      end: {
+        time: string;  // "10:00" 
+        period: 'AM' | 'PM';
+      };
     } | null;
     isDateFlexible: boolean;
     isTimeFlexible: boolean;
@@ -40,7 +46,10 @@ export const INITIAL_FORM_DATA: BookingFormData = {
   },
   dateTime: {
     date: null,
-    time: null,
+    time: {
+      start: { time: '06:00', period: 'AM' },
+      end: { time: '10:00', period: 'AM' },
+    },
     isDateFlexible: false,
     isTimeFlexible: false,
   },

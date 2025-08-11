@@ -23,7 +23,6 @@ interface BudgetSectionProps {
   onUpdate: (data: BudgetData) => void;
   onSave: () => void;
   onClear: () => void;
-  allSectionsComplete: boolean;
 }
 
 const BudgetSection: React.FC<BudgetSectionProps> = ({
@@ -34,7 +33,6 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
   onUpdate,
   onSave,
   onClear,
-  allSectionsComplete,
 }) => {
   const [minInput, setMinInput] = useState(data.min.toString());
   const [maxInput, setMaxInput] = useState(data.max.toString());
@@ -221,12 +219,11 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
         <TouchableOpacity 
           style={[
             styles.saveButton, 
-            allSectionsComplete && styles.searchButton
           ]} 
           onPress={onSave}
         >
           <Text style={styles.saveButtonText}>
-            {allSectionsComplete ? 'Search' : 'Save'}
+            {'Save'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -402,11 +399,13 @@ completedSection: {
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 8,
   },
   clearButton: {
     flex: 1,
     marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   clearButtonText: {
     fontSize: 16,
@@ -417,13 +416,10 @@ completedSection: {
   },
   saveButton: {
     flex: 1,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     paddingVertical: 16,
     borderRadius: 12,
     marginLeft: 8,
-  },
-  searchButton: {
-    backgroundColor: '#2196F3',
   },
   saveButtonText: {
     fontSize: 16,

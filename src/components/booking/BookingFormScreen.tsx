@@ -9,12 +9,11 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
-import {theme} from '../../theme/theme'
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
-import LocationSection from './LocationSection';
-import DateTimeSection from './DateTimeSection';
-import GuestsSection from './GuestsSection';
-import BudgetSection from './BudgetSection';
+import LocationSection from '../../components/booking/LocationSection';
+import DateTimeSection from '../../components/booking/DateTimeSection';
+import GuestsSection from '../../components/booking/GuestsSection';
+import BudgetSection from '../../components/booking/BudgetSection';
 
 interface BookingFormScreenProps {
   onBack: () => void;
@@ -123,7 +122,10 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
     }
     
     if (dateTime.time && !dateTime.isTimeFlexible) {
-      text += text ? `, ${dateTime.time.start}-${dateTime.time.end}PM` : `${dateTime.time.start}-${dateTime.time.end}PM`;
+      const startTime = `${dateTime.time.start.time} ${dateTime.time.start.period}`;
+      const endTime = `${dateTime.time.end.time} ${dateTime.time.end.period}`;
+      const timeText = `${startTime} - ${endTime}`;
+      text += text ? `, ${timeText}` : timeText;
     } else if (dateTime.isTimeFlexible) {
       text += text ? ', Flexible time' : 'Flexible time';
     }
@@ -149,6 +151,9 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Text style={styles.backArrow}>←</Text>
+        </TouchableOpacity>
         
         <View style={styles.headerTabs}>
           <Text style={styles.activeTab}>Instant Book</Text>
@@ -214,9 +219,23 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
           onUpdate={(budget) => updateFormData({ budget })}
           onSave={() => completeSection('budget')}
           onClear={() => clearSection('budget')}
-          allSectionsComplete={allSectionsComplete()}
         />
       </ScrollView>
+
+      {/* Floating Save Button - appears when all sections complete */}
+      {allSectionsComplete() && (
+        <View style={styles.floatingSaveContainer}>
+          <TouchableOpacity 
+            style={styles.floatingSaveButton}
+            onPress={() => {
+              // TODO: Handle form submission in future implementation
+              console.log('Form submitted with data:', formState.formData);
+            }}
+          >
+            <Text style={styles.floatingSaveText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -225,7 +244,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    marginTop: 20
   },
   header: {
     flexDirection: 'row',
@@ -248,7 +266,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerTabs: {
-    marginLeft: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -279,12 +296,12 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 4,
   },
   progressContainer: {
     flexDirection: 'row',
     marginVertical: 20,
-    paddingLeft: 16,
+    paddingLeft: 20,
   },
   progressBar: {
     width: 4,
@@ -294,7 +311,35 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressBarComplete: {
-    backgroundColor: theme.colors.buttonPrimary
+    backgroundColor: '#4CAF50',
+  },
+  floatingSaveContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingBottom: 40,
+    backgroundColor: 'rgba(245, 245, 245, 0.95)',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  floatingSaveButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 18,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  floatingSaveText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 
