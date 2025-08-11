@@ -223,7 +223,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       </ScrollView>
 
       {/* Floating Save Button - appears when all sections complete */}
-      {allSectionsComplete() && (
+      {allSectionsComplete() && formState.activeSection === null && (
         <View style={styles.floatingSaveContainer}>
           <TouchableOpacity 
             style={styles.floatingSaveButton}
