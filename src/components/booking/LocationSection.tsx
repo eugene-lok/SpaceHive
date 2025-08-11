@@ -253,7 +253,7 @@ completedSection: {
   checkmarkText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.semibold
   },
   toggleContainer: {
     flexDirection: 'row',

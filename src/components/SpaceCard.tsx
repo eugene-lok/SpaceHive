@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   rating: {
     color: 'rgba(255, 255, 255, 0.95)', // White text for better contrast
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
   },
 });
 

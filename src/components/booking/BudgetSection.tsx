@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import { theme } from '../../theme/theme';
 import Slider from '@react-native-community/slider';
 
 interface BudgetData {

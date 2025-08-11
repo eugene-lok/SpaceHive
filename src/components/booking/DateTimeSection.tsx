@@ -373,7 +373,7 @@ completedSection: {
   },
   sectionValue: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
   },
   checkmark: {
@@ -417,16 +417,16 @@ completedSection: {
   },
   toggleTextActive: {
     color: '#000',
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
   },
   calendarContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   calendarHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 0,
   },
   navButton: {
     padding: 8,
@@ -477,13 +477,13 @@ completedSection: {
   },
   calendarDayTextSelected: {
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: theme.fonts.bold,
   },
   calendarDayTextInactive: {
     color: '#ccc',
   },
   timeContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   timeInputContainer: {
     flexDirection: 'row',
@@ -501,7 +501,7 @@ completedSection: {
   },
   timeSeparator: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     marginHorizontal: 16,
     color: '#000',
   },
@@ -541,7 +541,7 @@ completedSection: {
   backgroundColor: '#f8f9fa',
   borderRadius: 12,
   padding: 16,
-  marginBottom: 20,
+  marginBottom: 8,
   borderLeftWidth: 4,
   borderLeftColor: theme.colors.buttonPrimary,
 },

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { theme } from '../../theme/theme';
 
 interface GuestsData {
   adults: number;

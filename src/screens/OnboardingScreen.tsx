@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.bold,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
     fontSize: 28,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   skipText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     padding: 8,
   },
   paginationContainer: {

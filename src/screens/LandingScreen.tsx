@@ -6,6 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { useTheme } from '../hooks/useTheme'; 
+import { theme } from '../theme/theme';
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
@@ -53,7 +54,7 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
     },
     welcomeTitle: {
       fontSize: 28,
-      fontWeight: 'bold',
+      fontFamily: theme.fonts.bold,
       color: color('onSurface'),      
       marginBottom: spacing('sm'),
     },
@@ -75,7 +76,7 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
     },
     logoText: {
       fontSize: 32,
-      fontWeight: 'bold',
+      fontFamily: theme.fonts.bold,
       color: color('accent'),         
       letterSpacing: 3,
       textAlign: 'center',
@@ -90,7 +91,7 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '600',
+      fontFamily: theme.fonts.bold,
       color: color('surface'),          
     },
   });

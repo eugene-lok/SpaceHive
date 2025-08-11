@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import {theme} from '../../theme/theme'
 
 interface BookingOptionsScreenProps {
   onBookRightAway: () => void;
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   closeText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.bold
   },
   content: {
     flex: 1,
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
     marginBottom: 8,
   },
