@@ -372,7 +372,7 @@ completedSection: {
     marginBottom: 4,
   },
   sectionValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
   },
@@ -519,7 +519,7 @@ completedSection: {
   clearButtonText: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
-    color: '#666',
+    color: '#000000',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
@@ -541,7 +541,7 @@ completedSection: {
   backgroundColor: '#f8f9fa',
   borderRadius: 12,
   padding: 16,
-  marginBottom: 8,
+  marginBottom: 20,
   borderLeftWidth: 4,
   borderLeftColor: theme.colors.buttonPrimary,
 },

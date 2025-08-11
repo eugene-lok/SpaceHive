@@ -9,6 +9,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import {theme} from '../../theme/theme'
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
 import LocationSection from './LocationSection';
 import DateTimeSection from './DateTimeSection';
@@ -148,9 +149,6 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <Text style={styles.backArrow}>←</Text>
-        </TouchableOpacity>
         
         <View style={styles.headerTabs}>
           <Text style={styles.activeTab}>Instant Book</Text>
@@ -250,6 +248,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerTabs: {
+    marginLeft: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressBarComplete: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary
   },
 });
 

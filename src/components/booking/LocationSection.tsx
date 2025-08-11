@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { theme } from '../../theme/theme';
 import { LOCATION_SUGGESTIONS } from '../../types/booking';
+import { Feather } from '@expo/vector-icons';
 
 interface LocationData {
   value: string | null;
@@ -139,6 +140,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({
       {!data.isFlexible && (
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
+            <Feather name="search" size={18} color={theme.colors.buttonDisabled} style={{ marginRight: 6 }} />
             <TextInput
               style={styles.searchInput}
               placeholder="Search locations"
@@ -158,7 +160,8 @@ const LocationSection: React.FC<LocationSectionProps> = ({
                   key={index}
                   style={styles.suggestionItem}
                   onPress={() => handleSuggestionSelect(suggestion)}
-                >
+                > 
+                  <Feather name="map-pin" style={styles.pinIcon} />
                   <Text style={styles.suggestionText}>{suggestion}</Text>
                 </TouchableOpacity>
               ))}
@@ -238,7 +241,7 @@ completedSection: {
     marginBottom: 4,
   },
   sectionValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
   },
@@ -291,11 +294,14 @@ completedSection: {
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: theme.colors.buttonDisabled,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 12,
+    
   },
   searchIcon: {
     fontSize: 16,
@@ -304,6 +310,7 @@ completedSection: {
   searchInput: {
     flex: 1,
     fontSize: 16,
+    fontFamily: theme.fonts.medium,
     color: '#000',
   },
   suggestionsContainer: {
@@ -321,7 +328,12 @@ completedSection: {
   },
   suggestionText: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.onSurfaceDisabled
+  },
+  pinIcon: {
+    fontSize: 16,
+    marginRight: 10,
+    color: theme.colors.onSurfaceDisabled
   },
   actionButtons: {
     flexDirection: 'row',
@@ -337,7 +349,7 @@ completedSection: {
   clearButtonText: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
-    color: '#666',
+    color: '#000000',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },

@@ -292,7 +292,7 @@ completedSection: {
     marginBottom: 4,
   },
   sectionValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#000',
   },
