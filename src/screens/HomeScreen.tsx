@@ -11,6 +11,7 @@ import SpaceCard from '../components/SpaceCard';
 import EventCategoryCard from '../components/EventCategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
 import BookingOptionsScreen from '../components/booking/BookingOptionsScreen';
+import BookingFormScreen from '../components/booking/BookingFormScreen';
 import { theme } from '../theme/theme';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -121,8 +122,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleBookRightAway = () => {
     setBookingStep('form');
-    // We'll implement the form screen in the next step
-    console.log('Navigate to booking form');
   };
 
   const handleRequestMatch = () => {
@@ -253,9 +252,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                 onClose={handleCloseBookingFlow}
               />
             )}
-            {/* We'll add the BookingFormScreen here in the next step */}
-          </View>
-      )}
+            {bookingStep === 'form' && (
+              <BookingFormScreen
+                onBack={() => setBookingStep('options')}
+                onClose={handleCloseBookingFlow}
+              />
+            )}
+  </View>
+)}
     </SafeAreaView>
   );
 };
