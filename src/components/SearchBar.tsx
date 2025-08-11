@@ -33,42 +33,44 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <Pressable
-        style={[
-          styles.searchButton,
-          isPressed && styles.searchButtonPressed,
-          disabled && styles.searchButtonDisabled
-        ]}
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        disabled={disabled}
-        accessibilityRole="button"
-        accessibilityLabel={placeholder}
-        accessibilityHint="Tap to start planning your gathering"
-      >
-        <View style={styles.content}>
-          <Text 
-            style={[
-              styles.placeholderText,
-              disabled && styles.placeholderTextDisabled
-            ]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {placeholder}
-          </Text>
-          <View style={styles.actionIcon}>
-            <MaterialIcons
-              name="search"
-              size={20}
-              color={theme.colors.surface}
-            />
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+      <View style={styles.container}>
+        <Pressable
+          style={[
+            styles.searchButton,
+            isPressed && styles.searchButtonPressed,
+            disabled && styles.searchButtonDisabled
+          ]}
+          onPress={handlePress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          disabled={disabled}
+          accessibilityRole="button"
+          accessibilityLabel={placeholder}
+          accessibilityHint="Tap to start planning your gathering"
+        >
+          <View style={styles.content}>
+            <Text 
+              style={[
+                styles.placeholderText,
+                disabled && styles.placeholderTextDisabled
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {placeholder}
+            </Text>
+            <View style={styles.actionIcon}>
+              <MaterialIcons
+                name="search"
+                size={20}
+                color={theme.colors.surface}
+              />
+            </View>
           </View>
-        </View>
-      </Pressable>
-    </View>
+        </Pressable>
+      </View>
+    </TouchableOpacity>
   );
 };
 

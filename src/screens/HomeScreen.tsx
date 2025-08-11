@@ -1,5 +1,5 @@
 // src/screens/HomeScreen.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from 'react-native-paper';
@@ -10,6 +10,7 @@ import SearchBar from '../components/SearchBar';
 import SpaceCard from '../components/SpaceCard';
 import EventCategoryCard from '../components/EventCategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
+import BookingOptionsScreen from '../components/booking/BookingOptionsScreen';
 import { theme } from '../theme/theme';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -110,11 +111,27 @@ const justForYouSpaces: Space[] = [
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('search');
 
-  // Handler for when the search button is pressed
-  const handleSearchPress = () => {
-    console.log('Search button pressed - navigating to search screen');
-    // TODO: Navigate to search/planning screen when implemented
-    // navigation.navigate('SearchScreen');
+  const [showBookingFlow, setShowBookingFlow] = useState(false);
+  const [bookingStep, setBookingStep] = useState<'options' | 'form'>('options');
+
+  const handleSearchBarPress = () => {
+    setShowBookingFlow(true);
+    setBookingStep('options');
+  };
+
+  const handleBookRightAway = () => {
+    setBookingStep('form');
+    // We'll implement the form screen in the next step
+    console.log('Navigate to booking form');
+  };
+
+  const handleRequestMatch = () => {
+    // Placeholder for future implementation
+    console.log('Request a Match - Coming Soon!');
+  };
+
+  const handleCloseBookingFlow = () => {
+    setShowBookingFlow(false);
   };
 
   const handleSpacePress = (space: Space) => {
@@ -161,7 +178,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
-        <SearchBar />
+        <SearchBar onPress={handleSearchBarPress} />
         
         {/* What are you planning? - Event Categories */}
         <View style={styles.section}>
@@ -227,6 +244,18 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         activeTab={activeTab}
         onTabPress={handleTabPress}
       />
+        {showBookingFlow && (
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
+            {bookingStep === 'options' && (
+              <BookingOptionsScreen
+                onBookRightAway={handleBookRightAway}
+                onRequestMatch={handleRequestMatch}
+                onClose={handleCloseBookingFlow}
+              />
+            )}
+            {/* We'll add the BookingFormScreen here in the next step */}
+          </View>
+      )}
     </SafeAreaView>
   );
 };
