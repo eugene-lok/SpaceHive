@@ -1,5 +1,5 @@
-// components/BudgetSection.tsx
-import React, { useState, useEffect } from 'react';
+// src/components/booking/BudgetSection.tsx
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 interface BudgetData {
   min: number;
@@ -36,52 +37,115 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
 }) => {
   const [minInput, setMinInput] = useState(data.min.toString());
   const [maxInput, setMaxInput] = useState(data.max.toString());
-  const [sliderWidth, setSliderWidth] = useState(300);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    setMinInput(data.min.toString());
-    setMaxInput(data.max.toString());
-  }, [data.min, data.max]);
+    if (!isDragging) {
+      setMinInput(data.min.toString());
+      setMaxInput(data.max.toString());
+    }
+  }, [data.min, data.max, isDragging]);
 
-  const handleMinInputChange = (text: string) => {
+  const handleMinInputChange = useCallback((text: string) => {
     setMinInput(text);
     const value = parseInt(text) || 0;
-    if (value >= 0 && value <= data.max) {
+    if (value >= 0 && value <= data.max && text !== '') {
       onUpdate({ ...data, min: value });
     }
-  };
+  }, [data, onUpdate]);
 
-  const handleMaxInputChange = (text: string) => {
+  const handleMaxInputChange = useCallback((text: string) => {
     setMaxInput(text);
     const value = parseInt(text) || 0;
-    if (value >= data.min && value <= 200) {
+    if (value >= data.min && value <= 200 && text !== '') {
       onUpdate({ ...data, max: value });
     }
-  };
+  }, [data, onUpdate]);
 
-  const handleSliderLayout = (event: any) => {
-    setSliderWidth(event.nativeEvent.layout.width);
-  };
+  const handleMinInputBlur = useCallback(() => {
+    const value = parseInt(minInput) || 0;
+    const clampedValue = Math.max(0, Math.min(value, data.max));
+    setMinInput(clampedValue.toString());
+    onUpdate({ ...data, min: clampedValue });
+    setIsDragging(false);
+  }, [minInput, data, onUpdate]);
 
-  // Simple slider implementation without external dependencies
-  const SliderComponent: React.FC = () => {
-    const minPosition = (data.min / 200) * sliderWidth;
-    const maxPosition = (data.max / 200) * sliderWidth;
+  const handleMaxInputBlur = useCallback(() => {
+    const value = parseInt(maxInput) || 200;
+    const clampedValue = Math.max(data.min, Math.min(value, 200));
+    setMaxInput(clampedValue.toString());
+    onUpdate({ ...data, max: clampedValue });
+    setIsDragging(false);
+  }, [maxInput, data, onUpdate]);
 
+  // Slider handlers
+  const handleMinSliderChange = useCallback((value: number) => {
+    const roundedValue = Math.round(value);
+    const clampedValue = Math.min(roundedValue, data.max);
+    onUpdate({ ...data, min: clampedValue });
+  }, [data, onUpdate]);
+
+  const handleMaxSliderChange = useCallback((value: number) => {
+    const roundedValue = Math.round(value);
+    const clampedValue = Math.max(roundedValue, data.min);
+    onUpdate({ ...data, max: clampedValue });
+  }, [data, onUpdate]);
+
+  const handleSliderStart = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  const handleSliderComplete = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Range Slider Component using two overlaid sliders
+  const RangeSliderComponent: React.FC = () => {
     return (
-      <View style={styles.sliderContainer} onLayout={handleSliderLayout}>
+      <View style={styles.rangeSliderContainer}>
+        {/* Background track */}
         <View style={styles.sliderTrack} />
+        
+        {/* Active range indicator */}
         <View 
           style={[
-            styles.sliderActiveTrack, 
-            { 
-              left: minPosition,
-              width: maxPosition - minPosition 
+            styles.activeRange,
+            {
+              left: `${(data.min / 200) * 100}%`,
+              width: `${((data.max - data.min) / 200) * 100}%`,
             }
-          ]} 
+          ]}
         />
-        <View style={[styles.sliderThumb, { left: minPosition - 10 }]} />
-        <View style={[styles.sliderThumb, { left: maxPosition - 10 }]} />
+
+        {/* Min value slider */}
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={200}
+          value={data.min}
+          onValueChange={handleMinSliderChange}
+          onSlidingStart={handleSliderStart}
+          onSlidingComplete={handleSliderComplete}
+          minimumTrackTintColor="transparent"
+          maximumTrackTintColor="transparent"
+          //thumbStyle={styles.thumbStyle}
+          //trackStyle={styles.trackStyle}
+        />
+
+        {/* Max value slider */}
+        <Slider
+          style={[styles.slider, styles.overlaySlider]}
+          minimumValue={0}
+          maximumValue={200}
+          value={data.max}
+          onValueChange={handleMaxSliderChange}
+          onSlidingStart={handleSliderStart}
+          onSlidingComplete={handleSliderComplete}
+          minimumTrackTintColor="transparent"
+          maximumTrackTintColor="transparent"
+          //thumbStyle={styles.thumbStyle}
+          //trackStyle={styles.trackStyle}
+        />
       </View>
     );
   };
@@ -103,7 +167,7 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
   if (!isActive) {
     return (
       <TouchableOpacity style={styles.section} onPress={onPress}>
-        <Text style={styles.sectionTitle}>What is your hourly budget?</Text>
+        <Text style={styles.sectionTitle}>Budget</Text>
       </TouchableOpacity>
     );
   }
@@ -116,14 +180,14 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
       
       {/* Price Range Display */}
       <View style={styles.priceRangeContainer}>
-        <Text style={styles.priceLabel}>${data.min}</Text>
-        <Text style={styles.priceLabel}>${data.max}</Text>
+        <Text style={styles.priceLabel}>Min: ${data.min}</Text>
+        <Text style={styles.priceLabel}>Max: ${data.max}</Text>
       </View>
 
-      {/* Slider */}
-      <View style={styles.sliderWrapper}>
-        <SliderComponent />
-      </View>
+      {/* Draggable Range Slider */}
+      {/* <View style={styles.sliderWrapper}>
+        <RangeSliderComponent />
+      </View> */}
 
       {/* Manual Input Fields */}
       <View style={styles.inputContainer}>
@@ -131,6 +195,8 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           style={styles.priceInput}
           value={minInput}
           onChangeText={handleMinInputChange}
+          onBlur={handleMinInputBlur}
+          onFocus={() => setIsDragging(true)}
           keyboardType="numeric"
           placeholder="0"
         />
@@ -139,6 +205,8 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           style={styles.priceInput}
           value={maxInput}
           onChangeText={handleMaxInputChange}
+          onBlur={handleMaxInputBlur}
+          onFocus={() => setIsDragging(true)}
           keyboardType="numeric"
           placeholder="200"
         />
@@ -167,41 +235,46 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
 
 const styles = StyleSheet.create({
   section: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  activeSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  completedSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+activeSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+completedSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
   completedContent: {
     flex: 1,
   },
@@ -255,29 +328,48 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingHorizontal: 10,
   },
-  sliderContainer: {
-    height: 20,
+  // Range slider styles
+  rangeSliderContainer: {
+    height: 40,
     justifyContent: 'center',
     position: 'relative',
   },
+  slider: {
+    position: 'absolute',
+    width: '100%',
+    height: 40,
+  },
+  overlaySlider: {
+    // Second slider overlays the first
+  },
   sliderTrack: {
+    position: 'absolute',
     height: 4,
     backgroundColor: '#e0e0e0',
     borderRadius: 2,
+    width: '100%',
+    top: '50%',
+    marginTop: -2,
   },
-  sliderActiveTrack: {
+  activeRange: {
     position: 'absolute',
     height: 4,
     backgroundColor: '#4CAF50',
     borderRadius: 2,
+    top: '50%',
+    marginTop: -2,
+    zIndex: 1,
   },
-  sliderThumb: {
-    position: 'absolute',
+  trackStyle: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'transparent',
+  },
+  thumbStyle: {
     width: 20,
     height: 20,
-    borderRadius: 10,
     backgroundColor: '#4CAF50',
-    top: -8,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

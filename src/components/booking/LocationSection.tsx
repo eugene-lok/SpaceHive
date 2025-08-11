@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import { theme } from '../../theme/theme';
 import { LOCATION_SUGGESTIONS } from '../../types/booking';
 
 interface LocationData {
@@ -81,14 +82,25 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     );
   }
 
-  if (!isActive) {
-    // Collapsed state
+  if (!isActive && !isCompleted) {
+    // Incomplete state
     return (
-      <TouchableOpacity style={styles.section} onPress={onPress}>
-        <Text style={styles.sectionTitle}>Where will it take place?</Text>
+      <TouchableOpacity style={styles.completedSection} onPress={onPress}>
+        <View style={styles.completedContent}>
+          <Text style={styles.sectionLabel}>Location</Text>
+          <Text style={styles.sectionValue}>None</Text>
+        </View>
       </TouchableOpacity>
     );
   }
+
+  if (!isActive) {
+    return (
+        <TouchableOpacity style={styles.section} onPress={onPress}>
+        <Text style={styles.sectionLabel}>Location</Text>
+        </TouchableOpacity>
+    );
+}
 
   // Active state
   return (
@@ -115,14 +127,21 @@ const LocationSection: React.FC<LocationSectionProps> = ({
         </TouchableOpacity>
       </View>
 
+      {data.isFlexible && (
+        <View style={styles.flexibleDescriptionContainer}>
+            <Text style={styles.flexibleDescription}>
+            Completely flexible - any location works for you.
+            </Text>
+        </View>
+        )}
+
       {/* Search Input and Suggestions */}
       {!data.isFlexible && (
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
-            <Text style={styles.searchIcon}>🔍</Text>
             <TextInput
               style={styles.searchInput}
-              placeholder="Search destinations"
+              placeholder="Search locations"
               value={searchText}
               onChangeText={setSearchText}
               onFocus={handleSearchFocus}
@@ -140,7 +159,6 @@ const LocationSection: React.FC<LocationSectionProps> = ({
                   style={styles.suggestionItem}
                   onPress={() => handleSuggestionSelect(suggestion)}
                 >
-                  <Text style={styles.locationIcon}>📍</Text>
                   <Text style={styles.suggestionText}>{suggestion}</Text>
                 </TouchableOpacity>
               ))}
@@ -164,66 +182,71 @@ const LocationSection: React.FC<LocationSectionProps> = ({
 
 const styles = StyleSheet.create({
   section: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  activeSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  completedSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+activeSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+completedSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
   completedContent: {
     flex: 1,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: theme.fonts.bold,
     color: '#000',
     marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
     marginBottom: 4,
   },
   sectionValue: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
   },
   checkmark: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -255,12 +278,12 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
   },
   toggleTextActive: {
     color: '#000',
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold
   },
   searchContainer: {
     marginBottom: 20,
@@ -306,29 +329,46 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   clearButton: {
-    flex: 1,
-    marginRight: 8,
-  },
+  flex: 1,
+  marginRight: 8,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
   clearButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
   saveButton: {
     flex: 1,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     paddingVertical: 16,
     borderRadius: 12,
     marginLeft: 8,
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
+
+  flexibleDescriptionContainer: {
+  backgroundColor: '#f8f9fa',
+  borderRadius: 12,
+  padding: 16,
+  marginBottom: 20,
+  borderLeftWidth: 4,
+  borderLeftColor: theme.colors.buttonPrimary,
+},
+flexibleDescription: {
+  fontSize: 15,
+  color: '#666',
+  lineHeight: 20,
+  fontStyle: 'italic',
+},
 });
 
 export default LocationSection;

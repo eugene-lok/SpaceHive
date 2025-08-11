@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    marginTop: 30
+    marginTop: 30,
   },
   header: {
     flexDirection: 'row',
@@ -73,11 +73,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-  },
-  timeText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#000',
   },
   closeButton: {
     width: 32,

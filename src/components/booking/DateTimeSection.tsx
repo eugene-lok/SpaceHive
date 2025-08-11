@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import { theme } from '../../theme/theme';
 
 interface DateTimeData {
   date: Date | null;
@@ -41,26 +42,26 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
 }) => {
   const [startTime, setStartTime] = useState(data.time?.start || '6:00');
   const [endTime, setEndTime] = useState(data.time?.end || '10:00');
+  const [currentMonth, setCurrentMonth] = useState(7); 
+  const [currentYear, setCurrentYear] = useState(2025);
 
   // Generate calendar for July 2025
   const generateCalendar = () => {
-    const year = 2025;
-    const month = 6; // July (0-indexed)
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - firstDay.getDay());
 
-    const days = [];
-    const current = new Date(startDate);
+  const days = [];
+  const current = new Date(startDate);
 
-    for (let i = 0; i < 42; i++) {
-      days.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
+  for (let i = 0; i < 42; i++) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
 
-    return days;
-  };
+  return days;
+};
 
   const handleDateToggle = (isDate: boolean) => {
     if (isDate) {
@@ -93,8 +94,8 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
   };
 
   const isDateInCurrentMonth = (date: Date) => {
-    return date.getMonth() === 6; // July
-  };
+    return date.getMonth() === currentMonth; 
+    };
 
   const isSelectedDate = (date: Date) => {
     return data.date && 
@@ -102,6 +103,32 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
            date.getMonth() === data.date.getMonth() &&
            date.getFullYear() === data.date.getFullYear();
   };
+
+  const goToPreviousMonth = () => {
+  if (currentMonth === 0) {
+    setCurrentMonth(11);
+    setCurrentYear(currentYear - 1);
+  } else {
+    setCurrentMonth(currentMonth - 1);
+  }
+};
+
+const goToNextMonth = () => {
+  if (currentMonth === 11) {
+    setCurrentMonth(0);
+    setCurrentYear(currentYear + 1);
+  } else {
+    setCurrentMonth(currentMonth + 1);
+  }
+};
+
+const getMonthName = () => {
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return `${monthNames[currentMonth]} ${currentYear}`;
+};
 
   if (!isActive && isCompleted) {
     return (
@@ -117,13 +144,25 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     );
   }
 
+  if (!isActive && !isCompleted) {
+      // Incomplete state
+      return (
+        <TouchableOpacity style={styles.completedSection} onPress={onPress}>
+          <View style={styles.completedContent}>
+            <Text style={styles.sectionLabel}>Date & Time</Text>
+            <Text style={styles.sectionValue}>None</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
   if (!isActive) {
-    return (
-      <TouchableOpacity style={styles.section} onPress={onPress}>
-        <Text style={styles.sectionTitle}>When is it happening?</Text>
-      </TouchableOpacity>
-    );
-  }
+  return (
+    <TouchableOpacity style={styles.section} onPress={onPress}>
+      <Text style={styles.sectionLabel}>Date & Time</Text>
+    </TouchableOpacity>
+  );
+}
 
   const calendarDays = generateCalendar();
 
@@ -152,48 +191,56 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       </View>
 
       {/* Calendar */}
-      {!data.isDateFlexible && (
+        {!data.isDateFlexible && (
         <View style={styles.calendarContainer}>
-          <View style={styles.calendarHeader}>
-            <TouchableOpacity style={styles.navButton}>
-              <Text style={styles.navText}>←</Text>
+            <View style={styles.calendarHeader}>
+            <TouchableOpacity style={styles.navButton} onPress={goToPreviousMonth}>
+                <Text style={styles.navText}>←</Text>
             </TouchableOpacity>
-            <Text style={styles.monthText}>July 2025</Text>
-            <TouchableOpacity style={styles.navButton}>
-              <Text style={styles.navText}>→</Text>
+            <Text style={styles.monthText}>{getMonthName()}</Text>
+            <TouchableOpacity style={styles.navButton} onPress={goToNextMonth}>
+                <Text style={styles.navText}>→</Text>
             </TouchableOpacity>
-          </View>
+            </View>
 
-          <View style={styles.weekDaysContainer}>
+            <View style={styles.weekDaysContainer}>
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <Text key={day} style={styles.weekDay}>{day}</Text>
+                <Text key={day} style={styles.weekDay}>{day}</Text>
             ))}
-          </View>
+            </View>
 
-          <View style={styles.calendarGrid}>
-            {calendarDays.map((date, index) => (
-              <TouchableOpacity
+            <View style={styles.calendarGrid}>
+            {generateCalendar().map((date, index) => (
+                <TouchableOpacity
                 key={index}
                 style={[
-                  styles.calendarDay,
-                  !isDateInCurrentMonth(date) && styles.calendarDayInactive,
-                  isSelectedDate(date) && styles.calendarDaySelected,
+                    styles.calendarDay,
+                    !isDateInCurrentMonth(date) && styles.calendarDayInactive,
+                    isSelectedDate(date) && styles.calendarDaySelected,
                 ]}
                 onPress={() => handleDateSelect(date)}
                 disabled={!isDateInCurrentMonth(date)}
-              >
+                >
                 <Text style={[
-                  styles.calendarDayText,
-                  !isDateInCurrentMonth(date) && styles.calendarDayTextInactive,
-                  isSelectedDate(date) && styles.calendarDayTextSelected,
+                    styles.calendarDayText,
+                    !isDateInCurrentMonth(date) && styles.calendarDayTextInactive,
+                    isSelectedDate(date) && styles.calendarDayTextSelected,
                 ]}>
-                  {date.getDate()}
+                    {date.getDate()}
                 </Text>
-              </TouchableOpacity>
+                </TouchableOpacity>
             ))}
-          </View>
+            </View>
         </View>
-      )}
+        )}
+
+    {data.isDateFlexible && !data.isTimeFlexible && (
+  <View style={styles.flexibleDescriptionContainer}>
+    <Text style={styles.flexibleDescription}>
+      Any date works for you - we'll show all available options.
+    </Text>
+  </View>
+)}
 
       {/* Time Toggle */}
       <View style={styles.toggleContainer}>
@@ -214,6 +261,22 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
           </Text>
         </TouchableOpacity>
       </View>
+
+      {data.isDateFlexible && data.isTimeFlexible && (
+  <View style={styles.flexibleDescriptionContainer}>
+    <Text style={styles.flexibleDescription}>
+      Completely flexible - any date and time works for you.
+    </Text>
+  </View>
+)}
+
+{!data.isDateFlexible && data.isTimeFlexible && (
+  <View style={styles.flexibleDescriptionContainer}>
+    <Text style={styles.flexibleDescription}>
+      Any time works for you - morning, afternoon, or evening.
+    </Text>
+  </View>
+)}
 
       {/* Time Inputs */}
       {!data.isTimeFlexible && (
@@ -252,54 +315,59 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
 };
 
 const styles = StyleSheet.create({
-  section: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  activeSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  completedSection: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
+ section: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+activeSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
+
+completedSection: {
+  backgroundColor: '#fff',
+  borderRadius: 16,
+  padding: 20,
+  marginBottom: 16,
+  marginHorizontal: 4, 
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 3,
+},
   completedContent: {
     flex: 1,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
     marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
     marginBottom: 4,
   },
@@ -312,14 +380,14 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkmarkText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.semibold,
   },
   toggleContainer: {
     flexDirection: 'row',
@@ -344,7 +412,7 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
   },
   toggleTextActive: {
@@ -365,12 +433,12 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: theme.fonts.regular,
     color: '#000',
   },
   monthText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
   },
   weekDaysContainer: {
@@ -381,7 +449,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: theme.fonts.regular,
     color: '#666',
     paddingVertical: 8,
   },
@@ -403,8 +471,8 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   calendarDayText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
+    fontFamily: theme.fonts.bold,
     color: '#000',
   },
   calendarDayTextSelected: {
@@ -445,27 +513,44 @@ const styles = StyleSheet.create({
   clearButton: {
     flex: 1,
     marginRight: 8,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   clearButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
   saveButton: {
     flex: 1,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     paddingVertical: 16,
     borderRadius: 12,
     marginLeft: 8,
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
+
+  flexibleDescriptionContainer: {
+  backgroundColor: '#f8f9fa',
+  borderRadius: 12,
+  padding: 16,
+  marginBottom: 20,
+  borderLeftWidth: 4,
+  borderLeftColor: theme.colors.buttonPrimary,
+},
+flexibleDescription: {
+  fontSize: 15,
+  color: '#666',
+  lineHeight: 20,
+  fontStyle: 'italic',
+},
 });
 
 export default DateTimeSection;
