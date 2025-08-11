@@ -242,10 +242,10 @@ const styles = StyleSheet.create({
   
   /* Larger pagination dots */
   paginationDot: {
-    width: 12,        // ✨ Increased from 8px
-    height: 12,       // ✨ Increased from 8px  
-    borderRadius: 6,  // ✨ Increased from 4px
-    marginHorizontal: 6, // ✨ Increased spacing
+    width: 12,      
+    height: 12,     
+    borderRadius: 6,  
+    marginHorizontal: 6, 
   },
   paginationDotActive: {
     backgroundColor: theme.colors.accent,

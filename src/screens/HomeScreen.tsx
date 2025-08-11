@@ -23,32 +23,32 @@ const eventCategories: EventCategory[] = [
   {
     id: 1,
     title: 'Party',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200&h=200&fit=crop&crop=center',
+    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300&h=400&fit=crop&crop=center',
   },
   {
     id: 2,
-    title: 'Meeting',
-    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=200&h=200&fit=crop&crop=center',
+    title: 'Anniversary',
+    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=300&h=400&fit=crop&crop=center',
   },
   {
     id: 3,
-    title: 'Workshop',
-    image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=200&h=200&fit=crop&crop=center',
+    title: 'Hobby Club',
+    image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=300&h=400&fit=crop&crop=center',
   },
   {
     id: 4,
-    title: 'Event',
-    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200&h=200&fit=crop&crop=center',
+    title: 'Workshop',
+    image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=300&h=400&fit=crop&crop=center',
   },
   {
     id: 5,
-    title: 'Wedding',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=200&h=200&fit=crop&crop=center',
+    title: 'Meeting',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=300&h=400&fit=crop&crop=center',
   },
   {
     id: 6,
-    title: 'Photoshoot',
-    image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=200&h=200&fit=crop&crop=center',
+    title: 'Pop-up',
+    image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=300&h=400&fit=crop&crop=center',
   },
 ];
 
@@ -240,19 +240,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   section: {
-    marginVertical: theme.spacing.md,
+    marginVertical: 2, 
   },
   sectionTitle: {
     fontWeight: 'bold',
     color: theme.colors.onSurface,
     marginHorizontal: theme.spacing.md,
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+    marginTop: 2, 
   },
   horizontalList: {
     paddingHorizontal: theme.spacing.md,
+    paddingBottom: theme.spacing.lg, 
   },
   bottomSpacer: {
-    height: 100, // Space for bottom navigation
+    height: 50, 
   },
 });
 

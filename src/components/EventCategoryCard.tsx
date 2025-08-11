@@ -23,52 +23,41 @@ const EventCategoryCard: React.FC<EventCategoryCardProps> = ({
   onPress 
 }) => {
   // Calculate responsive sizing - mobile first
-  const cardSize = screenWidth > 768 ? 80 : 70; // Larger on desktop/tablet
-  const imageSize = screenWidth > 768 ? 60 : 50; // Larger on desktop/tablet
+  const cardWidth = screenWidth > 768 ? 100 : 85; // Larger on desktop/tablet
+  const cardHeight = screenWidth > 768 ? 120 : 100; // Aspect ratio maintained
 
   return (
     <TouchableOpacity 
-      style={[styles.container, { width: cardSize }]} 
+      style={[styles.container, { width: cardWidth, height: cardHeight }]} 
       onPress={() => onPress?.(category)}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
     >
-      {/* Circular Image Container */}
-      <View style={[styles.imageContainer, { 
-        width: imageSize, 
-        height: imageSize,
-        borderRadius: imageSize / 2 
-      }]}>
-        <ImageBackground
-          source={{ uri: category.image }}
-          style={styles.imageBackground}
-          imageStyle={[styles.image, { borderRadius: imageSize / 2 }]}
-        >
-          {/* Optional overlay for better text contrast if needed */}
-          <View style={styles.imageOverlay} />
-        </ImageBackground>
-      </View>
-
-      {/* Category Label */}
-      <Text 
-        variant="bodySmall" 
-        style={styles.categoryText}
-        numberOfLines={1}
-        ellipsizeMode="tail"
+      <ImageBackground
+        source={{ uri: category.image }}
+        style={styles.imageBackground}
+        imageStyle={styles.image}
+        resizeMode="cover"
       >
-        {category.title}
-      </Text>
+        {/* White overlay at bottom for text */}
+        <View style={styles.textOverlay}>
+          <Text 
+            variant="bodySmall" 
+            style={styles.categoryText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {category.title}
+          </Text>
+        </View>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     marginRight: theme.spacing.md,
-    paddingVertical: theme.spacing.xs,
-  },
-  imageContainer: {
-    marginBottom: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     ...theme.elevation.small,
   },
@@ -76,22 +65,23 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   image: {
-    // borderRadius is applied in the component for responsive sizing
+    borderRadius: theme.borderRadius.md,
   },
-  imageOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Subtle overlay for better image quality
+  textOverlay: {
+    backgroundColor: 'rgba(255, 255, 255, 1)', 
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.sm,
+    width: '100%',
   },
   categoryText: {
     textAlign: 'center',
-    fontWeight: '500',
-    color: theme.colors.onSurfaceVariant, // Using grey text as requested
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.onSurface,
     fontSize: 12,
-    maxWidth: '100%',
+    lineHeight: 14,
   },
 });
 
