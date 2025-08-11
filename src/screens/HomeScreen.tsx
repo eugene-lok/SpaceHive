@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, Chip } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { Space, PlanningOption } from '../types';
+import { Space } from '../types';
 import SearchBar from '../components/SearchBar';
 import SpaceCard from '../components/SpaceCard';
+import EventCategoryCard from '../components/EventCategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
 import { theme } from '../theme/theme';
 
@@ -16,6 +17,47 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 interface Props {
   navigation: HomeScreenNavigationProp;
 }
+
+// Event Category interface for the filter buttons
+interface EventCategory {
+  id: number;
+  title: string;
+  image: string;
+}
+
+// Mock data for event categories (filter buttons)
+const eventCategories: EventCategory[] = [
+  {
+    id: 1,
+    title: 'Party',
+    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200&h=200&fit=crop&crop=center',
+  },
+  {
+    id: 2,
+    title: 'Meeting',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=200&h=200&fit=crop&crop=center',
+  },
+  {
+    id: 3,
+    title: 'Workshop',
+    image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=200&h=200&fit=crop&crop=center',
+  },
+  {
+    id: 4,
+    title: 'Event',
+    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200&h=200&fit=crop&crop=center',
+  },
+  {
+    id: 5,
+    title: 'Wedding',
+    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=200&h=200&fit=crop&crop=center',
+  },
+  {
+    id: 6,
+    title: 'Photoshoot',
+    image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=200&h=200&fit=crop&crop=center',
+  },
+];
 
 // Mock data - 4 cards matching the Figma design
 const trendingSpaces: Space[] = [
@@ -72,13 +114,6 @@ const justForYouSpaces: Space[] = [
   }
 ];
 
-const planningOptions: PlanningOption[] = [
-  { id: 1, title: 'Party', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&h=150&fit=crop' },
-  { id: 2, title: 'Anniversary', image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=150&h=150&fit=crop' },
-  { id: 3, title: 'Hobby Club', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=150&h=150&fit=crop' },
-  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' }
-];
-
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('search');
 
@@ -90,13 +125,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleSpacePress = (space: Space) => {
-    console.log('Space pressed:', space.title);
-    // Navigate to space details
+    console.log('Space selected:', space.id);
   };
 
-  const handleMessageHost = (space: Space) => {
-    console.log('Message host for:', space.title);
-    // Navigate to messaging
+  const handleCategoryPress = (category: EventCategory) => {
+    console.log('Category selected:', category.title);
+    // TODO: Implement filtering logic here
+    // This would filter the spaces based on the selected category
   };
 
   const handleTabPress = (tabId: string) => {
@@ -129,29 +164,25 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const renderPlanningOption = ({ item }: { item: PlanningOption }) => (
-    <View style={styles.planningOption}>
-      <View style={styles.planningImagePlaceholder} />
-      <Text variant="bodySmall" style={styles.planningText}>
-        {item.title}
-      </Text>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
         <SearchBar />
         
-        {/* What are you planning? */}
+        {/* What are you planning? - Event Categories */}
         <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>
             What are you planning?
           </Text>
           <FlatList
-            data={planningOptions}
-            renderItem={renderPlanningOption}
+            data={eventCategories}
+            renderItem={({ item }) => (
+              <EventCategoryCard
+                category={item}
+                onPress={handleCategoryPress}
+              />
+            )}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
@@ -161,7 +192,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         {/* Trending Spaces */}
         <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>
-            Trending in your area
+            Trending spaces
           </Text>
           <FlatList
             data={trendingSpaces}
@@ -226,23 +257,6 @@ const styles = StyleSheet.create({
   },
   horizontalList: {
     paddingHorizontal: theme.spacing.md,
-  },
-  planningOption: {
-    alignItems: 'center',
-    marginRight: theme.spacing.md,
-    width: 80,
-  },
-  planningImagePlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.surfaceVariant,
-    marginBottom: theme.spacing.sm,
-  },
-  planningText: {
-    textAlign: 'center',
-    fontWeight: '500',
-    color: theme.colors.onSurface,
   },
   bottomSpacer: {
     height: 100, // Space for bottom navigation
