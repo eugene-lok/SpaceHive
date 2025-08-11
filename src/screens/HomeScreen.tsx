@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { Space } from '../types';
+import { Space, EventCategory } from '../types';
 import SearchBar from '../components/SearchBar';
 import SpaceCard from '../components/SpaceCard';
 import EventCategoryCard from '../components/EventCategoryCard';
@@ -16,13 +16,6 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
 interface Props {
   navigation: HomeScreenNavigationProp;
-}
-
-// Event Category interface for the filter buttons
-interface EventCategory {
-  id: number;
-  title: string;
-  image: string;
 }
 
 // Mock data for event categories (filter buttons)

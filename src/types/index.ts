@@ -1,3 +1,4 @@
+// src/types/index.ts
 export interface Space {
   id: number;
   title: string;
@@ -11,6 +12,12 @@ export interface Space {
 }
 
 export interface PlanningOption {
+  id: number;
+  title: string;
+  image: string;
+}
+
+export interface EventCategory {
   id: number;
   title: string;
   image: string;
