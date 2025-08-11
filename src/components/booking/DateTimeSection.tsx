@@ -398,7 +398,7 @@ completedSection: {
   },
   toggleButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 4,
     alignItems: 'center',
     borderRadius: 21,
   },
@@ -413,7 +413,7 @@ completedSection: {
   toggleText: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
-    color: '#666',
+    color: theme.colors.onSurfaceVariant,
   },
   toggleTextActive: {
     color: '#000',
@@ -434,12 +434,12 @@ completedSection: {
   navText: {
     fontSize: 18,
     fontFamily: theme.fonts.regular,
-    color: '#000',
+    color: theme.colors.onSurface,
   },
   monthText: {
     fontSize: 18,
     fontFamily: theme.fonts.semibold,
-    color: '#000',
+    color: theme.colors.onSurfaceVariant,
   },
   weekDaysContainer: {
     flexDirection: 'row',
@@ -471,9 +471,9 @@ completedSection: {
     opacity: 0.3,
   },
   calendarDayText: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: theme.fonts.bold,
-    color: '#000',
+    color: theme.colors.onSurfaceVariant,
   },
   calendarDayTextSelected: {
     color: '#fff',
