@@ -278,7 +278,6 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
           onPress={() => setIsOpen(!isOpen)}
         >
           <Text style={styles.dropdownText}>{value}</Text>
-          <Text style={styles.dropdownArrow}>{isOpen ? '▲' : '▼'}</Text>
         </TouchableOpacity>
         
         {isOpen && (
@@ -423,7 +422,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       {data.isDateFlexible && !data.isTimeFlexible && (
         <View style={styles.flexibleDescriptionContainer}>
           <Text style={styles.flexibleDescription}>
-            📅 Any date works for you - we'll show all available options
+            Any date works for you - we'll show all available options
           </Text>
         </View>
       )}
@@ -451,7 +450,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       {data.isDateFlexible && data.isTimeFlexible && (
         <View style={styles.flexibleDescriptionContainer}>
           <Text style={styles.flexibleDescription}>
-            🗓️ Completely flexible - any date and time works for you
+            Completely flexible - any date and time works for you
           </Text>
         </View>
       )}
@@ -459,7 +458,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       {!data.isDateFlexible && data.isTimeFlexible && (
         <View style={styles.flexibleDescriptionContainer}>
           <Text style={styles.flexibleDescription}>
-            ⏰ Any time works for you - morning, afternoon, or evening
+            Any time works for you - morning, afternoon, or evening
           </Text>
         </View>
       )}
@@ -745,7 +744,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 0,
   },
   timeColon: {
     fontSize: 16,
@@ -777,11 +776,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
   },
-  dropdownArrow: {
-    fontSize: 10,
-    color: '#666',
-    marginLeft: 4,
-  },
   dropdownList: {
     position: 'absolute',
     top: '100%',
@@ -804,7 +798,7 @@ const styles = StyleSheet.create({
     maxHeight: 120,
   },
   dropdownItem: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 0,
     paddingVertical: 8,
   },
   dropdownItemText: {
