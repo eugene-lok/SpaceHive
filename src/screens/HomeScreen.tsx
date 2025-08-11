@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text } from 'react-native-paper';
+import { Text, Chip } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Space, PlanningOption } from '../types';
@@ -17,41 +17,58 @@ interface Props {
   navigation: HomeScreenNavigationProp;
 }
 
-// Mock data
+// Mock data - 4 cards matching the Figma design
 const trendingSpaces: Space[] = [
   {
     id: 1,
-    title: 'Cozy Private City View Condo',
-    price: '$35/hour',
+    title: 'Modern Condo with Skyline View',
+    price: '$35 hour',
     rating: 4.92,
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
-    location: '6-10PM, Jul 4 • 5 Adults • Downtown, Calgary',
-    instantBooking: true,
+    location: 'Downtown, Calgary',
   },
   {
     id: 2,
-    title: 'High-rise Cozy Room',
-    price: '$30/hour',
-    rating: 4.86,
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop',
-    location: 'Modern & Minimal',
+    title: 'Bright Room with Balcony',
+    price: '$30 hour',
+    rating: 4.66,
+    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+    location: 'Kensington, Calgary',
+  },
+  {
+    id: 3,
+    title: 'Upscale Meeting Room',
+    price: '$40 hour',
+    rating: 4.70,
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    location: 'Beltline, Calgary',
+  },
+  {
+    id: 4,
+    title: 'Sunlit Garden Room with Plants',
+    price: '$28 hour',
+    rating: 4.88,
+    image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&h=300&fit=crop',
+    location: 'Hillhurst, Calgary',
   }
 ];
 
 const justForYouSpaces: Space[] = [
   {
-    id: 3,
-    title: 'Modern Office Space',
-    price: '$25/hour',
-    rating: 4.75,
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop',
+    id: 5,
+    title: 'Cozy Living Room',
+    price: '$32 hour',
+    rating: 4.85,
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop',
+    location: 'Mission, Calgary',
   },
   {
-    id: 4,
-    title: 'Cozy Living Room',
-    price: '$20/hour',
-    rating: 4.68,
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+    id: 6,
+    title: 'Modern Office Space',
+    price: '$45 hour',
+    rating: 4.91,
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop',
+    location: 'Eau Claire, Calgary',
   }
 ];
 
@@ -59,7 +76,7 @@ const planningOptions: PlanningOption[] = [
   { id: 1, title: 'Party', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&h=150&fit=crop' },
   { id: 2, title: 'Anniversary', image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=150&h=150&fit=crop' },
   { id: 3, title: 'Hobby Club', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=150&h=150&fit=crop' },
-  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' },
+  { id: 4, title: 'Work', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&h=150&fit=crop' }
 ];
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
@@ -121,20 +138,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     </View>
   );
 
-  const renderJustForYouSpace = ({ item }: { item: Space }) => (
-    <View style={styles.justForYouSpace}>
-      <View style={styles.justForYouImagePlaceholder} />
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Search Button */}
-        <SearchBar 
-          placeholder="Plan your next gathering — start here!"
-          onPress={handleSearchPress}
-        />
+        {/* Search Bar */}
+        <SearchBar />
         
         {/* What are you planning? */}
         <View style={styles.section}>
@@ -161,7 +169,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               <SpaceCard
                 space={item}
                 onPress={() => handleSpacePress(item)}
-                onMessageHost={() => handleMessageHost(item)}
               />
             )}
             horizontal
@@ -177,7 +184,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           </Text>
           <FlatList
             data={justForYouSpaces}
-            renderItem={renderJustForYouSpace}
+            renderItem={({ item }) => (
+              <SpaceCard
+                space={item}
+                onPress={() => handleSpacePress(item)}
+              />
+            )}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
@@ -231,18 +243,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
     color: theme.colors.onSurface,
-  },
-  justForYouSpace: {
-    width: 160,
-    height: 120,
-    marginRight: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
-  },
-  justForYouImagePlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.colors.surfaceVariant,
   },
   bottomSpacer: {
     height: 100, // Space for bottom navigation
