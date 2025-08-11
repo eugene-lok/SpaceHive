@@ -263,7 +263,7 @@ completedSection: {
     backgroundColor: '#f0f0f0',
     borderRadius: 25,
     padding: 4,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   toggleButton: {
     flex: 1,
@@ -289,7 +289,7 @@ completedSection: {
     fontFamily: theme.fonts.semibold
   },
   searchContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   searchInputContainer: {
     flexDirection: 'row',
@@ -300,7 +300,7 @@ completedSection: {
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom: 12,
+    marginBottom: theme.spacing.xs,
     
   },
   searchIcon: {
@@ -319,7 +319,7 @@ completedSection: {
   suggestionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: theme.spacing.sm,
     paddingHorizontal: 4,
   },
   locationIcon: {
@@ -331,14 +331,14 @@ completedSection: {
     color: theme.colors.onSurfaceDisabled
   },
   pinIcon: {
-    fontSize: 16,
+    fontSize: 18,
     marginRight: 10,
     color: theme.colors.onSurfaceDisabled
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: theme.spacing.md,
   },
   clearButton: {
   flex: 1,

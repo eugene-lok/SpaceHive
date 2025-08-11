@@ -278,26 +278,26 @@ completedSection: {
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: theme.fonts.bold,
     color: '#000',
     marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: theme.fonts.semibold,
     color: '#666',
     marginBottom: 4,
   },
   sectionValue: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
   },
   checkmark: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -308,8 +308,8 @@ completedSection: {
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#666',
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.onSurface,
     marginBottom: 20,
   },
   priceRangeContainer: {
@@ -318,8 +318,8 @@ completedSection: {
     marginBottom: 16,
   },
   priceLabel: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 12,
+    fontFamily: theme.fonts.bold,
     color: '#000',
   },
   sliderWrapper: {
@@ -352,7 +352,7 @@ completedSection: {
   activeRange: {
     position: 'absolute',
     height: 4,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     borderRadius: 2,
     top: '50%',
     marginTop: -2,
@@ -366,7 +366,7 @@ completedSection: {
   thumbStyle: {
     width: 20,
     height: 20,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.buttonPrimary,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -381,14 +381,16 @@ completedSection: {
     marginBottom: 24,
   },
   priceInput: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFFFFF',
     borderRadius: 8,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: theme.spacing.sm,
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: 'left',
     minWidth: 80,
     marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.buttonDisabled
   },
   inputSeparator: {
     fontSize: 18,
@@ -409,8 +411,8 @@ completedSection: {
   },
   clearButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontFamily: theme.fonts.semibold,
+    color: '#000000',
     textAlign: 'center',
     textDecorationLine: 'underline',
   },

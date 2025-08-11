@@ -603,11 +603,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 25,
     padding: 4,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   toggleButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 4,
     alignItems: 'center',
     borderRadius: 21,
   },
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 4,
   },
   navButton: {
     padding: 8,
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
   },
   weekDaysContainer: {
     flexDirection: 'row',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   weekDay: {
     flex: 1,
@@ -671,7 +671,8 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 50,
+    minHeight: 40,
   },
   calendarDaySelected: {
     backgroundColor: '#000',
@@ -680,7 +681,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   calendarDayText: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: theme.fonts.bold,
     color: theme.colors.onSurfaceVariant,
   },
@@ -694,7 +695,7 @@ const styles = StyleSheet.create({
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 0,
   },
   clearButton: {
     flex: 1,
