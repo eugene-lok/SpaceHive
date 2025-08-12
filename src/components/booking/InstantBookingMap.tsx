@@ -23,17 +23,14 @@ const InstantBookingMap: React.FC<InstantBookingMapProps> = ({
 
   // Default region (Calgary)
   const defaultRegion: Region = {
-  latitude: 37.78825,
-  longitude: -122.4324, // San Francisco
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
+    latitude: 51.0447,
+    longitude: -114.0719,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
 
   useEffect(() => {
     requestLocationPermission();
-    
-    // Debug: Check API key
-    console.log('🔑 API Key:', process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY);
     
     // Debug timeout - force hide loading after 5 seconds
     const timeout = setTimeout(() => {
@@ -123,15 +120,16 @@ const InstantBookingMap: React.FC<InstantBookingMapProps> = ({
   return (
     <View style={styles.container}>
       <MapView
-        style={[styles.map, { width: '100%', height: 400 }]}
+        style={styles.map}
         initialRegion={initialRegion}
-        provider={undefined}
+        provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
         onMapReady={handleMapReady}
         onLayout={handleMapLayout}
-        showsUserLocation={false}
+        showsUserLocation={locationPermission}
         showsMyLocationButton={false}
         rotateEnabled={false}
         pitchEnabled={false}
+        loadingEnabled={true}
         zoomControlEnabled={true}
         mapType="standard"
       >
@@ -141,14 +139,8 @@ const InstantBookingMap: React.FC<InstantBookingMapProps> = ({
       {!mapReady && (
         <View style={styles.loadingOverlay}>
           <Text style={styles.loadingText}>Loading map...</Text>
-          <Text style={styles.debugText}>mapReady: {mapReady.toString()}</Text>
         </View>
       )}
-      
-      {/* Debug info overlay */}
-      <View style={styles.debugInfo}>
-        <Text style={styles.debugText}>Map Ready: {mapReady.toString()}</Text>
-      </View>
     </View>
   );
 };
@@ -204,19 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     fontWeight: '500',
-  },
-  debugInfo: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    padding: 8,
-    borderRadius: 4,
-    zIndex: 1000,
-  },
-  debugText: {
-    color: '#fff',
-    fontSize: 12,
   },
 });
 
