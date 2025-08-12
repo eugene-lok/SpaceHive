@@ -156,9 +156,6 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           <Text style={styles.sectionLabel}>Budget</Text>
           <Text style={styles.sectionValue}>${data.min} - ${data.max} per hour</Text>
         </View>
-        <View style={styles.checkmark}>
-          <Text style={styles.checkmarkText}>✓</Text>
-        </View>
       </TouchableOpacity>
     );
   }
@@ -292,14 +289,6 @@ completedSection: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-  },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.buttonPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   checkmarkText: {
     color: '#fff',

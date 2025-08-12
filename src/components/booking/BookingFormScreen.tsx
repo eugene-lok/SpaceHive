@@ -14,20 +14,91 @@ import LocationSection from '../../components/booking/LocationSection';
 import DateTimeSection from '../../components/booking/DateTimeSection';
 import GuestsSection from '../../components/booking/GuestsSection';
 import BudgetSection from '../../components/booking/BudgetSection';
+import {theme} from '../../theme/theme'
 
 interface BookingFormScreenProps {
   onBack: () => void;
   onClose: () => void;
 }
+interface StepIndicatorProps {
+  isActive: boolean;
+  isCompleted: boolean;
+  height: number;
+}
+
+const StepIndicator: React.FC<StepIndicatorProps> = ({
+  isActive,
+  isCompleted,
+  height,
+}) => {
+  const getBarColor = () => {
+    if (isCompleted) return theme.colors.success;
+    return '#e0e0e0'; // Grey for incomplete
+  };
+
+  const getThumbStyle = () => {
+    if (isCompleted) {
+      // Filled thumb for completed
+      return {
+        backgroundColor: theme.colors.success,
+        borderColor: theme.colors.success,
+      };
+    } else if (isActive) {
+      // Filled thumb for active
+      return {
+        backgroundColor: theme.colors.success,
+        borderColor: '#fff',
+      };
+    } else {
+      // Outlined thumb for inactive/incomplete
+      return {
+        backgroundColor: theme.colors.background,
+        borderColor: '#fbfbfb',
+      };
+    }
+  };
+
+  return (
+    <View style={styles.stepIndicatorContainer}>
+      {/* Vertical Bar */}
+      <View
+        style={[
+          styles.stepBar,
+          {
+            height: Math.max(height - 12, 20), // Account for thumb size
+            backgroundColor: getBarColor(),
+          },
+        ]}
+      />
+      {/* Thumb/Circle */}
+      <View
+        style={[
+          styles.stepThumb,
+          getThumbStyle(),
+        ]}
+      >
+        {isCompleted && (
+          <Text style={styles.checkmarkText}>✓</Text>
+        )}
+      </View>
+    </View>
+  );
+};
 
 const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
-  onBack,
   onClose,
 }) => {
   const [formState, setFormState] = useState<FormState>({
     activeSection: 'location',
     completedSections: [],
     formData: INITIAL_FORM_DATA,
+  });
+
+  const [sectionHeights, setSectionHeights] = useState({
+    location: 0,
+    dateTime: 0,
+    guests: 0,
+    budget: 0,
   });
 
   const updateFormData = useCallback((updates: Partial<BookingFormData>) => {
@@ -145,15 +216,19 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
     return text;
   };
 
+  const handleSectionLayout = (section: FormSection, height: number) => {
+    setSectionHeights(prev => ({
+      ...prev,
+      [section]: height,
+    }));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <Text style={styles.backArrow}>←</Text>
-        </TouchableOpacity>
         
         <View style={styles.headerTabs}>
           <Text style={styles.activeTab}>Instant Book</Text>
@@ -166,60 +241,101 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Progress Indicators */}
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, isLocationComplete() && styles.progressBarComplete]} />
-          <View style={[styles.progressBar, isDateTimeComplete() && styles.progressBarComplete]} />
-          <View style={[styles.progressBar, isGuestsComplete() && styles.progressBarComplete]} />
-          <View style={[styles.progressBar, isBudgetComplete() && styles.progressBarComplete]} />
+
+        {/* Location Section with Step Indicator */}
+        <View style={styles.sectionWithIndicator}>
+          <StepIndicator
+            isActive={formState.activeSection === 'location'}
+            isCompleted={isLocationComplete()}
+            height={sectionHeights.location}
+          />
+          <View 
+            style={styles.sectionWrapper}
+            onLayout={(event) => handleSectionLayout('location', event.nativeEvent.layout.height)}
+          >
+            <LocationSection
+              isActive={formState.activeSection === 'location'}
+              isCompleted={isLocationComplete()}
+              displayText={getLocationDisplayText()}
+              data={formState.formData.location}
+              onPress={() => setActiveSection('location')}
+              onUpdate={(location) => updateFormData({ location })}
+              onSave={() => completeSection('location')}
+              onClear={() => clearSection('location')}
+            />
+          </View>
         </View>
 
-        {/* Location Section */}
-        <LocationSection
-          isActive={formState.activeSection === 'location'}
-          isCompleted={isLocationComplete()}
-          displayText={getLocationDisplayText()}
-          data={formState.formData.location}
-          onPress={() => setActiveSection('location')}
-          onUpdate={(location) => updateFormData({ location })}
-          onSave={() => completeSection('location')}
-          onClear={() => clearSection('location')}
-        />
+        {/* Date & Time Section with Step Indicator */}
+        <View style={styles.sectionWithIndicator}>
+          <StepIndicator
+            isActive={formState.activeSection === 'dateTime'}
+            isCompleted={isDateTimeComplete()}
+            height={sectionHeights.dateTime}
+          />
+          <View 
+            style={styles.sectionWrapper}
+            onLayout={(event) => handleSectionLayout('dateTime', event.nativeEvent.layout.height)}
+          >
+            <DateTimeSection
+              isActive={formState.activeSection === 'dateTime'}
+              isCompleted={isDateTimeComplete()}
+              displayText={getDateTimeDisplayText()}
+              data={formState.formData.dateTime}
+              onPress={() => setActiveSection('dateTime')}
+              onUpdate={(dateTime) => updateFormData({ dateTime })}
+              onSave={() => completeSection('dateTime')}
+              onClear={() => clearSection('dateTime')}
+            />
+          </View>
+        </View>
 
-        {/* Date & Time Section */}
-        <DateTimeSection
-          isActive={formState.activeSection === 'dateTime'}
-          isCompleted={isDateTimeComplete()}
-          displayText={getDateTimeDisplayText()}
-          data={formState.formData.dateTime}
-          onPress={() => setActiveSection('dateTime')}
-          onUpdate={(dateTime) => updateFormData({ dateTime })}
-          onSave={() => completeSection('dateTime')}
-          onClear={() => clearSection('dateTime')}
-        />
+        {/* Guests Section with Step Indicator */}
+        <View style={styles.sectionWithIndicator}>
+          <StepIndicator
+            isActive={formState.activeSection === 'guests'}
+            isCompleted={isGuestsComplete()}
+            height={sectionHeights.guests}
+          />
+          <View 
+            style={styles.sectionWrapper}
+            onLayout={(event) => handleSectionLayout('guests', event.nativeEvent.layout.height)}
+          >
+            <GuestsSection
+              isActive={formState.activeSection === 'guests'}
+              isCompleted={isGuestsComplete()}
+              displayText={getGuestsDisplayText()}
+              data={formState.formData.guests}
+              onPress={() => setActiveSection('guests')}
+              onUpdate={(guests) => updateFormData({ guests })}
+              onSave={() => completeSection('guests')}
+              onClear={() => clearSection('guests')}
+            />
+          </View>
+        </View>
 
-        {/* Guests Section */}
-        <GuestsSection
-          isActive={formState.activeSection === 'guests'}
-          isCompleted={isGuestsComplete()}
-          displayText={getGuestsDisplayText()}
-          data={formState.formData.guests}
-          onPress={() => setActiveSection('guests')}
-          onUpdate={(guests) => updateFormData({ guests })}
-          onSave={() => completeSection('guests')}
-          onClear={() => clearSection('guests')}
-        />
-
-        {/* Budget Section */}
-        <BudgetSection
-          isActive={formState.activeSection === 'budget'}
-          isCompleted={isBudgetComplete()}
-          data={formState.formData.budget}
-          onPress={() => setActiveSection('budget')}
-          onUpdate={(budget) => updateFormData({ budget })}
-          onSave={() => completeSection('budget')}
-          onClear={() => clearSection('budget')}
-        />
+        {/* Budget Section with Step Indicator */}
+        <View style={styles.sectionWithIndicator}>
+          <StepIndicator
+            isActive={formState.activeSection === 'budget'}
+            isCompleted={isBudgetComplete()}
+            height={sectionHeights.budget}
+          />
+          <View 
+            style={styles.sectionWrapper}
+            onLayout={(event) => handleSectionLayout('budget', event.nativeEvent.layout.height)}
+          >
+            <BudgetSection
+              isActive={formState.activeSection === 'budget'}
+              isCompleted={isBudgetComplete()}
+              data={formState.formData.budget}
+              onPress={() => setActiveSection('budget')}
+              onUpdate={(budget) => updateFormData({ budget })}
+              onSave={() => completeSection('budget')}
+              onClear={() => clearSection('budget')}
+            />
+          </View>
+        </View>
       </ScrollView>
 
       {/* Floating Save Button - appears when all sections complete */}
@@ -232,7 +348,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
               console.log('Form submitted with data:', formState.formData);
             }}
           >
-            <Text style={styles.floatingSaveText}>Save</Text>
+            <Text style={styles.floatingSaveText}>Search</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -244,13 +360,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+    marginTop: 4
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 8,
+    marginTop: 36
   },
   backButton: {
     width: 32,
@@ -297,21 +415,45 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 4,
+    marginTop: theme.spacing.lg
   },
-  progressContainer: {
+  sectionWithIndicator: {
     flexDirection: 'row',
-    marginVertical: 20,
+    alignItems: 'flex-start',
     paddingLeft: 20,
+    marginTop: theme.spacing.xs
   },
-  progressBar: {
-    width: 4,
-    height: 20,
+  stepIndicatorContainer: {
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  stepBar: {
+    width: 2,
     backgroundColor: '#e0e0e0',
-    marginRight: 12,
     borderRadius: 2,
   },
-  progressBarComplete: {
-    backgroundColor: '#4CAF50',
+  stepThumb: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 4,
+    position: 'absolute',
+    top: 0,
+    justifyContent: 'center',
+    alignItems: 'center', 
+  },
+  checkmarkText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    lineHeight: 12,
+    textAlign: 'center',
+    includeFontPadding: false,
+    paddingTop: 2
+  },
+  sectionWrapper: {
+    flex: 1,
+    marginRight: 20,
   },
   floatingSaveContainer: {
     position: 'absolute',
@@ -326,7 +468,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#e0e0e0',
   },
   floatingSaveButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: theme.colors.buttonPrimary,
     paddingVertical: 18,
     borderRadius: 12,
     shadowColor: '#000',

@@ -76,9 +76,6 @@ const LocationSection: React.FC<LocationSectionProps> = ({
           <Text style={styles.sectionLabel}>Location</Text>
           <Text style={styles.sectionValue}>{displayText}</Text>
         </View>
-        <View style={styles.checkmark}>
-          <Text style={styles.checkmarkText}>✓</Text>
-        </View>
       </TouchableOpacity>
     );
   }
@@ -244,19 +241,6 @@ completedSection: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-  },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.buttonPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmarkText: {
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: theme.fonts.semibold
   },
   toggleContainer: {
     flexDirection: 'row',

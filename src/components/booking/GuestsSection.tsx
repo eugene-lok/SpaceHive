@@ -88,9 +88,6 @@ const GuestsSection: React.FC<GuestsSectionProps> = ({
           <Text style={styles.sectionLabel}>Guests</Text>
           <Text style={styles.sectionValue}>{displayText}</Text>
         </View>
-        <View style={styles.checkmark}>
-          <Text style={styles.checkmarkText}>✓</Text>
-        </View>
       </TouchableOpacity>
     );
   }
@@ -211,14 +208,6 @@ completedSection: {
     fontWeight: '600',
     color: '#000',
   },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.buttonPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   checkmarkText: {
     color: '#fff',
     fontSize: 14,
@@ -231,9 +220,7 @@ completedSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    paddingVertical: 14,
   },
   counterInfo: {
     flex: 1,
@@ -245,8 +232,9 @@ completedSection: {
     marginBottom: 4,
   },
   counterSubtitle: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 12,
+    color: '#888',
+    fontFamily: theme.fonts.bold
   },
   counterControls: {
     flexDirection: 'row',
@@ -255,7 +243,7 @@ completedSection: {
   counterButton: {
     width: 36,
     height: 36,
-    borderRadius: 36,
+    borderRadius: 18,
     borderWidth: 1,
     borderColor: '#ddd',
     justifyContent: 'center',
@@ -267,9 +255,10 @@ completedSection: {
     borderColor: '#eee',
   },
   counterButtonText: {
-    fontSize: 24,
-    fontFamily: theme.fonts.semibold,
+    fontSize: 28,
+    fontFamily: theme.fonts.medium,
     color: '#000',
+    lineHeight: 28
   },
   counterButtonTextDisabled: {
     color: '#ccc',

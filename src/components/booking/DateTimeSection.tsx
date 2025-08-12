@@ -325,9 +325,6 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
           <Text style={styles.sectionLabel}>Date & Time</Text>
           <Text style={styles.sectionValue}>{displayText}</Text>
         </View>
-        <View style={styles.checkmark}>
-          <Text style={styles.checkmarkText}>✓</Text>
-        </View>
       </TouchableOpacity>
     );
   }
@@ -584,14 +581,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-  },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.buttonPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   checkmarkText: {
     color: '#fff',
