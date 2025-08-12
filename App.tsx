@@ -8,9 +8,11 @@ import { StatusBar } from 'expo-status-bar';
 import LandingScreen from './src/screens/LandingScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import InstantBookingScreen from './src/screens/booking/InstantBookingScreen';
 
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
+import { BookingFormData } from './src/types/booking';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -20,10 +22,12 @@ export type RootStackParamList = {
   Landing: undefined;
   Onboarding: undefined;
   Home: undefined;
+  InstantBooking: {
+    formData: BookingFormData;
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
-
 
 const App: React.FC = () => {
   const fontsLoaded = useCustomFonts();
@@ -47,6 +51,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="InstantBooking" component={InstantBookingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

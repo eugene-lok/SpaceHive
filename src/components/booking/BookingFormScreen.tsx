@@ -16,6 +16,11 @@ import GuestsSection from '../../components/booking/GuestsSection';
 import BudgetSection from '../../components/booking/BudgetSection';
 import {theme} from '../../theme/theme'
 
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../App';
+
+type BookingFormNavigationProp = StackNavigationProp<RootStackParamList>;
 interface BookingFormScreenProps {
   onBack: () => void;
   onClose: () => void;
@@ -100,6 +105,8 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
     guests: 0,
     budget: 0,
   });
+
+  const navigation = useNavigation<BookingFormNavigationProp>();
 
   const updateFormData = useCallback((updates: Partial<BookingFormData>) => {
     setFormState(prev => ({
@@ -223,6 +230,16 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
     }));
   };
 
+  const handleSearchPress = () => {
+    if (allSectionsComplete()) {
+      navigation.navigate('InstantBooking', {
+        formData: formState.formData,
+      });
+    } else {
+      console.log('Form not complete yet');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
@@ -343,10 +360,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
         <View style={styles.floatingSaveContainer}>
           <TouchableOpacity 
             style={styles.floatingSaveButton}
-            onPress={() => {
-              // TODO: Handle form submission in future implementation
-              console.log('Form submitted with data:', formState.formData);
-            }}
+            onPress={handleSearchPress} 
           >
             <Text style={styles.floatingSaveText}>Search</Text>
           </TouchableOpacity>
