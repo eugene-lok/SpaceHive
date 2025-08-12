@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   borderRadius: 16,
   padding: 20,
   marginBottom: 16,
-  marginHorizontal: 16, 
+  marginHorizontal: 8, 
   shadowColor: '#000',
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
@@ -199,7 +199,7 @@ activeSection: {
   borderRadius: 16,
   padding: 20,
   marginBottom: 16,
-  marginHorizontal: 16, 
+  marginHorizontal: 8, 
   shadowColor: '#000',
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
@@ -212,7 +212,7 @@ completedSection: {
   borderRadius: 16,
   padding: 20,
   marginBottom: 16,
-  marginHorizontal: 16, 
+  marginHorizontal: 8, 
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -241,6 +241,11 @@ completedSection: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
+  },
+  checkmarkText: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold
   },
   toggleContainer: {
     flexDirection: 'row',

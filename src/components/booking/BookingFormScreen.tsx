@@ -389,14 +389,14 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: theme.fonts.semibold,
     color: '#000',
     textDecorationLine: 'underline',
     marginRight: 20,
   },
   inactiveTab: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: theme.fonts.semibold,
     color: '#999',
   },
   closeButton: {
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   closeText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: theme.fonts.bold,
   },
   content: {
     flex: 1,
@@ -445,6 +445,7 @@ const styles = StyleSheet.create({
   checkmarkText: {
     color: '#fff',
     fontSize: 12,
+    fontFamily: theme.fonts.medium,
     fontWeight: 'bold',
     lineHeight: 12,
     textAlign: 'center',
@@ -479,7 +480,7 @@ const styles = StyleSheet.create({
   },
   floatingSaveText: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
