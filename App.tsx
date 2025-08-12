@@ -1,5 +1,5 @@
 // App.tsx
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
@@ -30,6 +30,7 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
+  const [isReady, setIsReady] = useState(false);
   const fontsLoaded = useCustomFonts();
 
   useEffect(() => {
@@ -42,7 +43,10 @@ const App: React.FC = () => {
     return null;
   }
   return (
-    <NavigationContainer>
+    <NavigationContainer
+    onReady={() => setIsReady(true)}
+    onStateChange={() => console.log('Navigation state changed')}
+    >
       <StatusBar style="dark" backgroundColor="white" />
       <Stack.Navigator 
         initialRouteName="Landing"
