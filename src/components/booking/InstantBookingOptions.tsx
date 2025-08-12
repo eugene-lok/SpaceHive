@@ -1,5 +1,5 @@
-// src/components/booking/InstantBookingOptions.tsx
-import React, { useRef, useEffect } from 'react';
+// src/components/booking/InstantBookingOptions.tsx - Updated with scroll-to-card
+import React, { useRef, useEffect, useCallback } from 'react';
 import { 
   View, 
   Text,
@@ -16,6 +16,7 @@ const { height: screenHeight } = Dimensions.get('window');
 
 interface InstantBookingOptionsProps {
   locations: Location[];
+  selectedLocationId?: number;
   onLocationPress: (location: Location) => void;
   isExpanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
@@ -23,19 +24,21 @@ interface InstantBookingOptionsProps {
 
 const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   locations,
+  selectedLocationId,
   onLocationPress,
   isExpanded,
   onExpandedChange,
 }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const lastOffset = useRef(0);
+  // NEW: FlatList ref for scroll-to-card functionality
+  const flatListRef = useRef<FlatList>(null);
 
   // Heights and positioning
-  const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 3; // Only 1/3 visible when collapsed
-  const FULL_COMPONENT_HEIGHT = screenHeight * 0.85; // Full component height when expanded
-  const SUMMARY_HEIGHT = 80; // Approximate summary + safe area height
+  const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 3;
+  const FULL_COMPONENT_HEIGHT = screenHeight * 0.85;
+  const SUMMARY_HEIGHT = 80;
   
-  // Calculate how far up it can scroll (to meet bottom of summary)
   const MAX_SCROLL_UP = -(screenHeight - VISIBLE_COLLAPSED_HEIGHT - SUMMARY_HEIGHT);
 
   useEffect(() => {
@@ -49,7 +52,32 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
     }).start();
   }, [isExpanded, translateY, MAX_SCROLL_UP]);
 
-  // ONLY handle responds to pan gestures
+  // NEW: Scroll to selected location card
+  const scrollToLocation = useCallback((locationId: number) => {
+    if (!flatListRef.current) return;
+    
+    const selectedIndex = locations.findIndex(location => location.id === locationId);
+    if (selectedIndex === -1) return;
+
+    // Fast animated scroll to bring selected card to top
+    flatListRef.current.scrollToIndex({
+      index: selectedIndex,
+      animated: true,
+      viewPosition: 0, // 0 = top of visible area
+    });
+  }, [locations]);
+
+  // NEW: Effect to scroll when selectedLocationId changes
+  useEffect(() => {
+    if (selectedLocationId !== undefined) {
+      // Small delay to ensure FlatList is ready
+      setTimeout(() => {
+        scrollToLocation(selectedLocationId);
+      }, 100);
+    }
+  }, [selectedLocationId, scrollToLocation]);
+
+  // Pan responder for drag gestures
   const handlePanResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: (_, gestureState) => {
@@ -60,7 +88,6 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
       translateY.setValue(0);
     },
     onPanResponderMove: (_, gestureState) => {
-      // Constrain movement: 0 (collapsed) to MAX_SCROLL_UP (expanded)
       const constrainedDy = Math.max(MAX_SCROLL_UP - lastOffset.current, Math.min(-lastOffset.current, gestureState.dy));
       translateY.setValue(constrainedDy);
     },
@@ -71,7 +98,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
       let shouldExpand = false;
       
       if (Math.abs(gestureState.vy) > 0.5) {
-        shouldExpand = gestureState.vy < 0; // Negative velocity = upward
+        shouldExpand = gestureState.vy < 0;
       } else {
         shouldExpand = currentOffset < threshold;
       }
@@ -95,6 +122,19 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
     transform: [{ translateY }],
   };
 
+  // NEW: Handle scroll errors gracefully
+  const handleScrollToIndexFailed = useCallback((info: any) => {
+    console.log('Scroll to index failed:', info);
+    // Fallback: scroll to offset
+    if (flatListRef.current) {
+      const offset = info.index * 200; // Approximate card height
+      flatListRef.current.scrollToOffset({ 
+        offset, 
+        animated: true 
+      });
+    }
+  }, []);
+
   return (
     <Animated.View style={[styles.container, { height: FULL_COMPONENT_HEIGHT }, containerStyle]}>
       {/* Handle - ONLY this responds to drag gestures */}
@@ -108,13 +148,15 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
         </View>
       </View>
       
-      {/* FlatList - NO pan handlers, only scrolls content */}
+      {/* FlatList with ref and scroll functionality */}
       <FlatList
+        ref={flatListRef}
         data={locations}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <InstantBookingCard
             location={item}
+            isSelected={selectedLocationId === item.id}
             onPress={onLocationPress}
           />
         )}
@@ -122,6 +164,12 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
         contentContainerStyle={styles.listContent}
         scrollEnabled={true}
         bounces={false}
+        // NEW: Handle scroll errors
+        onScrollToIndexFailed={handleScrollToIndexFailed}
+        // Performance optimizations
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={5}
+        windowSize={10}
       />
     </Animated.View>
   );
@@ -130,8 +178,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    // Position so only bottom 1/3 is visible initially
-    bottom: -(screenHeight * 0.85 - screenHeight / 3), // Hide top portion, show only bottom 1/3
+    bottom: -(screenHeight * 0.85 - screenHeight / 3),
     left: 0,
     right: 0,
     backgroundColor: '#fff',
@@ -149,7 +196,6 @@ const styles = StyleSheet.create({
   handleContainer: {
     paddingVertical: 12,
     alignItems: 'center',
-    // Increase touch area for better UX
     paddingHorizontal: 50,
   },
   handle: {

@@ -1,4 +1,4 @@
-// src/components/booking/InstantBookingCard.tsx
+// src/components/booking/InstantBookingCard.tsx - Updated with selection state
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,16 +7,22 @@ import { theme } from '../../theme/theme';
 
 interface InstantBookingCardProps {
   location: Location;
+  isSelected?: boolean;
   onPress: (location: Location) => void;
 }
 
 const InstantBookingCard: React.FC<InstantBookingCardProps> = ({
   location,
+  isSelected = false,
   onPress,
 }) => {
   return (
     <TouchableOpacity 
-      style={styles.container} 
+      style={[
+        styles.container,
+        // NEW: Enhanced shadow when selected
+        isSelected && styles.selectedContainer
+      ]} 
       onPress={() => onPress(location)}
       activeOpacity={0.95}
     >
@@ -63,6 +69,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 16,
     marginVertical: 8,
+    overflow: 'hidden',
+    // Default shadow
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: {
@@ -71,7 +79,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    overflow: 'hidden',
+  },
+  // NEW: Enhanced shadow for selected state
+  selectedContainer: {
+    elevation: 8,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    // Subtle border to enhance selection
+    borderWidth: 1,
+    borderColor: theme.colors.primary || '#419E9D',
   },
   imageContainer: {
     position: 'relative',
@@ -97,15 +117,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     left: 12,
-    backgroundColor: '#FFD700',
+    backgroundColor: theme.colors.primary || '#419E9D',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 6,
   },
   badgeText: {
-    fontSize: 11,
-    fontFamily: theme.fonts.bold,
-    color: '#000',
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '600',
+    textTransform: 'uppercase',
   },
   content: {
     padding: 16,
@@ -113,55 +134,54 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 4,
   },
   title: {
-    flex: 1,
     fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.onSurface,
+    fontWeight: '600',
+    color: '#000',
+    flex: 1,
     marginRight: 8,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
   },
   rating: {
     fontSize: 14,
-    fontFamily: theme.fonts.semibold,
-    color: theme.colors.onSurface,
+    fontWeight: '500',
+    color: '#000',
+    marginLeft: 2,
   },
   distance: {
     fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.onSurfaceVariant,
+    color: '#666',
     marginBottom: 2,
   },
   bookingInfo: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.onSurfaceVariant,
-    marginBottom: 12,
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 8,
   },
   priceRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   price: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   priceAmount: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.onSurface,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
   },
   priceUnit: {
     fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.onSurface,
+    fontWeight: '400',
+    color: '#666',
   },
 });
 

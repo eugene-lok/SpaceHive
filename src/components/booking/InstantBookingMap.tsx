@@ -1,16 +1,49 @@
-// src/components/booking/InstantBookingMap.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, Platform } from 'react-native';
-import MapView, { Marker, Region, PROVIDER_GOOGLE } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { Location as LocationType, CALGARY_CENTER } from '../../types/instantBooking';
+// src/components/booking/InstantBookingMap.tsx - Final optimized version
+import React, { useState, useCallback, memo } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import MapView, { Marker, Region } from 'react-native-maps';
+import { Location } from '../../types/instantBooking';
 import { theme } from '../../theme/theme';
 
 interface InstantBookingMapProps {
-  locations: LocationType[];
+  locations: Location[];
   selectedLocationId?: number;
-  onMarkerPress: (location: LocationType) => void;
+  onMarkerPress: (location: Location) => void;
 }
+
+// Memoized marker component to prevent unnecessary re-renders
+const MapMarker = memo<{
+  location: Location;
+  isSelected: boolean;
+  onPress: (location: Location) => void;
+}>(({ location, isSelected, onPress }) => {
+  const handlePress = useCallback(() => {
+    onPress(location);
+  }, [location, onPress]);
+
+  return (
+    <Marker
+      coordinate={location.coordinates}
+      onPress={handlePress}
+      // CRITICAL: Prevents flickering during map movement
+      tracksViewChanges={false}
+    >
+      <View style={[
+        styles.markerContainer,
+        isSelected && styles.markerSelectedContainer
+      ]}>
+        <Text style={[
+          styles.markerText,
+          isSelected && styles.markerSelectedText
+        ]}>
+          ${location.price}
+        </Text>
+      </View>
+    </Marker>
+  );
+});
+
+MapMarker.displayName = 'MapMarker';
 
 const InstantBookingMap: React.FC<InstantBookingMapProps> = ({
   locations,
@@ -18,122 +51,51 @@ const InstantBookingMap: React.FC<InstantBookingMapProps> = ({
   onMarkerPress,
 }) => {
   const [mapReady, setMapReady] = useState(false);
-  const [userLocation, setUserLocation] = useState<Region | null>(null);
-  const [locationPermission, setLocationPermission] = useState<boolean>(false);
 
-  // Default region (Calgary)
-  const defaultRegion: Region = {
+  // Calgary region optimized for the 3 mock locations
+  const region: Region = {
     latitude: 51.0447,
     longitude: -114.0719,
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
 
-  useEffect(() => {
-    requestLocationPermission();
-    
-    // Debug timeout - force hide loading after 5 seconds
-    const timeout = setTimeout(() => {
-      console.log('⏰ Timeout: Force hiding loader');
-      setMapReady(true);
-    }, 5000);
-    
-    return () => clearTimeout(timeout);
+  const handleMapReady = useCallback(() => {
+    console.log('Map ready!');
+    setMapReady(true);
   }, []);
 
-  const requestLocationPermission = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      
-      if (status === 'granted') {
-        setLocationPermission(true);
-        getCurrentLocation();
-      } else {
-        console.log('Location permission denied');
-        setLocationPermission(false);
-      }
-    } catch (error) {
-      console.error('Error requesting location permission:', error);
-      setLocationPermission(false);
-    }
-  };
-
-  const getCurrentLocation = async () => {
-    try {
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-      
-      const userRegion: Region = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      };
-      
-      setUserLocation(userRegion);
-    } catch (error) {
-      console.error('Error getting current location:', error);
-    }
-  };
-
-  const handleMapReady = () => {
-    console.log('✅ Map ready! Setting mapReady to true');
-    setMapReady(true);
-    console.log('✅ mapReady state should now be:', true);
-  };
-
-  // Add layout event handler for additional debugging
-  const handleMapLayout = () => {
-    console.log('📐 Map layout complete');
-  };
-
-  const renderMarker = (location: LocationType) => {
-    const isSelected = selectedLocationId === location.id;
-    
-    return (
-      <Marker
-        key={location.id}
-        coordinate={location.coordinates}
-        onPress={() => onMarkerPress(location)}
-        title={location.title}
-        description={`$${location.price}/${location.priceUnit}`}
-      >
-        <View style={[
-          styles.markerContainer,
-          isSelected && styles.markerSelectedContainer
-        ]}>
-          <Text style={[
-            styles.markerText,
-            isSelected && styles.markerSelectedText
-          ]}>
-            ${location.price}
-          </Text>
-        </View>
-      </Marker>
-    );
-  };
-
-  // Use user location if available, otherwise use default Calgary region
-  const initialRegion = userLocation || defaultRegion;
+  // Memoized marker press handler to maintain reference stability
+  const handleMarkerPress = useCallback((location: Location) => {
+    onMarkerPress(location);
+  }, [onMarkerPress]);
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={initialRegion}
-        provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
+        initialRegion={region}
         onMapReady={handleMapReady}
-        onLayout={handleMapLayout}
-        showsUserLocation={locationPermission}
+        showsUserLocation={false}
         showsMyLocationButton={false}
         rotateEnabled={false}
         pitchEnabled={false}
-        loadingEnabled={true}
-        zoomControlEnabled={true}
-        mapType="standard"
+        // Performance optimizations
+        moveOnMarkerPress={false}
+        showsCompass={false}
+        showsScale={false}
+        showsTraffic={false}
+        showsIndoors={false}
+        showsBuildings={false}
       >
-        {locations.map(renderMarker)}
+        {locations.map((location) => (
+          <MapMarker
+            key={location.id}
+            location={location}
+            isSelected={selectedLocationId === location.id}
+            onPress={handleMarkerPress}
+          />
+        ))}
       </MapView>
       
       {!mapReady && (
@@ -153,29 +115,36 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  // OPTIMIZED: Consistent pill shape with mobile-first design
   markerContainer: {
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 8,
+    // Mobile-first: Minimum touch target of 44x44pt
+    minHeight: 32,
+    minWidth: 50,
+    // Large borderRadius ensures perfect pill shape
     borderRadius: 20,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Enhanced shadows for better visibility
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
-    shadowRadius: 5,
+    shadowRadius: 6,
     elevation: 5,
-    minWidth: 60,
-    alignItems: 'center',
   },
   markerSelectedContainer: {
-    backgroundColor: '#000',
-    borderColor: '#000',
+    backgroundColor: theme.colors.primary || '#419E9D',
+    borderColor: theme.colors.primary || '#419E9D',
+    // Slightly larger for selected state
     transform: [{ scale: 1.1 }],
   },
   markerText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
     color: '#000',
     textAlign: 'center',
   },
@@ -188,7 +157,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(245, 245, 245, 0.9)',
+    backgroundColor: 'rgba(245, 245, 245, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -199,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InstantBookingMap;
+export default memo(InstantBookingMap);
