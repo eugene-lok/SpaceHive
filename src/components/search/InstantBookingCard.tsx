@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   // Location (was previously title)
   location: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '500',
     color: '#000',
     marginBottom: 2,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   bookingInfo: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 4,
     lineHeight: 18,
   },
   bottomRow: {

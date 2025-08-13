@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     marginVertical: 2, 
   },
   sectionTitle: {
-    fontFamily: theme.fonts.bold,
+    fontFamily: theme.fonts.semibold,
     color: theme.colors.onSurface,
     marginHorizontal: theme.spacing.md,
     marginBottom: theme.spacing.sm,

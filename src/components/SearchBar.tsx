@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     borderRadius: 28, // Pill shape (height/2)
     height: 56,
-    paddingHorizontal: theme.spacing.md,
+    paddingLeft: theme.spacing.lg,
+    paddingRight: theme.spacing.sm,
     paddingVertical: theme.spacing.sm,
     // Normal elevation/shadow
     ...Platform.select({
