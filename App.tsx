@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import LandingScreen from './src/screens/LandingScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
-import InstantBookingScreen from './src/screens/booking/InstantBookingScreen';
+import InstantBookingScreen from './src/screens/search/InstantBookingScreen';
 
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';

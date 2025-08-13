@@ -7,9 +7,9 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../App';
 import { BookingFormData } from '../../types/booking';
 import { Location, MOCK_LOCATIONS } from '../../types/instantBooking';
-import InstantBookingSummary from '../../components/booking/InstantBookingSummary';
-import InstantBookingMap from '../../components/booking/InstantBookingMap';
-import InstantBookingOptions from '../../components/booking/InstantBookingOptions';
+import InstantBookingSummary from '../../components/search/InstantBookingSummary';
+import InstantBookingMap from '../../components/search/InstantBookingMap';
+import InstantBookingOptions from '../../components/search/InstantBookingOptions';
 import BottomNavigation from '../../components/BottomNavigation';
 
 type InstantBookingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'InstantBooking'>;

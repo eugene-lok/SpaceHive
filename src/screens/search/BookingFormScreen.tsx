@@ -10,10 +10,10 @@ import {
   StatusBar,
 } from 'react-native';
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
-import LocationSection from '../../components/booking/LocationSection';
-import DateTimeSection from '../../components/booking/DateTimeSection';
-import GuestsSection from '../../components/booking/GuestsSection';
-import BudgetSection from '../../components/booking/BudgetSection';
+import LocationSection from '../../components/search/LocationSection';
+import DateTimeSection from '../../components/search/DateTimeSection';
+import GuestsSection from '../../components/search/GuestsSection';
+import BudgetSection from '../../components/search/BudgetSection';
 import {theme} from '../../theme/theme'
 
 import { useNavigation } from '@react-navigation/native';

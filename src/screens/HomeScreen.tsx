@@ -10,8 +10,8 @@ import SearchBar from '../components/SearchBar';
 import SpaceCard from '../components/SpaceCard';
 import EventCategoryCard from '../components/EventCategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
-import BookingOptionsScreen from './booking/BookingOptionsScreen';
-import BookingFormScreen from './booking/BookingFormScreen';
+import BookingOptionsScreen from './search/BookingOptionsScreen';
+import BookingFormScreen from './search/BookingFormScreen';
 import { theme } from '../theme/theme';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
