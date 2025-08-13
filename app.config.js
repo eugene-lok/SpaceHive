@@ -19,8 +19,9 @@ export default {
       bundleIdentifier: "com.spacehive.booking",
       supportsTablet: true,
       infoPlist: {
-        NSLocationWhenInUseUsageDescription: "This app uses location to show nearby spaces for booking."
-      }
+        NSLocationWhenInUseUsageDescription: "This app uses location to show nearby spaces for booking.",
+         ITSAppUsesNonExemptEncryption: "false"
+      },
     },
     android: {
       adaptiveIcon: {
