@@ -1,5 +1,5 @@
 // src/components/booking/InstantBookingOptions.tsx - Updated with scroll-to-card
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { 
   View, 
   Text,
@@ -20,6 +20,7 @@ interface InstantBookingOptionsProps {
   onLocationPress: (location: Location) => void;
   isExpanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
+  summaryContainerHeight?: number; // NEW: Dynamic height prop
 }
 
 const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
@@ -28,18 +29,17 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   onLocationPress,
   isExpanded,
   onExpandedChange,
+  summaryContainerHeight = 100,
 }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const lastOffset = useRef(0);
-  // NEW: FlatList ref for scroll-to-card functionality
   const flatListRef = useRef<FlatList>(null);
 
   // Heights and positioning
-  const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 3;
-  const FULL_COMPONENT_HEIGHT = screenHeight * 0.85;
-  const SUMMARY_HEIGHT = 80;
-  
-  const MAX_SCROLL_UP = -(screenHeight - VISIBLE_COLLAPSED_HEIGHT - SUMMARY_HEIGHT);
+  const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 2;
+  const FULL_COMPONENT_HEIGHT = screenHeight * 0.95;
+
+  const MAX_SCROLL_UP = -(screenHeight - VISIBLE_COLLAPSED_HEIGHT - summaryContainerHeight - 10);
 
   useEffect(() => {
     const toValue = isExpanded ? MAX_SCROLL_UP : 0;
@@ -178,7 +178,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: -(screenHeight * 0.85 - screenHeight / 3),
+    bottom: -(screenHeight * 0.85 - screenHeight / 2.5),
     left: 0,
     right: 0,
     backgroundColor: '#fff',

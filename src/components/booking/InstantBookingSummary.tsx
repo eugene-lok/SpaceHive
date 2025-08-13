@@ -1,7 +1,6 @@
 // src/components/booking/InstantBookingSummary.tsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { BookingFormData } from '../../types/booking';
 import { theme } from '../../theme/theme';
 import { Feather } from '@expo/vector-icons';
