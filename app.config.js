@@ -16,6 +16,7 @@ export default {
       "**/*"
     ],
     ios: {
+      bundleIdentifier: "com.spacehive.booking",
       supportsTablet: true,
       infoPlist: {
         NSLocationWhenInUseUsageDescription: "This app uses location to show nearby spaces for booking."
