@@ -1,9 +1,10 @@
 // src/screens/HomeScreen.tsx
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import { Space, EventCategory } from '../types';
 import SearchBar from '../components/SearchBar';
@@ -115,6 +116,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [showBookingFlow, setShowBookingFlow] = useState(false);
   const [bookingStep, setBookingStep] = useState<'options' | 'form'>('options');
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setActiveTab('search');
+    }, [])
+  );
+
   const handleSearchBarPress = () => {
     setShowBookingFlow(true);
     setBookingStep('options');
@@ -147,14 +154,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     setActiveTab(tabId);
     console.log('Tab pressed:', tabId);
     
-    // Future navigation logic for different tabs
+    // Navigation logic for different tabs
     switch (tabId) {
       case 'search':
         // Already on home/search screen
         break;
       case 'bookings':
         // Navigate to bookings screen
-        console.log('Navigate to Bookings');
+        navigation.navigate('Bookings');
         break;
       case 'saved':
         // Navigate to saved/favorites screen
@@ -243,23 +250,24 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         activeTab={activeTab}
         onTabPress={handleTabPress}
       />
-        {showBookingFlow && (
-          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
-            {bookingStep === 'options' && (
-              <BookingOptionsScreen
-                onBookRightAway={handleBookRightAway}
-                onRequestMatch={handleRequestMatch}
-                onClose={handleCloseBookingFlow}
-              />
-            )}
-            {bookingStep === 'form' && (
-              <BookingFormScreen
-                onBack={() => setBookingStep('options')}
-                onClose={handleCloseBookingFlow}
-              />
-            )}
-  </View>
-)}
+      
+      {showBookingFlow && (
+        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
+          {bookingStep === 'options' && (
+            <BookingOptionsScreen
+              onBookRightAway={handleBookRightAway}
+              onRequestMatch={handleRequestMatch}
+              onClose={handleCloseBookingFlow}
+            />
+          )}
+          {bookingStep === 'form' && (
+            <BookingFormScreen
+              onBack={() => setBookingStep('options')}
+              onClose={handleCloseBookingFlow}
+            />
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 };

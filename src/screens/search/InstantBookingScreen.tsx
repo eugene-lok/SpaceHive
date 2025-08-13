@@ -4,6 +4,7 @@ import { View, StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../../App';
 import { BookingFormData } from '../../types/booking';
 import { Location, MOCK_LOCATIONS } from '../../types/instantBooking';
@@ -28,6 +29,12 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
   const [selectedLocationId, setSelectedLocationId] = useState<number | undefined>();
   const [isCarouselExpanded, setIsCarouselExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('search');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setActiveTab('search');
+    }, [])
+  );
   
   // NEW: Debouncing ref for marker presses
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -68,9 +75,10 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
     
     switch (tabId) {
       case 'search':
+        navigation.navigate('Home');
         break;
       case 'bookings':
-        console.log('Navigate to Bookings');
+        navigation.navigate('Bookings');
         break;
       case 'saved':
         console.log('Navigate to Saved');

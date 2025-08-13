@@ -9,6 +9,7 @@ import LandingScreen from './src/screens/LandingScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import InstantBookingScreen from './src/screens/search/InstantBookingScreen';
+import BookingsScreen from './src/screens/BookingScreen';
 
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
@@ -25,12 +26,12 @@ export type RootStackParamList = {
   InstantBooking: {
     formData: BookingFormData;
   };
+  Bookings: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
-  const [isReady, setIsReady] = useState(false);
   const fontsLoaded = useCustomFonts();
 
   useEffect(() => {
@@ -43,10 +44,7 @@ const App: React.FC = () => {
     return null;
   }
   return (
-    <NavigationContainer
-    onReady={() => setIsReady(true)}
-    onStateChange={() => console.log('Navigation state changed')}
-    >
+    <NavigationContainer>
       <StatusBar style="dark" backgroundColor="white" />
       <Stack.Navigator 
         initialRouteName="Landing"
@@ -56,6 +54,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="InstantBooking" component={InstantBookingScreen} />
+        <Stack.Screen name="Bookings" component={BookingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
