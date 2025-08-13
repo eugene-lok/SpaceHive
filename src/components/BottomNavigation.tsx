@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -54,6 +55,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             color={theme.colors.surface}
             style={styles.activeIcon}
           />
+          
           <Text style={styles.activeNavText}>
             {item.title}
           </Text>

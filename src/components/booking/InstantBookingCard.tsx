@@ -1,4 +1,4 @@
-// src/components/booking/InstantBookingCard.tsx - Updated with selection state
+// src/components/booking/InstantBookingCard.tsx - Redesigned to match reference image
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -20,43 +20,49 @@ const InstantBookingCard: React.FC<InstantBookingCardProps> = ({
     <TouchableOpacity 
       style={[
         styles.container,
-        // NEW: Enhanced shadow when selected
+        // Enhanced shadow when selected (applied to whole card area)
         isSelected && styles.selectedContainer
       ]} 
       onPress={() => onPress(location)}
       activeOpacity={0.95}
     >
+      {/* Rounded Image Container */}
       <View style={styles.imageContainer}>
         <Image source={{ uri: location.image }} style={styles.image} />
         <TouchableOpacity style={styles.heartButton}>
           <MaterialIcons name="favorite-border" size={20} color="#fff" />
         </TouchableOpacity>
-        <View style={styles.instantBookingBadge}>
-          <Text style={styles.badgeText}>Instant Booking</Text>
-        </View>
       </View>
       
+      {/* Content Below Image */}
       <View style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title} numberOfLines={1}>
-            {location.title}
-          </Text>
-          <View style={styles.ratingContainer}>
-            <MaterialIcons name="star" size={14} color="#FFD700" />
-            <Text style={styles.rating}>{location.rating}</Text>
-          </View>
-        </View>
+        {/* Property Title */}
+        <Text style={styles.title} numberOfLines={1}>
+          {location.title}
+        </Text>
         
+        {/* Location */}
+        <Text style={styles.location}>{location.location}</Text>
+        
+        {/* Distance */}
         <Text style={styles.distance}>{location.distance}</Text>
+        
+        {/* Booking Info */}
         <Text style={styles.bookingInfo}>
           Recently booked {location.recentBookings} times
         </Text>
         
-        <View style={styles.priceRow}>
+        {/* Price and Rating Row */}
+        <View style={styles.bottomRow}>
           <Text style={styles.price}>
             <Text style={styles.priceAmount}>${location.price}</Text>
             <Text style={styles.priceUnit}>/{location.priceUnit}</Text>
           </Text>
+          
+          <View style={styles.ratingContainer}>
+            <MaterialIcons name="star" size={16} color="#000" />
+            <Text style={styles.rating}>{location.rating}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -65,37 +71,22 @@ const InstantBookingCard: React.FC<InstantBookingCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
     marginHorizontal: 16,
     marginVertical: 8,
-    overflow: 'hidden',
-    // Default shadow
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
-  // NEW: Enhanced shadow for selected state
+  // Enhanced selection state for whole card area
   selectedContainer: {
-    elevation: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    // Subtle border to enhance selection
-    borderWidth: 1,
-    borderColor: theme.colors.primary || '#419E9D',
+    // Subtle background tint when selected
+    backgroundColor: 'rgba(65, 158, 157, 0.05)',
+    borderRadius: 12,
+    padding: 4,
+    margin: 12, // Adjust margin when padding added
   },
   imageContainer: {
     position: 'relative',
     height: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',
@@ -113,58 +104,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  instantBookingBadge: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: theme.colors.primary || '#419E9D',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  badgeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-  },
   content: {
-    padding: 16,
+    paddingTop: 12,
+    paddingHorizontal: 4, // Minimal horizontal padding
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 4,
-  },
+  // Property title (new field)
   title: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-    flex: 1,
-    marginRight: 8,
+    marginBottom: 4,
+    lineHeight: 22,
   },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rating: {
-    fontSize: 14,
+  // Location (was previously title)
+  location: {
+    fontSize: 15,
     fontWeight: '500',
     color: '#000',
-    marginLeft: 2,
+    marginBottom: 2,
+    lineHeight: 20,
   },
   distance: {
     fontSize: 14,
     color: '#666',
     marginBottom: 2,
+    lineHeight: 18,
   },
   bookingInfo: {
-    fontSize: 12,
-    color: '#888',
+    fontSize: 14,
+    color: '#666',
     marginBottom: 8,
+    lineHeight: 18,
   },
-  priceRow: {
+  bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -182,6 +154,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     color: '#666',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rating: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#000',
+    marginLeft: 4,
   },
 });
 

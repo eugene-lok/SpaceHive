@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BookingFormData } from '../../types/booking';
 import { theme } from '../../theme/theme';
+import { Feather } from '@expo/vector-icons';
 
 interface InstantBookingSummaryProps {
   formData: BookingFormData;
@@ -14,15 +15,17 @@ const InstantBookingSummary: React.FC<InstantBookingSummaryProps> = ({
   formData,
   onPress,
 }) => {
-  const formatSummaryText = (): string => {
-    const parts: string[] = [];
-    
-    // Location
+  const formatLocationText = (): string => {
     if (formData.location.isFlexible) {
-      parts.push('Flexible location');
+      return 'Flexible location';
     } else if (formData.location.value) {
-      parts.push(formData.location.value);
+      return formData.location.value;
     }
+    return 'Add location';
+  };
+
+  const formatDetailsText = (): string => {
+    const parts: string[] = [];
     
     // Date
     if (formData.dateTime.isDateFlexible) {
@@ -35,7 +38,7 @@ const InstantBookingSummary: React.FC<InstantBookingSummaryProps> = ({
       parts.push(dateStr);
     }
     
-    // Time
+    // Time  
     if (formData.dateTime.isTimeFlexible) {
       if (!formData.dateTime.isDateFlexible) {
         parts.push('Flexible time');
@@ -60,11 +63,20 @@ const InstantBookingSummary: React.FC<InstantBookingSummaryProps> = ({
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.content}>
-        <MaterialIcons name="search" size={20} color={theme.colors.onSurfaceVariant} />
-        <Text style={styles.summaryText} numberOfLines={1}>
-          {formatSummaryText()}
-        </Text>
-        <MaterialIcons name="tune" size={20} color={theme.colors.onSurfaceVariant} />
+        <View style={styles.leftContent}>
+          <Feather name="search" size={24} color={theme.colors.buttonDisabled} style={{ marginRight: 6 }} />
+          <View style={styles.textContent}>
+            <Text style={styles.locationText} numberOfLines={1}>
+              {formatLocationText()}
+            </Text>
+            <Text style={styles.detailsText} numberOfLines={1}>
+              {formatDetailsText()}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.tuneIconContainer}>
+          <Feather name="sliders" size={16} color={theme.colors.onSurfaceVariant}/>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -72,7 +84,7 @@ const InstantBookingSummary: React.FC<InstantBookingSummaryProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surfaceVariant,
     borderRadius: 28,
     marginHorizontal: 16,
     marginVertical: 8,
@@ -89,7 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingVertical: theme.spacing.sm,
     gap: 12,
   },
   summaryText: {
@@ -98,6 +110,34 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.medium,
     color: theme.colors.onSurface,
     marginRight: 8,
+  },
+  leftContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  textContent: {
+    flex: 1,
+  },
+  locationText: {
+    fontSize: 15,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.onSurface,
+    marginBottom: 2,
+  },
+  detailsText: {
+    fontSize: 12,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.onSurfaceVariant,
+  },
+  tuneIconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

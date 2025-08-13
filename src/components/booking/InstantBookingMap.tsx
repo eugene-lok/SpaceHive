@@ -137,10 +137,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   markerSelectedContainer: {
-    backgroundColor: theme.colors.primary || '#419E9D',
-    borderColor: theme.colors.primary || '#419E9D',
-    // Slightly larger for selected state
-    transform: [{ scale: 1.1 }],
+    backgroundColor: theme.colors.onSurface || '#000',
+    borderColor: theme.colors.onSurface|| '#000',
   },
   markerText: {
     fontSize: 13,
