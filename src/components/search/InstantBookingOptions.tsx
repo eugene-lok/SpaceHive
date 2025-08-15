@@ -1,5 +1,5 @@
 // src/components/booking/InstantBookingOptions.tsx - Updated with scroll-to-card
-import React, { useRef, useEffect, useCallback, useState } from 'react';
+import React, { useRef, useEffect, useCallback, useState} from 'react';
 import { 
   View, 
   Text,
@@ -9,6 +9,7 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Location } from '../../types/instantBooking';
 import InstantBookingCard from './InstantBookingCard';
 
@@ -20,7 +21,8 @@ interface InstantBookingOptionsProps {
   onLocationPress: (location: Location) => void;
   isExpanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
-  summaryContainerHeight?: number; // NEW: Dynamic height prop
+  summaryContainerHeight?: number; 
+  bottomNavHeight?: number;
 }
 
 const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
@@ -30,16 +32,19 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   isExpanded,
   onExpandedChange,
   summaryContainerHeight = 100,
+  bottomNavHeight = 80,
 }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const lastOffset = useRef(0);
   const flatListRef = useRef<FlatList>(null);
+  const insets = useSafeAreaInsets();
+  const dynamicBottomPadding = bottomNavHeight + insets.bottom + 20;
 
   // Heights and positioning
   const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 2;
-  const FULL_COMPONENT_HEIGHT = screenHeight * 0.95;
-
-  const MAX_SCROLL_UP = -(screenHeight - VISIBLE_COLLAPSED_HEIGHT - summaryContainerHeight - 10);
+  const SAFE_TOP_MARGIN = insets.top + 60;
+  const FULL_COMPONENT_HEIGHT = screenHeight - SAFE_TOP_MARGIN;
+  const MAX_SCROLL_UP = -(FULL_COMPONENT_HEIGHT - VISIBLE_COLLAPSED_HEIGHT + SAFE_TOP_MARGIN);
 
   useEffect(() => {
     const toValue = isExpanded ? MAX_SCROLL_UP : 0;
@@ -121,6 +126,10 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   const containerStyle = {
     transform: [{ translateY }],
   };
+  
+  const getContainerPosition = () => {
+    return -(screenHeight * 0.85 - screenHeight / 2.5);
+  };
 
   // NEW: Handle scroll errors gracefully
   const handleScrollToIndexFailed = useCallback((info: any) => {
@@ -136,7 +145,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { height: FULL_COMPONENT_HEIGHT }, containerStyle]}>
+    <Animated.View style={[styles.container, { height: FULL_COMPONENT_HEIGHT, bottom: getContainerPosition()}, containerStyle]}>
       {/* Handle - ONLY this responds to drag gestures */}
       <View style={styles.handleContainer} {...handlePanResponder.panHandlers}>
         <View style={styles.handle} />
@@ -161,7 +170,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
           />
         )}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={{paddingBottom: dynamicBottomPadding}}
         scrollEnabled={true}
         bounces={false}
         // NEW: Handle scroll errors
@@ -217,9 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#000',
-  },
-  listContent: {
-    paddingBottom: 120, // Space for bottom navigation
   },
 });
 

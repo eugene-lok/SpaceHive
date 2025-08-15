@@ -5,6 +5,7 @@ import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -31,6 +32,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   activeTab = 'search',
   onTabPress,
 }) => {
+  const insets = useSafeAreaInsets();
   const handleTabPress = (tabId: string) => {
     onTabPress?.(tabId);
   };
@@ -83,7 +85,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{paddingBottom: Math.max(insets.bottom, theme.spacing.lg)}]}>
       <View style={styles.navWrapper}>
         {navItems.map(renderNavItem)}
       </View>
@@ -97,9 +99,7 @@ const styles = StyleSheet.create({
     paddingTop: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.outline,
-    // Safe area handling for devices with home indicator
-    paddingBottom: theme.spacing.lg,
+    borderTopColor: theme.colors.outline
   },
   navWrapper: {
     flexDirection: 'row',
