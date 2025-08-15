@@ -1,4 +1,5 @@
 # SpaceHive 🏠
+
 **Mobile marketplace for affordable event space rentals targeting young adults**  
 A community-driven platform connecting young adults with casual event spaces (cafés, studios, community centers) through streamlined booking and real-time messaging.
 ---
@@ -6,6 +7,7 @@ A community-driven platform connecting young adults with casual event spaces (ca
 ## 🎯 Problem & Solution
 **Problem:**  
 Young adults struggle to find affordable, accessible spaces for casual events (birthdays, study groups, workshops). Existing platforms are too formal/expensive.
+
 **Solution:**  
 Mobile-first marketplace with smart matching, transparent pricing, and direct host communication.
 
