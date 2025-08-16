@@ -9,20 +9,23 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "image": "macos-sequoia-15.5-xcode-16.4"
       }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "image": "macos-sequoia-15.5-xcode-16.4"
       }
     },
     "production": {
       "autoIncrement": false,
       "ios": {
         "simulator": false,
-        "buildConfiguration": "Release"
+        "buildConfiguration": "Release",
+        "image": "macos-sequoia-15.5-xcode-16.4"
       }
     }
   },
