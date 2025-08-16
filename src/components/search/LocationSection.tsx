@@ -190,12 +190,7 @@ const styles = StyleSheet.create({
   borderRadius: 16,
   padding: 20,
   marginBottom: 16,
-  marginHorizontal: 8, 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
+  marginHorizontal: 8,
 },
 
 activeSection: {
@@ -220,11 +215,6 @@ completedSection: {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
 },
   completedContent: {
     flex: 1,

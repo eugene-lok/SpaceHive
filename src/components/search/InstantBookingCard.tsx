@@ -72,7 +72,7 @@ const InstantBookingCard: React.FC<InstantBookingCardProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginVertical: 12,
   },
   // Enhanced selection state for whole card area
   selectedContainer: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(65, 158, 157, 0.05)',
     borderRadius: 12,
     padding: 4,
-    margin: 12, // Adjust margin when padding added
+    margin: 16, 
   },
   imageContainer: {
     position: 'relative',
