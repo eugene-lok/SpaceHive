@@ -2,16 +2,23 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Text } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { 
+  MagnifyingGlassIcon,
+  CalendarCheckIcon,
+  HeartIcon,
+  ChatCircleDotsIcon,
+  UserCircleIcon,
+  Icon
+} from 'phosphor-react-native';
 import { theme } from '../theme/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 interface NavItem {
   id: string;
   title: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
+  icon: Icon;
 }
 
 interface BottomNavigationProps {
@@ -20,24 +27,27 @@ interface BottomNavigationProps {
 }
 
 const navItems: NavItem[] = [
-  { id: 'search', title: 'Search', icon: 'search' },
-  { id: 'bookings', title: 'Bookings', icon: 'calendar-today' },
-  { id: 'saved', title: 'Saved', icon: 'favorite' },
-  { id: 'messages', title: 'Messages', icon: 'chat-bubble-outline' },
-  { id: 'profile', title: 'Profile', icon: 'person' },
+  { id: 'search', title: 'Search', icon: MagnifyingGlassIcon },
+  { id: 'bookings', title: 'Bookings', icon: CalendarCheckIcon },
+  { id: 'saved', title: 'Saved', icon: HeartIcon },
+  { id: 'messages', title: 'Messages', icon: ChatCircleDotsIcon },
+  { id: 'profile', title: 'Profile', icon: UserCircleIcon },
 ];
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({
   activeTab = 'search',
   onTabPress,
 }) => {
+  const insets = useSafeAreaInsets();
+  
   const handleTabPress = (tabId: string) => {
     onTabPress?.(tabId);
   };
-
+  
   const renderNavItem = (item: NavItem) => {
     const isActive = activeTab === item.id;
-    
+    const IconComponent = item.icon;
+   
     if (isActive) {
       // Active state: Pill-shaped background with icon and text
       return (
@@ -49,20 +59,20 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
           accessibilityLabel={`${item.title} tab`}
           accessibilityState={{ selected: true }}
         >
-          <MaterialIcons
-            name={item.icon}
+          <IconComponent
             size={20}
             color={theme.colors.surface}
+            weight="bold"
             style={styles.activeIcon}
           />
-          
+         
           <Text style={styles.activeNavText}>
             {item.title}
           </Text>
         </TouchableOpacity>
       );
     }
-
+    
     // Inactive state: Just icon
     return (
       <TouchableOpacity
@@ -73,17 +83,17 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
         accessibilityLabel={`${item.title} tab`}
         accessibilityState={{ selected: false }}
       >
-        <MaterialIcons
-          name={item.icon}
+        <IconComponent
           size={24}
           color={theme.colors.onSurfaceVariant}
+          weight="regular"
         />
       </TouchableOpacity>
     );
   };
-
+  
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: Math.max(insets.bottom, theme.spacing.lg)}]}>
       <View style={styles.navWrapper}>
         {navItems.map(renderNavItem)}
       </View>
@@ -97,9 +107,7 @@ const styles = StyleSheet.create({
     paddingTop: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.outline,
-    // Safe area handling for devices with home indicator
-    paddingBottom: theme.spacing.lg,
+    borderTopColor: theme.colors.outline
   },
   navWrapper: {
     flexDirection: 'row',
@@ -112,10 +120,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm + 2, // Slightly more padding for better touch target
-    borderRadius: 24, // Pill shape
+    paddingVertical: theme.spacing.sm + 2,
+    borderRadius: 24,
     minHeight: 40,
-    // Shadow for better depth
     ...theme.elevation.small,
   },
   inactiveNavItem: {

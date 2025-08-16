@@ -29,6 +29,7 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
   const [selectedLocationId, setSelectedLocationId] = useState<number | undefined>();
   const [isCarouselExpanded, setIsCarouselExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('search');
+  const [navigationHeight, setNavigationHeight] = useState(80);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -131,10 +132,15 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
         onLocationPress={handleLocationPress}
         isExpanded={isCarouselExpanded}
         onExpandedChange={handleCarouselExpandedChange}
+        bottomNavHeight={navigationHeight}
       />
 
       {/* Bottom Navigation - always visible */}
-      <SafeAreaView edges={['bottom']} style={styles.navigationContainer}>
+      <SafeAreaView 
+        edges={['bottom']} 
+        style={styles.navigationContainer}
+        onLayout={(event) => setNavigationHeight(event.nativeEvent.layout.height)} // NEW
+      >
         <BottomNavigation
           activeTab={activeTab}
           onTabPress={handleTabPress}

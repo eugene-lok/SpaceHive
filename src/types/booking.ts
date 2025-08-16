@@ -48,19 +48,19 @@ export const INITIAL_FORM_DATA: BookingFormData = {
     date: null,
     time: {
       start: { time: '06:00', period: 'AM' },
-      end: { time: '10:00', period: 'AM' },
+      end: { time: '07:00', period: 'AM' },
     },
     isDateFlexible: false,
     isTimeFlexible: false,
   },
   guests: {
-    adults: 1,
+    adults: 0,
     children: 0,
     infants: 0,
   },
   budget: {
     min: 0,
-    max: 200,
+    max: 0,
   },
 };
 

@@ -154,16 +154,23 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
       <TouchableOpacity style={styles.completedSection} onPress={onPress}>
         <View style={styles.completedContent}>
           <Text style={styles.sectionLabel}>Budget</Text>
-          <Text style={styles.sectionValue}>${data.min} - ${data.max} per hour</Text>
+          <Text style={styles.sectionValue}>
+            ${data.min} - ${data.max} per hour
+          </Text>
         </View>
       </TouchableOpacity>
     );
   }
 
-  if (!isActive) {
+  if (!isActive && !isCompleted) {
     return (
-      <TouchableOpacity style={styles.section} onPress={onPress}>
-        <Text style={styles.sectionTitle}>Budget</Text>
+      <TouchableOpacity style={styles.completedSection} onPress={onPress}>
+        <View style={styles.completedContent}>
+          <Text style={styles.sectionLabel}>Budget</Text>
+          <Text style={styles.sectionValue}>
+            {data.max === 0 ? 'No budget set' : `$${data.min} - ${data.max} per hour`}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   }
@@ -194,7 +201,7 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onBlur={handleMinInputBlur}
           onFocus={() => setIsDragging(true)}
           keyboardType="numeric"
-          placeholder="0"
+          placeholder="0" // Keep as 0
         />
         <Text style={styles.inputSeparator}>~</Text>
         <TextInput
@@ -204,7 +211,7 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onBlur={handleMaxInputBlur}
           onFocus={() => setIsDragging(true)}
           keyboardType="numeric"
-          placeholder="200"
+          placeholder="0" 
         />
       </View>
 
@@ -235,11 +242,6 @@ const styles = StyleSheet.create({
   padding: 20,
   marginBottom: 16,
   marginHorizontal: 8, 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
 },
 
 activeSection: {
@@ -264,11 +266,6 @@ completedSection: {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
 },
   completedContent: {
     flex: 1,

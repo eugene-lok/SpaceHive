@@ -80,27 +80,18 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     return days;
   };
 
-  // Calculate time 15 minutes after given time
-  const add15Minutes = (hour: string, minute: string, period: 'AM' | 'PM') => {
+  // Calculate time 1 hour after given time
+  const addOneHour = (hour: string, minute: string, period: 'AM' | 'PM') => {
     let newHour = parseInt(hour);
-    let newMinute = parseInt(minute);
+    let newMinute = parseInt(minute); // Keep same minutes
     let newPeriod = period;
 
-    // Add 15 minutes
-    newMinute += 15;
+    newHour += 1; // Add 1 hour instead of 15 minutes
 
-    if (newMinute >= 60) {
-      newMinute = 0;
-      newHour += 1;
-
-      // Handle hour overflow
-      if (newHour === 12) {
-        // 11:45 AM -> 12:00 PM or 11:45 PM -> 12:00 AM
-        newPeriod = period === 'AM' ? 'PM' : 'AM';
-      } else if (newHour === 13) {
-        // 12:45 AM -> 1:00 AM or 12:45 PM -> 1:00 PM
-        newHour = 1;
-      }
+    if (newHour === 12) {
+      newPeriod = period === 'AM' ? 'PM' : 'AM';
+    } else if (newHour === 13) {
+      newHour = 1;
     }
 
     return {
@@ -126,8 +117,47 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
                          eHour: string, eMinute: string, ePeriod: 'AM' | 'PM') => {
     const startMinutes = timeToMinutes(sHour, sMinute, sPeriod);
     const endMinutes = timeToMinutes(eHour, eMinute, ePeriod);
-    return endMinutes > startMinutes;
+    return endMinutes >= startMinutes+60;
   };
+
+  const getValidEndTimeOptions = () => {
+  const startTimeInMinutes = timeToMinutes(startHour, startMinute, startPeriod);
+  const validEndTimes: { hour: string; minute: string; period: 'AM' | 'PM' }[] = [];
+  
+  // Generate hourly increments starting from 1 hour after start time
+  for (let i = 1; i <= 12; i++) {
+    const endTimeInMinutes = startTimeInMinutes + (i * 60);
+    const hours24 = Math.floor(endTimeInMinutes / 60) % 24;
+    const minutes = endTimeInMinutes % 60;
+    
+    let hour12 = hours24;
+    let period: 'AM' | 'PM' = 'AM';
+    
+    if (hours24 === 0) {
+      hour12 = 12;
+    } else if (hours24 > 12) {
+      hour12 = hours24 - 12;
+      period = 'PM';
+    } else if (hours24 === 12) {
+      period = 'PM';
+    }
+    
+    validEndTimes.push({
+      hour: hour12.toString().padStart(2, '0'),
+      minute: minutes.toString().padStart(2, '0'),
+      period
+    });
+  }
+  
+    return validEndTimes;
+  };
+
+  const validEndTimes = getValidEndTimeOptions();
+  const endHourOptions = [...new Set(validEndTimes.map(t => t.hour))];
+  const endMinuteOptions = validEndTimes
+    .filter(t => t.hour === endHour && t.period === endPeriod)
+    .map(t => t.minute);
+  const endPeriodOptions = [...new Set(validEndTimes.map(t => t.period))];
 
   // Only sync from props on initial load, not on every change
   useEffect(() => {
@@ -195,7 +225,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     if (newPeriod) setStartPeriod(newPeriod);
 
     // Calculate and set end time (15 minutes later)
-    const newEndTime = add15Minutes(hour, minute, period);
+    const newEndTime = addOneHour(hour, minute, period);
     setEndHour(newEndTime.hour);
     setEndMinute(newEndTime.minute);
     setEndPeriod(newEndTime.period);
@@ -489,19 +519,19 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
             {/* End Time */}
             <Dropdown
               value={endHour}
-              options={hourOptions}
+              options={endHourOptions}
               onChange={(value) => handleEndTimeChange(value)}
               width={30}
             />
             <Dropdown
               value={endMinute}
-              options={minuteOptions}
+              options={endMinuteOptions.length > 0 ? endMinuteOptions : [endMinute]}
               onChange={(value) => handleEndTimeChange(undefined, value)}
               width={30}
             />
             <Dropdown
               value={endPeriod}
-              options={periodOptions}
+              options={endPeriodOptions}
               onChange={(value) => handleEndTimeChange(undefined, undefined, value as 'AM' | 'PM')}
               width={30}
             />
@@ -529,11 +559,6 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 16,
     marginHorizontal: 8, 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
   },
   activeSection: {
     backgroundColor: '#fff',
@@ -556,11 +581,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
   },
   completedContent: {
     flex: 1,
@@ -798,7 +818,7 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     fontWeight: '600',
-    color: '#4CAF50',
+    color: theme.colors.buttonPrimary,
   },
 });
 

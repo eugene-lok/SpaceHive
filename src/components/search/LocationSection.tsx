@@ -55,6 +55,10 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     setShowSuggestions(true);
   };
 
+  const handleOutsideTouch = () => {
+    setShowSuggestions(false);
+  };
+
   const handleSuggestionSelect = (suggestion: string) => {
     setSearchText(suggestion);
     onUpdate({ ...data, value: suggestion, isFlexible: false });
@@ -150,16 +154,16 @@ const LocationSection: React.FC<LocationSectionProps> = ({
           </View>
 
           {/* Suggestions */}
-          {(showSuggestions || searchText.length > 0) && (
-            <View style={styles.suggestionsContainer}>
+          {showSuggestions && (
+            <View style={styles.dropdownContainer}>
               {LOCATION_SUGGESTIONS.map((suggestion, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.suggestionItem}
+                  style={styles.dropdownItem}
                   onPress={() => handleSuggestionSelect(suggestion)}
                 > 
                   <Feather name="map-pin" style={styles.pinIcon} />
-                  <Text style={styles.suggestionText}>{suggestion}</Text>
+                  <Text style={styles.dropdownItemText}>{suggestion}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -186,12 +190,7 @@ const styles = StyleSheet.create({
   borderRadius: 16,
   padding: 20,
   marginBottom: 16,
-  marginHorizontal: 8, 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
+  marginHorizontal: 8,
 },
 
 activeSection: {
@@ -216,11 +215,6 @@ completedSection: {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
 },
   completedContent: {
     flex: 1,
@@ -302,8 +296,41 @@ completedSection: {
     fontFamily: theme.fonts.medium,
     color: '#000',
   },
-  suggestionsContainer: {
-    marginTop: 8,
+  dropdownContainer: {
+    position: 'absolute',
+    top: '100%', // Position below search input
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
+    marginTop: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    zIndex: 1000,
+    maxHeight: 120,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F7',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: theme.colors.onSurface,
+    flex: 1,
+  },
+  pinIcon: {
+    fontSize: 16,
+    marginRight: 12,
+    color: theme.colors.onSurfaceDisabled
   },
   suggestionItem: {
     flexDirection: 'row',
@@ -317,11 +344,6 @@ completedSection: {
   },
   suggestionText: {
     fontSize: 16,
-    color: theme.colors.onSurfaceDisabled
-  },
-  pinIcon: {
-    fontSize: 18,
-    marginRight: 10,
     color: theme.colors.onSurfaceDisabled
   },
   actionButtons: {
