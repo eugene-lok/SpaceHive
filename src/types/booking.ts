@@ -48,7 +48,7 @@ export const INITIAL_FORM_DATA: BookingFormData = {
     date: null,
     time: {
       start: { time: '06:00', period: 'AM' },
-      end: { time: '10:00', period: 'AM' },
+      end: { time: '07:00', period: 'AM' },
     },
     isDateFlexible: false,
     isTimeFlexible: false,
