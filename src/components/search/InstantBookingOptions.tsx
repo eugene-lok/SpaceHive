@@ -1,5 +1,5 @@
-// src/components/booking/InstantBookingOptions.tsx - Updated with scroll-to-card
-import React, { useRef, useEffect, useCallback, useState} from 'react';
+// src/components/booking/InstantBookingOptions.tsx - SIMPLE SOLUTION
+import React, { useRef, useEffect, useCallback } from 'react';
 import { 
   View, 
   Text,
@@ -38,44 +38,46 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   const lastOffset = useRef(0);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
-  const dynamicBottomPadding = bottomNavHeight + insets.bottom + 20;
 
-  // Heights and positioning
-  const VISIBLE_COLLAPSED_HEIGHT = screenHeight / 2;
-  const SAFE_TOP_MARGIN = insets.top + 60;
-  const FULL_COMPONENT_HEIGHT = screenHeight - SAFE_TOP_MARGIN;
-  const MAX_SCROLL_UP = -(FULL_COMPONENT_HEIGHT - VISIBLE_COLLAPSED_HEIGHT + SAFE_TOP_MARGIN);
+  // SIMPLE: Fixed heights
+  const COMPONENT_HEIGHT = screenHeight * 0.75; // Fixed height that works everywhere
+  const COLLAPSED_POSITION = 0; // Stay where positioned
+  
+  // SIMPLE: When expanded, move up just enough to show more content 
+  // but keep handle visible below summary + safe area
+  const EXPANDED_MOVE_UP = screenHeight * 0.35; // Move up by 35% of screen
+  
+  // SIMPLE: Ensure last card is above navbar
+  const BOTTOM_PADDING = bottomNavHeight + insets.bottom + 30;
 
   useEffect(() => {
-    const toValue = isExpanded ? MAX_SCROLL_UP : 0;
+    const toValue = isExpanded ? -EXPANDED_MOVE_UP : COLLAPSED_POSITION;
     lastOffset.current = toValue;
+    
     Animated.spring(translateY, {
       toValue,
       useNativeDriver: true,
       tension: 100,
       friction: 8,
     }).start();
-  }, [isExpanded, translateY, MAX_SCROLL_UP]);
+  }, [isExpanded, EXPANDED_MOVE_UP]);
 
-  // NEW: Scroll to selected location card
+  // Scroll to selected location card
   const scrollToLocation = useCallback((locationId: number) => {
     if (!flatListRef.current) return;
     
     const selectedIndex = locations.findIndex(location => location.id === locationId);
     if (selectedIndex === -1) return;
 
-    // Fast animated scroll to bring selected card to top
     flatListRef.current.scrollToIndex({
       index: selectedIndex,
       animated: true,
-      viewPosition: 0, // 0 = top of visible area
+      viewPosition: 0,
     });
   }, [locations]);
 
-  // NEW: Effect to scroll when selectedLocationId changes
   useEffect(() => {
     if (selectedLocationId !== undefined) {
-      // Small delay to ensure FlatList is ready
       setTimeout(() => {
         scrollToLocation(selectedLocationId);
       }, 100);
@@ -93,11 +95,12 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
       translateY.setValue(0);
     },
     onPanResponderMove: (_, gestureState) => {
-      const constrainedDy = Math.max(MAX_SCROLL_UP - lastOffset.current, Math.min(-lastOffset.current, gestureState.dy));
+      // SIMPLE: Constrain movement between collapsed and expanded positions
+      const constrainedDy = Math.max(-EXPANDED_MOVE_UP - lastOffset.current, Math.min(-lastOffset.current, gestureState.dy));
       translateY.setValue(constrainedDy);
     },
     onPanResponderRelease: (_, gestureState) => {
-      const threshold = MAX_SCROLL_UP / 2;
+      const threshold = -EXPANDED_MOVE_UP / 2;
       const currentOffset = lastOffset.current + gestureState.dy;
       
       let shouldExpand = false;
@@ -108,7 +111,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
         shouldExpand = currentOffset < threshold;
       }
       
-      const finalPosition = shouldExpand ? MAX_SCROLL_UP : 0;
+      const finalPosition = shouldExpand ? -EXPANDED_MOVE_UP : COLLAPSED_POSITION;
       lastOffset.current = finalPosition;
       
       translateY.flattenOffset();
@@ -126,17 +129,12 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   const containerStyle = {
     transform: [{ translateY }],
   };
-  
-  const getContainerPosition = () => {
-    return -(screenHeight * 0.85 - screenHeight / 2.5);
-  };
 
-  // NEW: Handle scroll errors gracefully
+  // Handle scroll errors gracefully
   const handleScrollToIndexFailed = useCallback((info: any) => {
     console.log('Scroll to index failed:', info);
-    // Fallback: scroll to offset
     if (flatListRef.current) {
-      const offset = info.index * 200; // Approximate card height
+      const offset = info.index * 200;
       flatListRef.current.scrollToOffset({ 
         offset, 
         animated: true 
@@ -145,8 +143,8 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { height: FULL_COMPONENT_HEIGHT, bottom: getContainerPosition()}, containerStyle]}>
-      {/* Handle - ONLY this responds to drag gestures */}
+    <Animated.View style={[styles.container, { height: COMPONENT_HEIGHT }, containerStyle]}>
+      {/* Handle - Always accessible */}
       <View style={styles.handleContainer} {...handlePanResponder.panHandlers}>
         <View style={styles.handle} />
       </View>
@@ -157,7 +155,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
         </View>
       </View>
       
-      {/* FlatList with ref and scroll functionality */}
+      {/* FlatList with proper bottom padding */}
       <FlatList
         ref={flatListRef}
         data={locations}
@@ -170,12 +168,10 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
           />
         )}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: dynamicBottomPadding}}
+        contentContainerStyle={{ paddingBottom: BOTTOM_PADDING }}
         scrollEnabled={true}
         bounces={false}
-        // NEW: Handle scroll errors
         onScrollToIndexFailed={handleScrollToIndexFailed}
-        // Performance optimizations
         removeClippedSubviews={true}
         maxToRenderPerBatch={5}
         windowSize={10}
@@ -187,12 +183,11 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: -(screenHeight * 0.85 - screenHeight / 2.5),
+    bottom: -(screenHeight * 0.25), // SIMPLE: Position so 75% is visible when collapsed
     left: 0,
     right: 0,
     backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderRadius: 20,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: {
