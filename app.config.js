@@ -22,6 +22,7 @@ export default {
         NSLocationWhenInUseUsageDescription: "This app uses location to show nearby spaces for booking.",
          ITSAppUsesNonExemptEncryption: "false"
       },
+      buildNumber: "1.0.0"
     },
     android: {
       adaptiveIcon: {
