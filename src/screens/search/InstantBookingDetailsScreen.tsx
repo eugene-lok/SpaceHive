@@ -36,12 +36,21 @@ const MOCK_IMAGES = [
   'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
 ];
 
+// New: What's included mock data
+const MOCK_WHATS_INCLUDED = [
+  { id: 1, icon: 'bed', text: '1 Bedroom' },
+  { id: 2, icon: 'kitchen', text: '1 Kitchen' },
+];
+
 const MOCK_AMENITIES = [
   { id: 1, name: 'WiFi', icon: 'wifi' },
-  { id: 2, name: 'Kitchen', icon: 'restaurant' },
-  { id: 3, name: 'Parking', icon: 'local-parking' },
-  { id: 4, name: 'Air Conditioning', icon: 'ac-unit' },
-  { id: 5, name: 'TV', icon: 'tv' },
+  { id: 2, name: 'City skyline view', icon: 'landscape' },
+  { id: 3, name: 'Coffee', icon: 'local-cafe' },
+  { id: 4, name: 'Kitchen', icon: 'kitchen' },
+  { id: 5, name: 'Parking', icon: 'local-parking' },
+  { id: 6, name: 'Air Conditioning', icon: 'ac-unit' },
+  { id: 7, name: 'TV', icon: 'tv' },
+  { id: 8, name: 'Sound system', icon: 'volume-up' },
 ];
 
 const MOCK_VENUE_OFFERS = [
@@ -119,6 +128,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const [readMoreExpanded, setReadMoreExpanded] = useState(false);
   const [expandedRules, setExpandedRules] = useState<number[]>([]);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -181,75 +191,78 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     </View>
   );
 
+  // MODIFIED: Changed to pill-shaped attributes
   const renderAttributes = () => (
     <View style={styles.attributesContainer}>
-      <View style={styles.attributeRow}>
-        <View style={styles.attribute}>
-          <MaterialIcons name="music-note" size={16} color="#666" />
-          <Text style={styles.attributeText}>Music-Friendly</Text>
+      <View style={styles.attributePills}>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="music-note" size={14} color="#666" />
+          <Text style={styles.attributePillText}>Music-Friendly</Text>
         </View>
-        <View style={styles.attribute}>
-          <MaterialIcons name="chair" size={16} color="#666" />
-          <Text style={styles.attributeText}>Cozy</Text>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="local-cafe" size={14} color="#666" />
+          <Text style={styles.attributePillText}>Cozy</Text>
         </View>
-        <View style={styles.attribute}>
-          <MaterialIcons name="lock" size={16} color="#666" />
-          <Text style={styles.attributeText}>Private</Text>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="lock" size={14} color="#666" />
+          <Text style={styles.attributePillText}>Private</Text>
         </View>
-      </View>
-      <View style={styles.attributeRow}>
-        <View style={styles.attribute}>
-          <MaterialIcons name="wb-sunny" size={16} color="#666" />
-          <Text style={styles.attributeText}>Natural Light</Text>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="wb-sunny" size={14} color="#666" />
+          <Text style={styles.attributePillText}>Natural Light</Text>
         </View>
-        <View style={styles.attribute}>
-          <MaterialIcons name="directions-transit" size={16} color="#666" />
-          <Text style={styles.attributeText}>Transit-Friendly</Text>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="directions-transit" size={14} color="#666" />
+          <Text style={styles.attributePillText}>Transit-Friendly</Text>
         </View>
-        <View style={styles.attribute}>
-          <MaterialIcons name="group" size={16} color="#666" />
-          <Text style={styles.attributeText}>3</Text>
+        <View style={styles.attributePill}>
+          <MaterialIcons name="group" size={14} color="#666" />
+          <Text style={styles.attributePillText}>3</Text>
         </View>
       </View>
     </View>
   );
 
   const renderHeader = () => (
-    <View style={styles.headerInfo}>
-      <Text style={styles.title}>{location.title}</Text>
-      <View style={styles.ratingRow}>
+    <View style={styles.headerContainer}>
+      <Text style={styles.locationTitle}>{location.title}</Text>
+      <Text style={styles.locationSubtitle}>{location.location}</Text>
+      <View style={styles.ratingContainer}>
         <MaterialIcons name="star" size={16} color="#000" />
-        <Text style={styles.rating}>{location.rating}</Text>
-        <Text style={styles.reviewCount}>· 110 reviews ></Text>
+        <Text style={styles.ratingText}>{location.rating}</Text>
+        <Text style={styles.reviewsText}>· 110 reviews · Calgary, Canada</Text>
       </View>
     </View>
   );
 
   const renderDescription = () => (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>About this place</Text>
-      <Text style={styles.description} numberOfLines={readMoreExpanded ? undefined : 3}>
-        Enjoy an elegant private room of 20 m2 in a renovated apartment of 160 m2 in the heart of the city center of Calgary downtown....
+      <Text style={styles.descriptionText} numberOfLines={readMoreExpanded ? undefined : 3}>
+        This modern workspace features floor-to-ceiling windows with stunning city views. 
+        Perfect for team meetings, workshops, or creative sessions. The space includes high-speed WiFi, 
+        a fully equipped kitchen, and flexible seating arrangements to accommodate various group sizes.
       </Text>
-      {!readMoreExpanded && (
-        <TouchableOpacity onPress={() => setReadMoreExpanded(true)}>
-          <Text style={styles.readMoreText}>Read more</Text>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity onPress={() => setReadMoreExpanded(!readMoreExpanded)}>
+        <Text style={styles.readMoreText}>
+          {readMoreExpanded ? 'Show less' : 'Read more'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
-  const renderAmenitiesCarousel = () => (
+  // NEW: What's included carousel
+  const renderWhatsIncluded = () => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>What's included</Text>
       <FlatList
-        data={MOCK_AMENITIES}
+        data={MOCK_WHATS_INCLUDED}
         horizontal
         showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.whatsIncludedContainer}
         renderItem={({ item }) => (
-          <View style={styles.amenityItem}>
-            <MaterialIcons name={item.icon as any} size={24} color="#000" />
-            <Text style={styles.amenityText}>{item.name}</Text>
+          <View style={styles.whatsIncludedCard}>
+            <MaterialIcons name={item.icon} size={24} color="#333" />
+            <Text style={styles.whatsIncludedText}>{item.text}</Text>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -257,46 +270,81 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     </View>
   );
 
-  const renderVenueOffers = () => (
+  const renderAmenitiesCarousel = () => (
     <View style={styles.section}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>What the venue offers</Text>
-        <TouchableOpacity>
-          <Text style={styles.showAllText}>Show all amenities</Text>
-        </TouchableOpacity>
-      </View>
-      {MOCK_VENUE_OFFERS.slice(0, 6).map((offer, index) => (
-        <View key={index} style={styles.offerItem}>
-          <MaterialIcons name="check" size={16} color="#000" />
-          <Text style={styles.offerText}>{offer}</Text>
-        </View>
-      ))}
+      <Text style={styles.sectionTitle}>Amenities</Text>
+      <FlatList
+        data={MOCK_AMENITIES}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <View style={styles.amenityCard}>
+            <MaterialIcons name={item.icon} size={24} color="#000" />
+            <Text style={styles.amenityCardText}>{item.name}</Text>
+          </View>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
 
+  // MODIFIED: Changed to list with icons and expandable button
+  const renderVenueOffers = () => {
+    const displayedAmenities = showAllAmenities ? MOCK_AMENITIES : MOCK_AMENITIES.slice(0, 3);
+    const hasMoreAmenities = MOCK_AMENITIES.length > 3;
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>What this venue offers</Text>
+        <View style={styles.amenitiesList}>
+          {displayedAmenities.map((amenity, index) => (
+            <View key={amenity.id} style={styles.amenityItem}>
+              <MaterialIcons name={amenity.icon} size={20} color="#333" />
+              <Text style={styles.amenityText}>{amenity.name}</Text>
+            </View>
+          ))}
+        </View>
+        {hasMoreAmenities && !showAllAmenities && (
+          <TouchableOpacity 
+            style={styles.showAllButton}
+            onPress={() => setShowAllAmenities(true)}
+          >
+            <Text style={styles.showAllButtonText}>
+              Show All {MOCK_AMENITIES.length} Amenities
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  // MODIFIED: Changed to accordion with +/- buttons
   const renderVenueRules = () => (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Venue rules</Text>
-      {MOCK_VENUE_RULES.map((rule, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.ruleItem}
-          onPress={() => toggleRuleExpansion(index)}
-        >
-          <View style={styles.ruleHeader}>
-            <MaterialIcons name={rule.icon as any} size={20} color="#000" />
-            <Text style={styles.ruleTitle}>{rule.title}</Text>
-            <MaterialIcons 
-              name={expandedRules.includes(index) ? "expand-less" : "expand-more"} 
-              size={24} 
-              color="#666" 
-            />
+      <Text style={styles.sectionTitle}>Venue Rules</Text>
+      <View style={styles.rulesContainer}>
+        {MOCK_VENUE_RULES.map((rule, index) => (
+          <View key={index} style={styles.ruleCard}>
+            <TouchableOpacity 
+              style={styles.ruleHeader}
+              onPress={() => toggleRuleExpansion(index)}
+            >
+              <View style={styles.ruleHeaderLeft}>
+                <MaterialIcons name={rule.icon} size={20} color="#333" />
+                <Text style={styles.ruleTitle}>{rule.title}</Text>
+              </View>
+              <MaterialIcons 
+                name={expandedRules.includes(index) ? 'remove' : 'add'} 
+                size={20} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+            {expandedRules.includes(index) && (
+              <Text style={styles.ruleContent}>{rule.content}</Text>
+            )}
           </View>
-          {expandedRules.includes(index) && (
-            <Text style={styles.ruleContent}>{rule.content}</Text>
-          )}
-        </TouchableOpacity>
-      ))}
+        ))}
+      </View>
     </View>
   );
 
@@ -411,6 +459,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         {renderAttributes()}
         {renderHeader()}
         {renderDescription()}
+        {renderWhatsIncluded()}
         {renderAmenitiesCarousel()}
         {renderVenueOffers()}
         {renderVenueRules()}
@@ -506,53 +555,62 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: theme.fonts.medium,
   },
+  // MODIFIED: New pill-shaped attributes styles
   attributesContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: '#f8f8f8',
+    paddingTop: 16,
+    paddingBottom: 8,
   },
-  attributeRow: {
+  attributePills: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  attribute: {
+  attributePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 4,
   },
-  attributeText: {
-    marginLeft: 6,
-    fontSize: 14,
+  attributePillText: {
+    fontSize: 12,
     fontFamily: theme.fonts.medium,
     color: '#666',
   },
-  headerInfo: {
+  headerContainer: {
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
-  title: {
+  locationTitle: {
     fontSize: 24,
     fontFamily: theme.fonts.bold,
     color: '#000',
+    marginBottom: 4,
+  },
+  locationSubtitle: {
+    fontSize: 16,
+    fontFamily: theme.fonts.regular,
+    color: '#666',
     marginBottom: 8,
   },
-  ratingRow: {
+  ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  rating: {
-    marginLeft: 4,
-    fontSize: 16,
+  ratingText: {
+    fontSize: 14,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-  },
-  reviewCount: {
     marginLeft: 4,
-    fontSize: 16,
-    fontFamily: theme.fonts.medium,
+  },
+  reviewsText: {
+    fontSize: 14,
+    fontFamily: theme.fonts.regular,
     color: '#666',
-    textDecorationLine: 'underline',
+    marginLeft: 4,
   },
   section: {
     paddingHorizontal: 16,
@@ -564,75 +622,111 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: theme.fonts.bold,
     color: '#000',
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  showAllText: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: '#666',
-    textDecorationLine: 'underline',
-  },
-  description: {
+  descriptionText: {
     fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: '#666',
+    color: '#333',
     lineHeight: 22,
   },
   readMoreText: {
-    marginTop: 8,
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
-    color: '#000',
-    textDecorationLine: 'underline',
-  },
-  amenityItem: {
-    alignItems: 'center',
-    marginRight: 24,
-    width: 80,
-  },
-  amenityText: {
+    color: theme.colors.primary,
     marginTop: 8,
-    fontSize: 12,
+  },
+  // NEW: What's included carousel styles
+  whatsIncludedContainer: {
+    paddingRight: 16,
+  },
+  whatsIncludedCard: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 12,
+    alignItems: 'center',
+    minWidth: 100,
+  },
+  whatsIncludedText: {
+    fontSize: 14,
     fontFamily: theme.fonts.medium,
-    color: '#666',
+    color: '#333',
+    marginTop: 8,
     textAlign: 'center',
   },
-  offerItem: {
+  amenityCard: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 12,
+    alignItems: 'center',
+    minWidth: 80,
+  },
+  amenityCardText: {
+    fontSize: 12,
+    fontFamily: theme.fonts.medium,
+    color: '#000',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  // MODIFIED: New amenities list styles
+  amenitiesList: {
+    gap: 12,
+  },
+  amenityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    gap: 12,
   },
-  offerText: {
-    marginLeft: 12,
+  amenityText: {
     fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: '#666',
-    flex: 1,
+    color: '#333',
   },
-  ruleItem: {
-    marginBottom: 16,
+  showAllButton: {
+    backgroundColor: '#333',
+    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  showAllButtonText: {
+    fontSize: 16,
+    fontFamily: theme.fonts.semibold,
+    color: '#fff',
+  },
+  // MODIFIED: New venue rules accordion styles
+  rulesContainer: {
+    gap: 12,
+  },
+  ruleCard: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   ruleHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  ruleHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
   },
   ruleTitle: {
-    marginLeft: 12,
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
-    color: '#000',
-    flex: 1,
+    color: '#333',
   },
   ruleContent: {
-    marginTop: 8,
-    marginLeft: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    paddingLeft: 48,
     fontSize: 14,
     fontFamily: theme.fonts.regular,
     color: '#666',
@@ -641,14 +735,14 @@ const styles = StyleSheet.create({
   mapPlaceholder: {
     height: 200,
     backgroundColor: '#f0f0f0',
-    borderRadius: 12,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   mapText: {
     fontSize: 16,
-    fontFamily: theme.fonts.medium,
+    fontFamily: theme.fonts.regular,
     color: '#666',
   },
   locationText: {
@@ -692,6 +786,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderRadius: 8,
     paddingVertical: 12,
+    paddingHorizontal: 24,
     alignItems: 'center',
   },
   askQuestionText: {
@@ -705,23 +800,23 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   reviewsRating: {
-    marginLeft: 4,
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
+    marginLeft: 4,
   },
   reviewsCount: {
-    marginLeft: 4,
     fontSize: 16,
-    fontFamily: theme.fonts.medium,
+    fontFamily: theme.fonts.regular,
     color: '#666',
+    marginLeft: 4,
   },
   testimonialCard: {
-    width: 280,
     backgroundColor: '#f8f8f8',
     borderRadius: 12,
     padding: 16,
-    marginRight: 16,
+    marginRight: 12,
+    width: 280,
   },
   testimonialHeader: {
     flexDirection: 'row',
