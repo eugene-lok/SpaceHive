@@ -9,6 +9,8 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
 import LocationSection from '../../components/search/LocationSection';
 import DateTimeSection from '../../components/search/DateTimeSection';
@@ -19,6 +21,7 @@ import {theme} from '../../theme/theme'
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
+
 
 type BookingFormNavigationProp = StackNavigationProp<RootStackParamList>;
 interface BookingFormScreenProps {
@@ -93,6 +96,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
 const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
   onClose,
 }) => {
+  const insets = useSafeAreaInsets();
+
   const [formState, setFormState] = useState<FormState>({
     activeSection: 'location',
     completedSections: [],
@@ -245,7 +250,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 16) }]}>
         
         <View style={styles.headerTabs}>
           <Text style={styles.activeTab}>Instant Book</Text>
@@ -253,7 +258,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
         </View>
         
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Text style={styles.closeText}>✕</Text>
+          <MaterialIcons name="close" size={18} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -374,7 +379,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    marginTop: 4
   },
   header: {
     flexDirection: 'row',
@@ -382,12 +386,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 8,
-    marginTop: 36
   },
   backButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
