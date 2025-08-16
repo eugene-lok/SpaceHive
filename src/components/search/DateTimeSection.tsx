@@ -828,7 +828,7 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     fontWeight: '600',
-    color: '#4CAF50',
+    color: theme.colors.buttonPrimary,
   },
 });
 

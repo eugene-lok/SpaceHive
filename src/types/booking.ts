@@ -54,13 +54,13 @@ export const INITIAL_FORM_DATA: BookingFormData = {
     isTimeFlexible: false,
   },
   guests: {
-    adults: 1,
+    adults: 0,
     children: 0,
     infants: 0,
   },
   budget: {
     min: 0,
-    max: 200,
+    max: 0,
   },
 };
 

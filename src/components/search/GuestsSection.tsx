@@ -42,8 +42,8 @@ const GuestsSection: React.FC<GuestsSectionProps> = ({
     if (increment) {
       newData[type] = currentValue + 1;
     } else {
-      // Prevent adults from going below 1, others below 0
-      const minValue = type === 'adults' ? 1 : 0;
+      // Allow adults to go to 0, others stay at 0 minimum
+      const minValue = 0; 0
       newData[type] = Math.max(minValue, currentValue - 1);
     }
     
@@ -92,10 +92,13 @@ const GuestsSection: React.FC<GuestsSectionProps> = ({
     );
   }
 
-  if (!isActive) {
+  if (!isActive && !isCompleted) {
     return (
-      <TouchableOpacity style={styles.section} onPress={onPress}>
-        <Text style={styles.sectionTitle}>How many people?</Text>
+      <TouchableOpacity style={styles.completedSection} onPress={onPress}>
+        <View style={styles.completedContent}>
+          <Text style={styles.sectionLabel}>Guests</Text> 
+          <Text style={styles.sectionValue}>{displayText}</Text> 
+        </View>
       </TouchableOpacity>
     );
   }
@@ -111,7 +114,7 @@ const GuestsSection: React.FC<GuestsSectionProps> = ({
           value={data.adults}
           onIncrement={() => updateGuestCount('adults', true)}
           onDecrement={() => updateGuestCount('adults', false)}
-          canDecrement={data.adults > 1}
+          canDecrement={data.adults > 0} 
         />
         
         <CounterRow

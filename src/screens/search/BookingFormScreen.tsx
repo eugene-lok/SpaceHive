@@ -178,7 +178,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
 
   const isBudgetComplete = () => {
     const { budget } = formState.formData;
-    return budget.min >= 0 && budget.max >= 0 && budget.min <= budget.max;
+    return budget.max >= 1;
   };
 
   const allSectionsComplete = () => {
@@ -217,16 +217,22 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
   };
 
   const getGuestsDisplayText = () => {
-    const { guests } = formState.formData;
-    let text = `${guests.adults} Adult${guests.adults !== 1 ? 's' : ''}`;
-    if (guests.children > 0) {
-      text += `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`;
-    }
-    if (guests.infants > 0) {
-      text += `, ${guests.infants} Infant${guests.infants !== 1 ? 's' : ''}`;
-    }
-    return text;
-  };
+  const { guests } = formState.formData;
+  
+  // ADDED: Handle 0 adults case
+  if (guests.adults === 0) {
+    return 'No guests selected';
+  }
+  
+  let text = `${guests.adults} Adult${guests.adults !== 1 ? 's' : ''}`;
+  if (guests.children > 0) {
+    text += `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`;
+  }
+  if (guests.infants > 0) {
+    text += `, ${guests.infants} Infant${guests.infants !== 1 ? 's' : ''}`;
+  }
+  return text;
+};
 
   const handleSectionLayout = (section: FormSection, height: number) => {
     setSectionHeights(prev => ({
