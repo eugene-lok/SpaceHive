@@ -1,4 +1,4 @@
-// src/screens/booking/InstantBookingScreen.tsx - Updated with scroll-to-card functionality
+// src/screens/search/InstantBookingScreen.tsx - Updated with navigation to details
 import React, { useState, useCallback, useRef } from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,7 +29,6 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
   const [selectedLocationId, setSelectedLocationId] = useState<number | undefined>();
   const [isCarouselExpanded, setIsCarouselExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('search');
-  const [navigationHeight, setNavigationHeight] = useState(80);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,14 +36,14 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
     }, [])
   );
   
-  // NEW: Debouncing ref for marker presses
+  // Debouncing ref for marker presses
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSummaryPress = () => {
     navigation.goBack();
   };
 
-  // NEW: Debounced marker press handler (300ms debounce)
+  // Debounced marker press handler (300ms debounce)
   const handleMarkerPress = useCallback((location: Location) => {
     // Clear existing timeout
     if (debounceRef.current) {
@@ -58,13 +57,14 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
     }, 100); // Fast debounce for responsive feel
   }, []);
 
-  // NEW: Updated location press handler with reverse interaction
+  // Updated location press handler with navigation to details
   const handleLocationPress = useCallback((location: Location) => {
     console.log('Location card pressed:', location.title);
-    // Reverse interaction: card press also updates map marker selection
-    setSelectedLocationId(location.id);
-    // TODO: Navigate to location details or booking confirmation
-  }, []);
+    // Navigate to InstantBookingDetails screen
+    navigation.navigate('InstantBookingDetails', {
+      location: location,
+    });
+  }, [navigation]);
 
   const handleCarouselExpandedChange = (expanded: boolean) => {
     setIsCarouselExpanded(expanded);
@@ -125,22 +125,17 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
         />
       </View>
 
-      {/* Sliding Options Carousel - NOW with selectedLocationId prop */}
+      {/* Sliding Options Carousel */}
       <InstantBookingOptions
         locations={MOCK_LOCATIONS}
         selectedLocationId={selectedLocationId}
         onLocationPress={handleLocationPress}
         isExpanded={isCarouselExpanded}
         onExpandedChange={handleCarouselExpandedChange}
-        bottomNavHeight={navigationHeight}
       />
 
-      {/* Bottom Navigation - always visible */}
-      <SafeAreaView 
-        edges={['bottom']} 
-        style={styles.navigationContainer}
-        onLayout={(event) => setNavigationHeight(event.nativeEvent.layout.height)} // NEW
-      >
+      {/* Bottom Navigation */}
+      <SafeAreaView edges={['bottom']} style={styles.navigationContainer}>
         <BottomNavigation
           activeTab={activeTab}
           onTabPress={handleTabPress}

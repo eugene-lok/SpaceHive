@@ -9,11 +9,13 @@ import LandingScreen from './src/screens/LandingScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import InstantBookingScreen from './src/screens/search/InstantBookingScreen';
+import InstantBookingDetailsScreen from './src/screens/search/InstantBookingDetailsScreen';
 import BookingsScreen from './src/screens/BookingScreen';
 
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
 import { BookingFormData } from './src/types/booking';
+import { Location } from './src/types/instantBooking';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +27,9 @@ export type RootStackParamList = {
   Home: undefined;
   InstantBooking: {
     formData: BookingFormData;
+  };
+  InstantBookingDetails: {
+    location: Location;
   };
   Bookings: undefined;
 };
@@ -54,6 +59,14 @@ const App: React.FC = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="InstantBooking" component={InstantBookingScreen} />
+        <Stack.Screen 
+          name="InstantBookingDetails" 
+          component={InstantBookingDetailsScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
         <Stack.Screen name="Bookings" component={BookingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
