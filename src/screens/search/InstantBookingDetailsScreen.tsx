@@ -166,6 +166,15 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const [expandedRules, setExpandedRules] = useState<number[]>([]);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const [expandedTestimonials, setExpandedTestimonials] = useState<number[]>([]);
+
+  const toggleTestimonialExpansion = (testimonialId: number) => {
+    setExpandedTestimonials(prev => 
+      prev.includes(testimonialId) 
+        ? prev.filter(id => id !== testimonialId)
+        : [...prev, testimonialId]
+    );
+  };
 
   const handleBack = () => {
     navigation.goBack();
@@ -484,7 +493,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
           <View style={styles.ownerStat}>
             <View style={styles.ratingWithStar}>
               <Text style={styles.ownerStatNumber}>4.66</Text>
-              <StarIcon size={14} weight="fill" color="#000" />
+              <StarIcon size={14} weight="fill" color="#000" style={{marginLeft: 6}}/>
             </View>
             <Text style={styles.ownerStatLabel}>Rating</Text>
           </View>
@@ -530,38 +539,57 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         data={MOCK_TESTIMONIALS}
         horizontal
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View style={styles.testimonialCardNew}>
-            {/* Stars */}
-            <View style={styles.testimonialStars}>
-              {[...Array(item.rating)].map((_, i) => (
-                <StarIcon key={i} size={12} weight="fill" color={theme.colors.onSurface} />
-              ))}
-            </View>
-            
-            {/* Review text container - this will expand/contract */}
-            <View style={styles.testimonialTextContainer}>
-              <Text style={styles.testimonialTextNew} numberOfLines={4}>
-                {item.text}
-              </Text>
+        renderItem={({ item }) => {
+          const isExpanded = expandedTestimonials.includes(item.id);
+          const shouldShowButton = item.text.length > 100; // Adjust character limit as needed
+
+          return (
+            <View style={styles.testimonialCardNew}>
+              {/* Stars at top */}
+              <View style={styles.testimonialStars}>
+                {[...Array(item.rating)].map((_, i) => (
+                  <StarIcon key={i} size={12} weight="fill" color={theme.colors.onSurface} />
+                ))}
+              </View>
               
-              {/* Show more button if needed */}
-              <TouchableOpacity style={styles.showMoreTestimonial}>
-                <Text style={styles.showMoreTestimonialText}>Show more</Text>
-                <MaterialIcons name="expand-more" size={16} color="#666" />
-              </TouchableOpacity>
-            </View>
-            
-            {/* Reviewer info - this will always be at the bottom */}
-            <View style={styles.reviewerInfo}>
-              <Image source={{ uri: item.image }} style={styles.reviewerImage} />
-              <View style={styles.reviewerDetails}>
-                <Text style={styles.reviewerName}>{item.name}</Text>
-                <Text style={styles.reviewTime}>3 weeks ago</Text>
+              {/* Text content section */}
+              <View style={styles.testimonialContentSection}>
+                <Text 
+                  style={styles.testimonialTextNew} 
+                  numberOfLines={isExpanded ? undefined : 3}
+                >
+                  {item.text}
+                </Text>
+                
+                {/* Show more button - only if text is long */}
+                {shouldShowButton && (
+                  <TouchableOpacity 
+                    style={styles.showMoreTestimonial}
+                    onPress={() => toggleTestimonialExpansion(item.id)}
+                  >
+                    <Text style={styles.showMoreTestimonialText}>
+                      {isExpanded ? 'Show less' : 'Show more'}
+                    </Text>
+                    <MaterialIcons 
+                      name={isExpanded ? "expand-less" : "expand-more"} 
+                      size={16} 
+                      color="#666" 
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              
+              {/* Reviewer info - always at bottom */}
+              <View style={styles.reviewerInfo}>
+                <Image source={{ uri: item.image }} style={styles.reviewerImage} />
+                <View style={styles.reviewerDetails}>
+                  <Text style={styles.reviewerName}>{item.name}</Text>
+                  <Text style={styles.reviewTime}>3 weeks ago</Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
+          );
+        }}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
@@ -847,21 +875,24 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   whatsIncludedCard: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
     padding: 16,
     marginRight: 12,
     width: 120, // Fixed width for consistency
     height: 80, // Fixed height for consistency
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start', // Left align content
+    justifyContent: 'space-between', // Left align content
   },
   whatsIncludedText: {
-    fontSize: 12,
-    fontFamily: theme.fonts.bold,
-    color: '#666',
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.onSurfaceVariant,
     flex: 1,
+    marginTop: 4
   },
   amenityCard: {
     backgroundColor: '#f8f8f8',
@@ -1005,34 +1036,39 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   ownerStat: {
-    alignItems: 'center',
-    flex: 1,
+    alignItems: 'flex-start',
+    flex: 0, // Change from flex: 1 to fixed width approach
+    minWidth: 80, // Set minimum width for each stat
+    paddingLeft: 0, // No left padding
+    marginLeft: 0, // No left margin
+    marginBottom: 8
   },
   ownerStatNumber: {
-    fontSize: 16,
-    fontFamily: theme.fonts.bold,
+    fontSize: 20,
+    fontFamily: theme.fonts.medium,
     color: '#000',
-    marginBottom: 4,
+    textAlign: 'left'
   },
   ownerStatLabel: {
     fontSize: 12,
-    fontFamily: theme.fonts.regular,
+    fontFamily: theme.fonts.medium,
     color: theme.colors.onSurfaceDisabled,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   ownerStatDivider: {
-    width: 100,
+    width: 80,
     height: 1,
     backgroundColor: '#e0e0e0',
-    marginBottom: 10
+    marginBottom: 10,
   },
   ratingWithStar: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 2,
+    justifyContent: 'flex-start'
   },
   askQuestionButton: {
     backgroundColor: theme.colors.buttonPrimary,
@@ -1111,7 +1147,43 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.regular,
     color: '#333',
     lineHeight: 20,
-    flex: 1, // Allow text to expand within its container
+    marginBottom: 0, // Remove margin, let show more button handle spacing
+  },
+  testimonialCardNew: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 16,
+    width: 250,
+    minHeight: 250, 
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Keep this for stars/content vs reviewer info
+  },
+
+  testimonialContentSection: {
+    flex: 1, // Takes up available space between stars and reviewer info
+    justifyContent: 'flex-start', // Content starts at top of this section
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  showMoreTestimonial: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8, // Small gap between text and button
+    alignSelf: 'flex-start', // Don't stretch button full width
+  },
+  showMoreTestimonialText: {
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: theme.colors.onSurfaceVariant,
+    marginRight: 4,
+  },
+  reviewerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 'auto', // Push to bottom when content is shorter
   },
   smallCarouselImage: {
     width: 120,
@@ -1123,35 +1195,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   reviewPhoto: {
-    width: 120,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 8,
     marginRight: 12,
   },
-  testimonialCardNew: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginRight: 16,
-    width: 280,
-    borderWidth: 1,
-    borderColor: '#f0f0f0',
-  },
-  showMoreTestimonial: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  showMoreTestimonialText: {
-    fontSize: 14,
-    fontFamily: theme.fonts.semibold,
-    color: '#666',
-    marginRight: 4,
-  },
-  reviewerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  
   reviewerImage: {
     width: 40,
     height: 40,
@@ -1165,7 +1214,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-    marginBottom: 2,
   },
   reviewTime: {
     fontSize: 12,
@@ -1174,28 +1222,28 @@ const styles = StyleSheet.create({
   },
   expandableSection: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',marginHorizontal: 16
+    borderBottomColor: '#f0f0f0',
+    marginHorizontal: 16
   },
   expandableHeader: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   expandableTitle: {
-    marginLeft: 12,
-    fontSize: 16,
+    marginLeft: 8,
+    fontSize: 20,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     flex: 1,
   },
   expandableContent: {
     marginTop: 12,
-    marginLeft: 32,
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.regular,
     color: '#666',
-    lineHeight: 20,
+    lineHeight: 24,
   },
   bottomPadding: {
     height: 100,
