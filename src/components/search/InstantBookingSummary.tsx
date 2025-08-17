@@ -25,16 +25,24 @@ const InstantBookingSummary: React.FC<InstantBookingSummaryProps> = ({
 
   const formatDetailsText = (): string => {
     const parts: string[] = [];
-    
-    // Date
+  
+    // Date - Add safety check
     if (formData.dateTime.isDateFlexible) {
       parts.push('Flexible date');
     } else if (formData.dateTime.date) {
-      const dateStr = formData.dateTime.date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
-      });
-      parts.push(dateStr);
+      try {
+        const date = formData.dateTime.date instanceof Date 
+          ? formData.dateTime.date 
+          : new Date(formData.dateTime.date);
+        
+        const dateStr = date.toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        });
+        parts.push(dateStr);
+      } catch (error) {
+        console.warn('Error formatting date:', error);
+      }
     }
     
     // Time  

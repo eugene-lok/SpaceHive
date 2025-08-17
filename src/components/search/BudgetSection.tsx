@@ -130,8 +130,6 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onSlidingComplete={handleSliderComplete}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
-          thumbStyle={styles.thumbStyle}
-          trackStyle={styles.trackStyle}
         />
 
         {/* Max value slider */}
@@ -145,8 +143,6 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onSlidingComplete={handleSliderComplete}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
-          thumbStyle={styles.thumbStyle}
-          trackStyle={styles.trackStyle}
         />
       </View>
     );

@@ -1,5 +1,5 @@
 // src/screens/search/InstantBookingScreen.tsx - Updated with navigation to details
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../../App';
 import { BookingFormData } from '../../types/booking';
 import { Location, MOCK_LOCATIONS } from '../../types/instantBooking';
+import { SerializableBookingFormData } from '../../../App';
 import InstantBookingSummary from '../../components/search/InstantBookingSummary';
 import InstantBookingMap from '../../components/search/InstantBookingMap';
 import InstantBookingOptions from '../../components/search/InstantBookingOptions';
@@ -21,11 +22,26 @@ interface InstantBookingScreenProps {
   route: InstantBookingScreenRouteProp;
 }
 
+const deserializeFormData = (serializable: SerializableBookingFormData): BookingFormData => {
+  return {
+    ...serializable,
+    dateTime: {
+      ...serializable.dateTime,
+      date: serializable.dateTime.date 
+        ? new Date(serializable.dateTime.date) 
+        : null,
+    },
+  };
+};
+
 const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
   navigation,
   route,
 }) => {
-  const { formData } = route.params;
+  const formData = useMemo(() => 
+    deserializeFormData(route.params.formData), 
+    [route.params.formData]
+  );
   const [selectedLocationId, setSelectedLocationId] = useState<number | undefined>();
   const [isCarouselExpanded, setIsCarouselExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('search');

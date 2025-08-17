@@ -12,6 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
+import { SerializableBookingFormData } from '../../../App';
 import LocationSection from '../../components/search/LocationSection';
 import DateTimeSection from '../../components/search/DateTimeSection';
 import GuestsSection from '../../components/search/GuestsSection';
@@ -243,11 +244,21 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
 
   const handleSearchPress = () => {
     if (allSectionsComplete()) {
+      const serializableFormData: SerializableBookingFormData = {
+        location: formState.formData.location, // ✅ Now works - types match
+        dateTime: {
+          ...formState.formData.dateTime,
+          date: formState.formData.dateTime.date 
+            ? formState.formData.dateTime.date.toISOString() 
+            : null,
+        },
+        guests: formState.formData.guests,
+        budget: formState.formData.budget,
+      };
+
       navigation.navigate('InstantBooking', {
-        formData: formState.formData,
+        formData: serializableFormData, // ✅ No more type errors
       });
-    } else {
-      console.log('Form not complete yet');
     }
   };
 

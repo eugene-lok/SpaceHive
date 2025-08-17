@@ -16,6 +16,30 @@ import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
 import { BookingFormData } from './src/types/booking';
 import { Location } from './src/types/instantBooking';
+export interface SerializableBookingFormData {
+  location: {
+    value: string | null; // ← Fixed: now matches original BookingFormData
+    isFlexible: boolean;
+  };
+  dateTime: {
+    date: string | null; // ← Only this changes from Date to string
+    time: {
+      start: { time: string; period: 'AM' | 'PM' };
+      end: { time: string; period: 'AM' | 'PM' };
+    } | null;
+    isDateFlexible: boolean;
+    isTimeFlexible: boolean;
+  };
+  guests: {
+    adults: number;
+    children: number;
+    infants: number;
+  };
+  budget: {
+    min: number;
+    max: number;
+  };
+}
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -26,7 +50,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Home: undefined;
   InstantBooking: {
-    formData: BookingFormData;
+    formData: SerializableBookingFormData; // ← Use serializable version
   };
   InstantBookingDetails: {
     location: Location;
