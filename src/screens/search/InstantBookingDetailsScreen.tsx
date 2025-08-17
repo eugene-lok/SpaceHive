@@ -142,10 +142,10 @@ const MOCK_VENUE_RULES = [
 const MOCK_TESTIMONIALS = [
   {
     id: 1,
-    name: 'Sarah M.',
+    name: 'Emma M.',
     rating: 5,
-    text: 'Perfect space for our team meeting. Great natural light and very clean!',
-    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=100&h=100&fit=crop&crop=face',
+    text: 'We hosted a small birthday here and it couldn\'t have been more perfect. The space had everything we needed.',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
   },
   {
     id: 2,
@@ -274,19 +274,25 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   );
 
   const renderDescription = () => (
-    <View style={styles.section}>
+    <>
+    <View style={styles.sectionReduced}>
       <Text style={styles.aboutStyle}>About this place</Text>
       <Text style={styles.descriptionText} numberOfLines={readMoreExpanded ? undefined : 3}>
         This modern workspace features floor-to-ceiling windows with stunning city views. 
         Perfect for team meetings, workshops, or creative sessions. The space includes high-speed WiFi, 
         a fully equipped kitchen, and flexible seating arrangements to accommodate various group sizes.
       </Text>
-      <TouchableOpacity onPress={() => setReadMoreExpanded(!readMoreExpanded)}>
-        <Text style={styles.readMoreText}>
-          {readMoreExpanded ? 'Show less' : 'Read more'}
+      <TouchableOpacity 
+        style={styles.showMoreButton}
+        onPress={() => setReadMoreExpanded(!readMoreExpanded)}
+      >
+        <Text style={styles.showMoreButtonText}>
+          {readMoreExpanded ? 'Show Less' : 'Read More'}
         </Text>
       </TouchableOpacity>
     </View>
+    <View style={styles.customSectionBorder}></View>
+    </>
   );
 
   const getWhatsIncludedIcon = (iconName: string) => {
@@ -455,14 +461,40 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const renderVenueOwner = () => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Meet Your Venue Owner</Text>
-      <View style={styles.ownerInfo}>
-        <Image 
-          source={{ uri: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' }}
-          style={styles.ownerImage}
-        />
-        <View style={styles.ownerDetails}>
-          <Text style={styles.ownerName}>John Smith</Text>
-          <Text style={styles.ownerRole}>Host since 2020</Text>
+      <View style={styles.ownerCard}>
+        {/* Column 1 - Image, Name, Join Date */}
+        <View style={styles.ownerLeftColumn}>
+          <Image 
+            source={{ uri: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' }}
+            style={styles.ownerImageNew}
+          />
+          <Text style={styles.ownerNameNew}>Will</Text>
+          <Text style={styles.ownerJoinDate}>Joined Oct 2024</Text>
+        </View>
+        
+        {/* Column 2 - Stats with vertical dividers */}
+        <View style={styles.ownerRightColumn}>
+          <View style={styles.ownerStat}>
+            <Text style={styles.ownerStatNumber}>110</Text>
+            <Text style={styles.ownerStatLabel}>Reviews</Text>
+          </View>
+          
+          <View style={styles.ownerStatDivider} />
+          
+          <View style={styles.ownerStat}>
+            <View style={styles.ratingWithStar}>
+              <Text style={styles.ownerStatNumber}>4.66</Text>
+              <StarIcon size={14} weight="fill" color="#000" />
+            </View>
+            <Text style={styles.ownerStatLabel}>Rating</Text>
+          </View>
+          
+          <View style={styles.ownerStatDivider} />
+          
+          <View style={styles.ownerStat}>
+            <Text style={styles.ownerStatNumber}>Within 1hr</Text>
+            <Text style={styles.ownerStatLabel}>Response Rate</Text>
+          </View>
         </View>
       </View>
       <TouchableOpacity style={styles.askQuestionButton}>
@@ -473,32 +505,61 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
 
   const renderReviews = () => (
     <View style={styles.section}>
-      <View style={styles.reviewsHeader}>
-        <StarIcon size={16} weight = "fill" color={theme.colors.onSurface} />
+      {/* Rating and count - removed extra marginBottom */}
+      <View style={[styles.reviewsHeader, { marginBottom: 8 }]}>
+        <StarIcon size={16} weight="fill" color={theme.colors.onSurface} />
         <Text style={styles.reviewsRating}>{location.rating}</Text>
         <Text style={styles.reviewsCount}>· 110 reviews</Text>
       </View>
-      <View>
-        <Text style={styles.reviewsSubtitle}>Photos from reviews</Text>
-      </View>
+      
+      {/* Photos from reviews section - removed extra margin */}
+      <Text style={styles.reviewsSubtitle}>Photos from reviews</Text>
+      <FlatList
+        data={MOCK_IMAGES}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <Image source={{ uri: item }} style={styles.reviewPhoto} />
+        )}
+        keyExtractor={(item, index) => `review-photo-${index}`}
+        contentContainerStyle={{ paddingTop: 12, paddingBottom: 16 }}
+      />
+      
+      {/* Testimonial cards */}
       <FlatList
         data={MOCK_TESTIMONIALS}
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={styles.testimonialCard}>
-            <View style={styles.testimonialHeader}>
-              <View>
-                <View style={styles.testimonialStars}>
-                  {[...Array(item.rating)].map((_, i) => (
-                    <StarIcon size={12} weight = "fill" color={theme.colors.onSurface} />
-                  ))}
-                </View>
+          <View style={styles.testimonialCardNew}>
+            {/* Stars */}
+            <View style={styles.testimonialStars}>
+              {[...Array(item.rating)].map((_, i) => (
+                <StarIcon key={i} size={12} weight="fill" color={theme.colors.onSurface} />
+              ))}
+            </View>
+            
+            {/* Review text container - this will expand/contract */}
+            <View style={styles.testimonialTextContainer}>
+              <Text style={styles.testimonialTextNew} numberOfLines={4}>
+                {item.text}
+              </Text>
+              
+              {/* Show more button if needed */}
+              <TouchableOpacity style={styles.showMoreTestimonial}>
+                <Text style={styles.showMoreTestimonialText}>Show more</Text>
+                <MaterialIcons name="expand-more" size={16} color="#666" />
+              </TouchableOpacity>
+            </View>
+            
+            {/* Reviewer info - this will always be at the bottom */}
+            <View style={styles.reviewerInfo}>
+              <Image source={{ uri: item.image }} style={styles.reviewerImage} />
+              <View style={styles.reviewerDetails}>
+                <Text style={styles.reviewerName}>{item.name}</Text>
+                <Text style={styles.reviewTime}>3 weeks ago</Text>
               </View>
             </View>
-            <Image source={{ uri: item.image }} style={styles.testimonialImage} />
-            <Text style={styles.testimonialName}>{item.name}</Text>
-            <Text style={styles.testimonialText}>{item.text}</Text>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -582,18 +643,6 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         {renderVenueOwner()}
         {renderReviews()}
         
-        {/* Small image carousel */}
-        <View style={styles.section}>
-          <FlatList
-            data={MOCK_IMAGES}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={styles.smallCarouselImage} />
-            )}
-            keyExtractor={(item, index) => `small-${index}`}
-          />
-        </View>
 
         {/* Expandable sections */}
         {renderExpandableSection('Availability', 'availability')}
@@ -739,8 +788,6 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: 16,
     paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
   },
   sectionTitle: {
     fontSize: 28,
@@ -748,16 +795,42 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 8,
   },
+  sectionReduced: {
+    paddingHorizontal: 16,
+    paddingVertical: 8, // Reduced from default section padding
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  customSectionBorder: {
+    height: 1,
+    backgroundColor: '#f0f0f0',
+    marginHorizontal: 32, // This controls the border width/inset
+    marginVertical: 0,
+  },
   aboutStyle: {
     fontSize: 18,
     fontFamily: theme.fonts.medium,
-    paddingBottom: 16
+    paddingBottom: 20
   },
   descriptionText: {
     fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: theme.colors.onSurfaceVariant,
+    color: theme.colors.onSurfaceDisabled,
     lineHeight: 22,
+  },
+  showMoreButton: {
+    backgroundColor: theme.colors.onSurface,
+    borderRadius: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    alignSelf: 'stretch',
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  showMoreButtonText: {
+    fontSize: 20,
+    fontFamily: theme.fonts.bold,
+    color: '#fff',
   },
   readMoreText: {
     backgroundColor: '#333',
@@ -774,21 +847,21 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   whatsIncludedCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f8f8',
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.onSurfaceDisabled,
     padding: 16,
     marginRight: 12,
-    alignItems: 'center',
-    minWidth: 100,
+    width: 120, // Fixed width for consistency
+    height: 80, // Fixed height for consistency
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start', // Left align content
   },
   whatsIncludedText: {
-    fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: theme.colors.onSurface,
-    marginTop: 8,
-    textAlign: 'center',
+    fontSize: 12,
+    fontFamily: theme.fonts.bold,
+    color: '#666',
+    flex: 1,
   },
   amenityCard: {
     backgroundColor: '#f8f8f8',
@@ -820,7 +893,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   showAllButton: {
-    backgroundColor: '#333',
+    backgroundColor: theme.colors.onSurface,
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -861,10 +934,9 @@ const styles = StyleSheet.create({
   ruleContent: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-    paddingLeft: 48,
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: theme.colors.onSurfaceVariant,
+    color: theme.colors.onSurfaceDisabled,
     lineHeight: 20,
   },
   exactLocation: {
@@ -895,37 +967,77 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: theme.fonts.regular,
     color: '#666',
-    marginBottom: 4
+    marginBottom: 4,
+    marginLeft: 12,
   },
-  ownerInfo: {
+  ownerCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
     flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    marginBottom: 20,
+  },
+  ownerLeftColumn: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginRight: 24,
   },
-  ownerImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 16,
+  ownerImageNew: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 8,
   },
-  ownerDetails: {
+  ownerNameNew: {
+    fontSize: 26,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.onSurface,
+    marginBottom: 0,
+  },
+  ownerJoinDate: {
+    fontSize: 14,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.onSurface,
+    textAlign: 'center',
+  },
+  ownerRightColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  ownerStat: {
+    alignItems: 'center',
     flex: 1,
   },
-  ownerName: {
-    fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+  ownerStatNumber: {
+    fontSize: 16,
+    fontFamily: theme.fonts.bold,
     color: '#000',
     marginBottom: 4,
   },
-  ownerRole: {
-    fontSize: 14,
+  ownerStatLabel: {
+    fontSize: 12,
     fontFamily: theme.fonts.regular,
-    color: '#666',
+    color: theme.colors.onSurfaceDisabled,
+    textAlign: 'center',
+  },
+  ownerStatDivider: {
+    width: 100,
+    height: 1,
+    backgroundColor: '#e0e0e0',
+    marginBottom: 10
+  },
+  ratingWithStar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
   },
   askQuestionButton: {
     backgroundColor: theme.colors.buttonPrimary,
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: 'center',
   },
@@ -938,7 +1050,6 @@ const styles = StyleSheet.create({
   reviewsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
   reviewsRating: {
     fontSize: 26,
@@ -958,11 +1069,22 @@ const styles = StyleSheet.create({
     color: theme.colors.onSurfaceVariant,
   },
   testimonialCard: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
-    marginRight: 12,
+    marginRight: 16,
     width: 280,
+    height: 200, // Fixed height to ensure consistency
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    flexDirection: 'column',
+    justifyContent: 'space-between', // This pushes reviewer info to bottom
+  },
+  testimonialTextContainer: {
+    flex: 1, // This takes up available space between stars and reviewer info
+    justifyContent: 'flex-start',
+    marginTop: 12,
+    marginBottom: 12,
   },
   testimonialHeader: {
     flexDirection: 'row',
@@ -984,11 +1106,12 @@ const styles = StyleSheet.create({
   testimonialStars: {
     flexDirection: 'row',
   },
-  testimonialText: {
+  testimonialTextNew: {
     fontSize: 14,
     fontFamily: theme.fonts.regular,
-    color: '#666',
-    lineHeight: 18,
+    color: '#333',
+    lineHeight: 20,
+    flex: 1, // Allow text to expand within its container
   },
   smallCarouselImage: {
     width: 120,
@@ -996,11 +1119,64 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 12,
   },
+  reviewPhotosSection: {
+    marginTop: 16,
+  },
+  reviewPhoto: {
+    width: 120,
+    height: 80,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  testimonialCardNew: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 16,
+    width: 280,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  showMoreTestimonial: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  showMoreTestimonialText: {
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: '#666',
+    marginRight: 4,
+  },
+  reviewerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reviewerImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 12,
+  },
+  reviewerDetails: {
+    flex: 1,
+  },
+  reviewerName: {
+    fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: '#000',
+    marginBottom: 2,
+  },
+  reviewTime: {
+    fontSize: 12,
+    fontFamily: theme.fonts.regular,
+    color: '#666',
+  },
   expandableSection: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f0f0f0',marginHorizontal: 16
   },
   expandableHeader: {
     flexDirection: 'row',
