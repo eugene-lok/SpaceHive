@@ -6,8 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Modal,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import { theme } from '../../theme/theme';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 interface DateTimeData {
   date: Date | null;
@@ -83,10 +88,10 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
   // Calculate time 1 hour after given time
   const addOneHour = (hour: string, minute: string, period: 'AM' | 'PM') => {
     let newHour = parseInt(hour);
-    let newMinute = parseInt(minute); // Keep same minutes
+    let newMinute = parseInt(minute);
     let newPeriod = period;
 
-    newHour += 1; // Add 1 hour instead of 15 minutes
+    newHour += 1;
 
     if (newHour === 12) {
       newPeriod = period === 'AM' ? 'PM' : 'AM';
@@ -121,34 +126,34 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
   };
 
   const getValidEndTimeOptions = () => {
-  const startTimeInMinutes = timeToMinutes(startHour, startMinute, startPeriod);
-  const validEndTimes: { hour: string; minute: string; period: 'AM' | 'PM' }[] = [];
-  
-  // Generate hourly increments starting from 1 hour after start time
-  for (let i = 1; i <= 12; i++) {
-    const endTimeInMinutes = startTimeInMinutes + (i * 60);
-    const hours24 = Math.floor(endTimeInMinutes / 60) % 24;
-    const minutes = endTimeInMinutes % 60;
+    const startTimeInMinutes = timeToMinutes(startHour, startMinute, startPeriod);
+    const validEndTimes: { hour: string; minute: string; period: 'AM' | 'PM' }[] = [];
     
-    let hour12 = hours24;
-    let period: 'AM' | 'PM' = 'AM';
-    
-    if (hours24 === 0) {
-      hour12 = 12;
-    } else if (hours24 > 12) {
-      hour12 = hours24 - 12;
-      period = 'PM';
-    } else if (hours24 === 12) {
-      period = 'PM';
+    // Generate hourly increments starting from 1 hour after start time
+    for (let i = 1; i <= 12; i++) {
+      const endTimeInMinutes = startTimeInMinutes + (i * 60);
+      const hours24 = Math.floor(endTimeInMinutes / 60) % 24;
+      const minutes = endTimeInMinutes % 60;
+      
+      let hour12 = hours24;
+      let period: 'AM' | 'PM' = 'AM';
+      
+      if (hours24 === 0) {
+        hour12 = 12;
+      } else if (hours24 > 12) {
+        hour12 = hours24 - 12;
+        period = 'PM';
+      } else if (hours24 === 12) {
+        period = 'PM';
+      }
+      
+      validEndTimes.push({
+        hour: hour12.toString().padStart(2, '0'),
+        minute: minutes.toString().padStart(2, '0'),
+        period
+      });
     }
     
-    validEndTimes.push({
-      hour: hour12.toString().padStart(2, '0'),
-      minute: minutes.toString().padStart(2, '0'),
-      period
-    });
-  }
-  
     return validEndTimes;
   };
 
@@ -224,7 +229,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     if (newMinute) setStartMinute(newMinute);
     if (newPeriod) setStartPeriod(newPeriod);
 
-    // Calculate and set end time (15 minutes later)
+    // Calculate and set end time (1 hour later)
     const newEndTime = addOneHour(hour, minute, period);
     setEndHour(newEndTime.hour);
     setEndMinute(newEndTime.minute);
@@ -248,7 +253,6 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       
       setTimeout(updateTimeData, 50);
     }
-    // If invalid, don't update (time stays the same)
   };
 
   const handleDateSelect = (date: Date) => {
@@ -292,7 +296,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     return `${monthNames[currentMonth]} ${currentYear}`;
   };
 
-  // Scrollable dropdown component
+  // IMPROVED Modal-based dropdown component for better iOS support
   const Dropdown: React.FC<{
     value: string;
     options: string[];
@@ -305,38 +309,49 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
       <View style={[styles.dropdownContainer, { minWidth: width }]}>
         <TouchableOpacity 
           style={styles.dropdown}
-          onPress={() => setIsOpen(!isOpen)}
+          onPress={() => setIsOpen(true)}
         >
           <Text style={styles.dropdownText}>{value}</Text>
         </TouchableOpacity>
         
-        {isOpen && (
-          <View style={styles.dropdownList}>
-            <ScrollView 
-              style={styles.dropdownScroll}
-              showsVerticalScrollIndicator={false}
-              nestedScrollEnabled={true}
-            >
-              {options.map((option) => (
-                <TouchableOpacity 
-                  key={option}
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    onChange(option);
-                    setIsOpen(false);
-                  }}
-                >
-                  <Text style={[
-                    styles.dropdownItemText, 
-                    value === option && styles.selectedItem
-                  ]}>
-                    {option}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        <Modal
+          transparent={true}
+          visible={isOpen}
+          animationType="fade"
+          onRequestClose={() => setIsOpen(false)}
+        >
+          <TouchableOpacity 
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setIsOpen(false)}
+          >
+            <View style={styles.modalContent}>
+              <ScrollView 
+                style={styles.modalScrollView}
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+              >
+                {options.map((option) => (
+                  <TouchableOpacity 
+                    key={option}
+                    style={styles.modalItem}
+                    onPress={() => {
+                      onChange(option);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <Text style={[
+                      styles.modalItemText, 
+                      value === option && styles.selectedModalItem
+                    ]}>
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </View>
     );
   };
@@ -490,7 +505,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
         </View>
       )}
 
-      {/* Time Dropdowns - Horizontal Format */}
+      {/* Time Dropdowns - Horizontal Format with improved spacing */}
       {!data.isTimeFlexible && (
         <View style={styles.timeContainer}>
           <View style={styles.timeRowContainer}>
@@ -539,7 +554,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
         </View>
       )}
 
-      {/* Action Buttons */}
+      {/* Action Buttons - Improved spacing from time dropdowns */}
       <View style={styles.actionButtons}>
         <TouchableOpacity style={styles.clearButton} onPress={onClear}>
           <Text style={styles.clearButtonText}>Clear All</Text>
@@ -704,7 +719,7 @@ const styles = StyleSheet.create({
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 0,
+    marginTop: 24, // Increased spacing from time dropdowns
   },
   clearButton: {
     flex: 1,
@@ -767,6 +782,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     color: '#000',
   },
+  // OLD DROPDOWN STYLES - REMOVED
   dropdownContainer: {
     position: 'relative',
   },
@@ -779,45 +795,58 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    minHeight: 44, // Minimum touch target size
   },
   dropdownText: {
     fontSize: 14,
     color: '#000',
-    fontWeight: '500',
-  },
-  dropdownList: {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#e8e8e8',
-    borderRadius: 8,
-    marginTop: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-    zIndex: 1000,
-    maxHeight: 120,
-  },
-  dropdownScroll: {
-    maxHeight: 120,
-  },
-  dropdownItem: {
-    paddingHorizontal: 0,
-    paddingVertical: 8,
-  },
-  dropdownItemText: {
-    fontSize: 14,
-    color: '#000',
+    fontWeight: '600',
     textAlign: 'center',
   },
-  selectedItem: {
-    fontWeight: '600',
+  
+  // NEW MODAL-BASED DROPDOWN STYLES
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    marginHorizontal: 40,
+    maxHeight: screenHeight * 0.4,
+    minWidth: 200,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  modalScrollView: {
+    maxHeight: screenHeight * 0.35,
+  },
+  modalItem: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#e8e8e8',
+  },
+  modalItemText: {
+    fontSize: 18,
+    color: '#000',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  selectedModalItem: {
+    fontWeight: '700',
     color: theme.colors.buttonPrimary,
   },
 });

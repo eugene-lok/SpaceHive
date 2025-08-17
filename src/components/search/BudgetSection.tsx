@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from 'react-native';
 import { theme } from '../../theme/theme';
 import Slider from '@react-native-community/slider';
@@ -127,8 +130,8 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onSlidingComplete={handleSliderComplete}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
-          //thumbStyle={styles.thumbStyle}
-          //trackStyle={styles.trackStyle}
+          thumbStyle={styles.thumbStyle}
+          trackStyle={styles.trackStyle}
         />
 
         {/* Max value slider */}
@@ -142,8 +145,8 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
           onSlidingComplete={handleSliderComplete}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
-          //thumbStyle={styles.thumbStyle}
-          //trackStyle={styles.trackStyle}
+          thumbStyle={styles.thumbStyle}
+          trackStyle={styles.trackStyle}
         />
       </View>
     );
@@ -155,7 +158,9 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
         <View style={styles.completedContent}>
           <Text style={styles.sectionLabel}>Budget</Text>
           <Text style={styles.sectionValue}>
-            ${data.min} - ${data.max} per hour
+            {data.min === 0 && data.max === 0 
+              ? 'No budget set' 
+              : `$${data.min} - ${data.max} per hour`}
           </Text>
         </View>
       </TouchableOpacity>
@@ -168,7 +173,9 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
         <View style={styles.completedContent}>
           <Text style={styles.sectionLabel}>Budget</Text>
           <Text style={styles.sectionValue}>
-            {data.max === 0 ? 'No budget set' : `$${data.min} - ${data.max} per hour`}
+            {data.min === 0 && data.max === 0 
+              ? 'No budget set' 
+              : `$${data.min} - ${data.max} per hour`}
           </Text>
         </View>
       </TouchableOpacity>
@@ -176,97 +183,120 @@ const BudgetSection: React.FC<BudgetSectionProps> = ({
   }
 
   return (
-    <View style={styles.activeSection}>
-      <Text style={styles.sectionTitle}>What is your hourly budget?</Text>
-      
-      <Text style={styles.subtitle}>Price range (per hour)</Text>
-      
-      {/* Price Range Display */}
-      <View style={styles.priceRangeContainer}>
-        <Text style={styles.priceLabel}>Min: ${data.min}</Text>
-        <Text style={styles.priceLabel}>Max: ${data.max}</Text>
-      </View>
+    <KeyboardAvoidingView 
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.activeSection}>
+          <Text style={styles.sectionTitle}>What is your hourly budget?</Text>
+          
+          <Text style={styles.subtitle}>Price range (per hour)</Text>
+          
+          {/* Price Range Display */}
+          <View style={styles.priceRangeContainer}>
+            <Text style={styles.priceLabel}>Min: ${data.min}</Text>
+            <Text style={styles.priceLabel}>Max: ${data.max}</Text>
+          </View>
 
-      {/* Draggable Range Slider */}
-      {/* <View style={styles.sliderWrapper}>
-        <RangeSliderComponent />
-      </View> */}
+          {/* Draggable Range Slider */}
+          {/* Uncomment if you want to enable the slider
+          <View style={styles.sliderWrapper}>
+            <RangeSliderComponent />
+          </View>
+          */}
 
-      {/* Manual Input Fields */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.priceInput}
-          value={minInput}
-          onChangeText={handleMinInputChange}
-          onBlur={handleMinInputBlur}
-          onFocus={() => setIsDragging(true)}
-          keyboardType="numeric"
-          placeholder="0" // Keep as 0
-        />
-        <Text style={styles.inputSeparator}>~</Text>
-        <TextInput
-          style={styles.priceInput}
-          value={maxInput}
-          onChangeText={handleMaxInputChange}
-          onBlur={handleMaxInputBlur}
-          onFocus={() => setIsDragging(true)}
-          keyboardType="numeric"
-          placeholder="0" 
-        />
-      </View>
+          {/* Manual Input Fields */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.priceInput}
+              value={minInput}
+              onChangeText={handleMinInputChange}
+              onBlur={handleMinInputBlur}
+              onFocus={() => setIsDragging(true)}
+              keyboardType="numeric"
+              placeholder="0"
+              placeholderTextColor="#999"
+              returnKeyType="next"
+              blurOnSubmit={false}
+            />
+            <Text style={styles.inputSeparator}>~</Text>
+            <TextInput
+              style={styles.priceInput}
+              value={maxInput}
+              onChangeText={handleMaxInputChange}
+              onBlur={handleMaxInputBlur}
+              onFocus={() => setIsDragging(true)}
+              keyboardType="numeric"
+              placeholder="0"
+              placeholderTextColor="#999"
+              returnKeyType="done"
+            />
+          </View>
 
-      {/* Action Buttons */}
-      <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.clearButton} onPress={onClear}>
-          <Text style={styles.clearButtonText}>Clear All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[
-            styles.saveButton, 
-          ]} 
-          onPress={onSave}
-        >
-          <Text style={styles.saveButtonText}>
-            {'Save'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          {/* Action Buttons - Will always stay visible above keyboard */}
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.clearButton} onPress={onClear}>
+              <Text style={styles.clearButtonText}>Clear All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.saveButton}
+              onPress={onSave}
+            >
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   section: {
-  backgroundColor: '#fff',
-  borderRadius: 16,
-  padding: 20,
-  marginBottom: 16,
-  marginHorizontal: 8, 
-},
-
-activeSection: {
-  backgroundColor: '#fff',
-  borderRadius: 16,
-  padding: 20,
-  marginBottom: 16,
-  marginHorizontal: 8, 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 3,
-},
-
-completedSection: {
-  backgroundColor: '#fff',
-  borderRadius: 16,
-  padding: 20,
-  marginBottom: 16,
-  marginHorizontal: 8, 
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-},
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    marginHorizontal: 8, 
+  },
+  activeSection: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    marginHorizontal: 8, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  completedSection: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    marginHorizontal: 8, 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   completedContent: {
     flex: 1,
   },
@@ -364,7 +394,8 @@ completedSection: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 32, // Increased spacing before buttons
+    paddingHorizontal: 20, // Add horizontal padding for better mobile layout
   },
   priceInput: {
     backgroundColor: '#FFFFFF',
@@ -372,11 +403,22 @@ completedSection: {
     paddingHorizontal: 16,
     paddingVertical: theme.spacing.sm,
     fontSize: 16,
-    textAlign: 'left',
-    minWidth: 80,
+    textAlign: 'center', // Center text for better mobile UX
+    minWidth: 100, // Increased min width for easier tapping
+    minHeight: 44, // Minimum touch target size for mobile
     marginHorizontal: 8,
     borderWidth: 1,
-    borderColor: theme.colors.buttonDisabled
+    borderColor: theme.colors.buttonDisabled,
+    // Add focus styles
+    ...(Platform.OS === 'ios' && {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+    }),
+    ...(Platform.OS === 'android' && {
+      elevation: 2,
+    }),
   },
   inputSeparator: {
     fontSize: 18,
@@ -388,12 +430,16 @@ completedSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 8,
+    paddingTop: 16, // Add padding to ensure it's not too close to inputs
+    // Ensure buttons stay visible above keyboard
+    minHeight: 60,
   },
   clearButton: {
     flex: 1,
     marginRight: 8,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    minHeight: 44, // Minimum touch target
   },
   clearButtonText: {
     fontSize: 16,
@@ -408,6 +454,9 @@ completedSection: {
     paddingVertical: 16,
     borderRadius: 12,
     marginLeft: 8,
+    minHeight: 44, // Minimum touch target
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   saveButtonText: {
     fontSize: 16,
