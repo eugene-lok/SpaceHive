@@ -1,5 +1,7 @@
-// src/components/booking/InstantBookingOptions.tsx - SIMPLE SOLUTION
-import React, { useRef, useEffect, useCallback } from 'react';
+// src/components/search/InstantBookingOptions.tsx
+// Enhanced version with prominent draggable handle
+
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { 
   View, 
   Text,
@@ -38,16 +40,18 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
   const lastOffset = useRef(0);
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
+  
+  // NEW: State to track when user is actively dragging
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // NEW: Animated value for handle styling during drag
+  const handleScale = useRef(new Animated.Value(1)).current;
+  const handleOpacity = useRef(new Animated.Value(1)).current;
 
-  // SIMPLE: Fixed heights
-  const COMPONENT_HEIGHT = screenHeight * 0.75; // Fixed height that works everywhere
-  const COLLAPSED_POSITION = 0; // Stay where positioned
-  
-  // SIMPLE: When expanded, move up just enough to show more content 
-  // but keep handle visible below summary + safe area
-  const EXPANDED_MOVE_UP = screenHeight * 0.35; // Move up by 35% of screen
-  
-  // SIMPLE: Ensure last card is above navbar
+  // Fixed heights
+  const COMPONENT_HEIGHT = screenHeight * 0.75;
+  const COLLAPSED_POSITION = 0;
+  const EXPANDED_MOVE_UP = screenHeight * 0.35;
   const BOTTOM_PADDING = bottomNavHeight + insets.bottom + 30;
 
   useEffect(() => {
@@ -61,6 +65,40 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
       friction: 8,
     }).start();
   }, [isExpanded, EXPANDED_MOVE_UP]);
+
+  // NEW: Animate handle to prominent state
+  const animateHandleToActive = () => {
+    Animated.parallel([
+      Animated.spring(handleScale, {
+        toValue: 1.2, // Scale up by 20%
+        useNativeDriver: true,
+        tension: 150,
+        friction: 8,
+      }),
+      Animated.timing(handleOpacity, {
+        toValue: 0.8,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  // NEW: Animate handle back to normal state
+  const animateHandleToNormal = () => {
+    Animated.parallel([
+      Animated.spring(handleScale, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 150,
+        friction: 8,
+      }),
+      Animated.timing(handleOpacity, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   // Scroll to selected location card
   const scrollToLocation = useCallback((locationId: number) => {
@@ -84,22 +122,30 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
     }
   }, [selectedLocationId, scrollToLocation]);
 
-  // Pan responder for drag gestures
+  // ENHANCED: Pan responder with handle visual feedback
   const handlePanResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: (_, gestureState) => {
       return Math.abs(gestureState.dy) > 5;
     },
     onPanResponderGrant: () => {
+      // MODIFIED: Make handle prominent when user starts dragging
+      setIsDragging(true);
+      animateHandleToActive();
+      
       translateY.setOffset(lastOffset.current);
       translateY.setValue(0);
     },
     onPanResponderMove: (_, gestureState) => {
-      // SIMPLE: Constrain movement between collapsed and expanded positions
+      // Constrain movement between collapsed and expanded positions
       const constrainedDy = Math.max(-EXPANDED_MOVE_UP - lastOffset.current, Math.min(-lastOffset.current, gestureState.dy));
       translateY.setValue(constrainedDy);
     },
     onPanResponderRelease: (_, gestureState) => {
+      // MODIFIED: Reset handle appearance when user releases
+      setIsDragging(false);
+      animateHandleToNormal();
+      
       const threshold = -EXPANDED_MOVE_UP / 2;
       const currentOffset = lastOffset.current + gestureState.dy;
       
@@ -130,6 +176,12 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
     transform: [{ translateY }],
   };
 
+  // NEW: Dynamic handle style based on drag state
+  const handleAnimatedStyle = {
+    transform: [{ scaleX: handleScale }, { scaleY: handleScale }],
+    opacity: handleOpacity,
+  };
+
   // Handle scroll errors gracefully
   const handleScrollToIndexFailed = useCallback((info: any) => {
     console.log('Scroll to index failed:', info);
@@ -144,9 +196,21 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
 
   return (
     <Animated.View style={[styles.container, { height: COMPONENT_HEIGHT }, containerStyle]}>
-      {/* Handle - Always accessible */}
+      {/* ENHANCED: Handle with visual feedback */}
       <View style={styles.handleContainer} {...handlePanResponder.panHandlers}>
-        <View style={styles.handle} />
+        <Animated.View 
+          style={[
+            styles.handle, 
+            isDragging && styles.handleActive,
+            handleAnimatedStyle
+          ]} 
+        />
+        {/* OPTIONAL: Add subtle text hint when dragging */}
+        {isDragging && (
+          <Animated.Text style={[styles.dragHint, { opacity: handleOpacity }]}>
+            {isExpanded ? 'Drag down to collapse' : 'Drag up to expand'}
+          </Animated.Text>
+        )}
       </View>
       
       <View style={styles.header}>
@@ -155,7 +219,6 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
         </View>
       </View>
       
-      {/* FlatList with proper bottom padding */}
       <FlatList
         ref={flatListRef}
         data={locations}
@@ -183,7 +246,7 @@ const InstantBookingOptions: React.FC<InstantBookingOptionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: -(screenHeight * 0.25), // SIMPLE: Position so 75% is visible when collapsed
+    bottom: -(screenHeight * 0.25),
     left: 0,
     right: 0,
     backgroundColor: '#fff',
@@ -207,6 +270,29 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: '#D1D1D6',
     borderRadius: 2,
+  },
+  // NEW: Enhanced handle style when active/dragging
+  handleActive: {
+    backgroundColor: '#007AFF', // iOS blue or use your theme color
+    height: 6, // Slightly taller
+    width: 100, // Slightly wider
+    borderRadius: 3,
+    // Add shadow for more prominence
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  // NEW: Optional drag hint text
+  dragHint: {
+    fontSize: 12,
+    color: '#007AFF',
+    marginTop: 4,
+    fontWeight: '500',
   },
   header: {
     paddingHorizontal: 16,
