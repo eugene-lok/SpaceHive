@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Text } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   MagnifyingGlassIcon,
   CalendarCheckIcon,
@@ -11,7 +12,6 @@ import {
   Icon
 } from 'phosphor-react-native';
 import { theme } from '../theme/theme';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -38,8 +38,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   activeTab = 'search',
   onTabPress,
 }) => {
-  const insets = useSafeAreaInsets();
-  
   const handleTabPress = (tabId: string) => {
     onTabPress?.(tabId);
   };
@@ -49,7 +47,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
     const IconComponent = item.icon;
    
     if (isActive) {
-      // Active state: Pill-shaped background with icon and text
       return (
         <TouchableOpacity
           key={item.id}
@@ -65,7 +62,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             weight="bold"
             style={styles.activeIcon}
           />
-         
           <Text style={styles.activeNavText}>
             {item.title}
           </Text>
@@ -73,7 +69,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
       );
     }
     
-    // Inactive state: Just icon
     return (
       <TouchableOpacity
         key={item.id}
@@ -93,21 +88,34 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   };
   
   return (
-    <View style={[styles.container, {paddingBottom: Math.max(insets.bottom, theme.spacing.lg)}]}>
+    <SafeAreaView edges={['bottom']} style={styles.container}>
       <View style={styles.navWrapper}>
         {navItems.map(renderNavItem)}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.surface,
-    paddingTop: theme.spacing.sm,
+    paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.outline
+    borderTopColor: theme.colors.outline,
+    position: 'absolute', // Make it always stick to bottom
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000, // Ensure it's above other content
+    elevation: 8, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
   },
   navWrapper: {
     flexDirection: 'row',
