@@ -229,8 +229,9 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
       <Text style={styles.locationSubtitle}>{location.location}</Text>
       <View style={styles.ratingContainer}>
         <MaterialIcons name="star" size={16} color="#000" />
-        <Text style={styles.ratingText}>{location.rating}</Text>
-        <Text style={styles.reviewsText}>· 110 reviews · Calgary, Canada</Text>
+        <Text style={styles.ratingText}>{location.rating} ·</Text>
+        <Text style={styles.reviewsText}>110 reviews</Text>
+        {/* <Text style={styles.cityText}> · Calgary, Canada</Text> */}
       </View>
     </View>
   );
@@ -539,7 +540,7 @@ const styles = StyleSheet.create({
   },
   rightButtons: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 16,
   },
   imageIndicator: {
     position: 'absolute',
@@ -558,7 +559,7 @@ const styles = StyleSheet.create({
   // MODIFIED: New pill-shaped attributes styles
   attributesContainer: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 32,
     paddingBottom: 8,
   },
   attributePills: {
@@ -569,24 +570,26 @@ const styles = StyleSheet.create({
   attributePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.buttonDisabled,
     gap: 4,
   },
   attributePillText: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: theme.fonts.medium,
-    color: '#666',
+    color: '#000'
   },
   headerContainer: {
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   locationTitle: {
-    fontSize: 24,
-    fontFamily: theme.fonts.bold,
+    fontSize: 26,
+    fontFamily: theme.fonts.semibold,
     color: '#000',
     marginBottom: 4,
   },
@@ -608,8 +611,15 @@ const styles = StyleSheet.create({
   },
   reviewsText: {
     fontSize: 14,
+    fontFamily: theme.fonts.semibold,
+    color: '#000',
+    marginLeft: 4,
+    textDecorationLine: "underline"
+  },
+  cityText: {
+    fontSize: 14,
     fontFamily: theme.fonts.regular,
-    color: '#666',
+    color: '#000',
     marginLeft: 4,
   },
   section: {
