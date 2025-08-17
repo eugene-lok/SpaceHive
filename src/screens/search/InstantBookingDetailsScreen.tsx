@@ -275,6 +275,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
 
   const renderDescription = () => (
     <View style={styles.section}>
+      <Text style={styles.aboutStyle}>About this place</Text>
       <Text style={styles.descriptionText} numberOfLines={readMoreExpanded ? undefined : 3}>
         This modern workspace features floor-to-ceiling windows with stunning city views. 
         Perfect for team meetings, workshops, or creative sessions. The space includes high-speed WiFi, 
@@ -425,8 +426,8 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
               </View>
               <MaterialIcons 
                 name={expandedRules.includes(index) ? 'remove' : 'add'} 
-                size={20} 
-                color="#666" 
+                size={26} 
+                color={theme.colors.onSurfaceVariant} 
               />
             </TouchableOpacity>
             {expandedRules.includes(index) && (
@@ -441,11 +442,13 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const renderLocationSection = () => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Where you'll be</Text>
+      <Text style={styles.exactLocation}>Exact location shared after booking.</Text>
       <View style={styles.mapPlaceholder}>
         <Text style={styles.mapText}>Map Placeholder</Text>
       </View>
       <Text style={styles.locationText}>{location.location}</Text>
-      <Text style={styles.instructionsText}>Instructions to get there...</Text>
+      <Text style={styles.instructionsText}>· 2 min walk to C-Train</Text>
+      <Text style={styles.instructionsText}>· Street parking & paid lots nearby</Text>
     </View>
   );
 
@@ -475,6 +478,9 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         <Text style={styles.reviewsRating}>{location.rating}</Text>
         <Text style={styles.reviewsCount}>· 110 reviews</Text>
       </View>
+      <View>
+        <Text style={styles.reviewsSubtitle}>Photos from reviews</Text>
+      </View>
       <FlatList
         data={MOCK_TESTIMONIALS}
         horizontal
@@ -482,9 +488,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         renderItem={({ item }) => (
           <View style={styles.testimonialCard}>
             <View style={styles.testimonialHeader}>
-              <Image source={{ uri: item.image }} style={styles.testimonialImage} />
               <View>
-                <Text style={styles.testimonialName}>{item.name}</Text>
                 <View style={styles.testimonialStars}>
                   {[...Array(item.rating)].map((_, i) => (
                     <StarIcon size={12} weight = "fill" color={theme.colors.onSurface} />
@@ -492,6 +496,8 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
                 </View>
               </View>
             </View>
+            <Image source={{ uri: item.image }} style={styles.testimonialImage} />
+            <Text style={styles.testimonialName}>{item.name}</Text>
             <Text style={styles.testimonialText}>{item.text}</Text>
           </View>
         )}
@@ -737,30 +743,41 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   sectionTitle: {
-    fontSize: 20,
-    fontFamily: theme.fonts.bold,
+    fontSize: 28,
+    fontFamily: theme.fonts.semibold,
     color: '#000',
-    marginBottom: 16,
+    marginBottom: 8,
+  },
+  aboutStyle: {
+    fontSize: 18,
+    fontFamily: theme.fonts.medium,
+    paddingBottom: 16
   },
   descriptionText: {
     fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: '#333',
+    color: theme.colors.onSurfaceVariant,
     lineHeight: 22,
   },
   readMoreText: {
-    fontSize: 16,
-    fontFamily: theme.fonts.semibold,
-    color: theme.colors.primary,
-    marginTop: 8,
+    backgroundColor: '#333',
+    color: '#fff',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginTop: 16,
+    alignItems: 'center',
   },
   // NEW: What's included carousel styles
   whatsIncludedContainer: {
     paddingRight: 16,
   },
   whatsIncludedCard: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.onSurfaceDisabled,
     padding: 16,
     marginRight: 12,
     alignItems: 'center',
@@ -769,7 +786,7 @@ const styles = StyleSheet.create({
   whatsIncludedText: {
     fontSize: 14,
     fontFamily: theme.fonts.medium,
-    color: '#333',
+    color: theme.colors.onSurface,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -811,7 +828,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   showAllButtonText: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: theme.fonts.semibold,
     color: '#fff',
   },
@@ -828,7 +845,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 12,
   },
   ruleHeaderLeft: {
     flexDirection: 'row',
@@ -838,7 +855,7 @@ const styles = StyleSheet.create({
   },
   ruleTitle: {
     fontSize: 16,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.bold,
     color: '#333',
   },
   ruleContent: {
@@ -847,8 +864,13 @@ const styles = StyleSheet.create({
     paddingLeft: 48,
     fontSize: 14,
     fontFamily: theme.fonts.regular,
-    color: '#666',
+    color: theme.colors.onSurfaceVariant,
     lineHeight: 20,
+  },
+  exactLocation: {
+    fontFamily: theme.fonts.regular,
+    color: theme.colors.onSurfaceVariant,
+    paddingBottom: 16,
   },
   mapPlaceholder: {
     height: 200,
@@ -870,9 +892,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   instructionsText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.regular,
     color: '#666',
+    marginBottom: 4
   },
   ownerInfo: {
     flexDirection: 'row',
@@ -900,17 +923,17 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   askQuestionButton: {
-    borderWidth: 1,
-    borderColor: '#000',
+    backgroundColor: theme.colors.buttonPrimary,
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: 'center',
   },
   askQuestionText: {
-    fontSize: 16,
-    fontFamily: theme.fonts.semibold,
-    color: '#000',
+    fontSize: 20,
+    fontFamily: theme.fonts.bold,
+    color: '#fff',
+    paddingVertical: 4
   },
   reviewsHeader: {
     flexDirection: 'row',
@@ -918,16 +941,21 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   reviewsRating: {
-    fontSize: 16,
+    fontSize: 26,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     marginLeft: 4,
   },
   reviewsCount: {
-    fontSize: 16,
-    fontFamily: theme.fonts.regular,
-    color: '#666',
+    fontSize: 26,
+    fontFamily: theme.fonts.semibold,
+    color: '#000',
     marginLeft: 4,
+  },
+  reviewsSubtitle: {
+    fontSize: 14,
+    fontFamily: theme.fonts.regular,
+    color: theme.colors.onSurfaceVariant,
   },
   testimonialCard: {
     backgroundColor: '#f8f8f8',
@@ -1022,8 +1050,8 @@ const styles = StyleSheet.create({
   },
   priceUnit: {
     fontSize: 16,
-    fontFamily: theme.fonts.regular,
-    color: '#666',
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.onSurface
   },
   minimumText: {
     fontSize: 14,
@@ -1033,13 +1061,13 @@ const styles = StyleSheet.create({
   },
   bookNowButton: {
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
+    paddingHorizontal: 36,
+    paddingVertical: 18,
     borderRadius: 8,
     marginLeft: 16,
   },
   bookNowText: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: theme.fonts.bold,
     color: '#fff',
   },
