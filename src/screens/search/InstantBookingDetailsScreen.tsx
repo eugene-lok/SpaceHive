@@ -14,7 +14,43 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { 
+  WaveformIcon,
+  WavesIcon,
+  KeyholeIcon,
+  BusIcon,
+  PlusIcon,
+  CoffeeIcon, 
+  LockIcon, 
+  SunIcon, 
+  StarIcon, 
+  BedIcon,
+  OvenIcon,
+  BathtubIcon,
+  CityIcon,
+  ForkKnifeIcon,
+  LetterCirclePIcon,
+  WifiHighIcon,
+  MountainsIcon,
+  CarIcon,
+  SnowflakeIcon,
+  TelevisionSimpleIcon,
+  SpeakerHighIcon,
+  HamburgerIcon,
+  BeerSteinIcon,
+  CigaretteIcon,
+  PawPrintIcon,
+  ConfettiIcon,
+  MusicNotesIcon,
+  ArmchairIcon,
+  CalendarCheckIcon,
+  CalendarXIcon,
+  ClockIcon,
+  SprayBottleIcon,
+  CaretDownIcon,
+  CaretUpIcon
+} from 'phosphor-react-native';
 import { RootStackParamList } from '../../../App';
 import { Location } from '../../types/instantBooking';
 import { theme } from '../../theme/theme';
@@ -38,19 +74,20 @@ const MOCK_IMAGES = [
 
 // New: What's included mock data
 const MOCK_WHATS_INCLUDED = [
-  { id: 1, icon: 'bed', text: '1 Bedroom' },
-  { id: 2, icon: 'kitchen', text: '1 Kitchen' },
+  { id: 1, icon: 'BathtubIcon', text: '1 Bathroom' },
+  { id: 2, icon: 'OvenIcon', text: '1 Kitchen' },
 ];
 
+// Replace MOCK_AMENITIES  
 const MOCK_AMENITIES = [
-  { id: 1, name: 'WiFi', icon: 'wifi' },
-  { id: 2, name: 'City skyline view', icon: 'landscape' },
-  { id: 3, name: 'Coffee', icon: 'local-cafe' },
-  { id: 4, name: 'Kitchen', icon: 'kitchen' },
-  { id: 5, name: 'Parking', icon: 'local-parking' },
-  { id: 6, name: 'Air Conditioning', icon: 'ac-unit' },
-  { id: 7, name: 'TV', icon: 'tv' },
-  { id: 8, name: 'Sound system', icon: 'volume-up' },
+  { id: 1, name: 'WiFi', icon: 'WifiHighIcon' },
+  { id: 2, name: 'City skyline view', icon: 'CityIcon' },
+  { id: 3, name: 'Coffee', icon: 'CoffeeIcon' },
+  { id: 4, name: 'Kitchen', icon: 'ForkKnifeIcon' },
+  { id: 5, name: 'Parking', icon: 'LetterCirclePIcon' },
+  { id: 6, name: 'Air Conditioning', icon: 'SnowflakeIcon' },
+  { id: 7, name: 'TV', icon: 'TelevisionSimpleIcon' },
+  { id: 8, name: 'Sound system', icon: 'SpeakerHighIcon' },
 ];
 
 const MOCK_VENUE_OFFERS = [
@@ -67,37 +104,37 @@ const MOCK_VENUE_OFFERS = [
 const MOCK_VENUE_RULES = [
   {
     title: 'Food and Drink',
-    icon: 'restaurant',
+    icon: 'HamburgerIcon',
     content: 'Outside food and catering are welcome. Please clean up after use.',
   },
   {
     title: 'Alcohol',
-    icon: 'local-bar',
+    icon: 'BeerSteinIcon',
     content: 'Alcohol is allowed.',
   },
   {
     title: 'Smoking / Vaping',
-    icon: 'smoke-free',
+    icon: 'CigaretteIcon',
     content: 'Smoking and vaping are not allowed inside the venue.',
   },
   {
     title: 'Pets',
-    icon: 'pets',
+    icon: 'PawPrintIcon',
     content: 'Pets are not allowed, except for certified service animals.',
   },
   {
     title: 'Decorations',
-    icon: 'celebration',
+    icon: 'ConfettiIcon',
     content: 'Decorations are welcome but must not damage walls, floors, or furniture. Please remove them after your event.',
   },
   {
     title: 'Loud Music',
-    icon: 'volume-up',
+    icon: 'MusicNotesIcon',
     content: 'Keep music volume at a reasonable level to respect neighbors.',
   },
   {
     title: 'Rearranging Furniture',
-    icon: 'chair',
+    icon: 'ArmchairIcon',
     content: 'Furniture may be moved, but please return it to its original layout before leaving.',
   },
 ];
@@ -196,27 +233,27 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     <View style={styles.attributesContainer}>
       <View style={styles.attributePills}>
         <View style={styles.attributePill}>
-          <MaterialIcons name="music-note" size={14} color="#666" />
+          <WaveformIcon size={14} color={theme.colors.onSurface} />
           <Text style={styles.attributePillText}>Music-Friendly</Text>
         </View>
         <View style={styles.attributePill}>
-          <MaterialIcons name="local-cafe" size={14} color="#666" />
+          <WavesIcon size={14} color={theme.colors.onSurface}/>
           <Text style={styles.attributePillText}>Cozy</Text>
         </View>
         <View style={styles.attributePill}>
-          <MaterialIcons name="lock" size={14} color="#666" />
+          <KeyholeIcon size={14} color={theme.colors.onSurface} />
           <Text style={styles.attributePillText}>Private</Text>
         </View>
         <View style={styles.attributePill}>
-          <MaterialIcons name="wb-sunny" size={14} color="#666" />
+          <SunIcon size={14} color={theme.colors.onSurface} />
           <Text style={styles.attributePillText}>Natural Light</Text>
         </View>
         <View style={styles.attributePill}>
-          <MaterialIcons name="directions-transit" size={14} color="#666" />
+          <BusIcon size={14} color={theme.colors.onSurface} />
           <Text style={styles.attributePillText}>Transit-Friendly</Text>
         </View>
         <View style={styles.attributePill}>
-          <MaterialIcons name="group" size={14} color="#666" />
+          <PlusIcon size={14} color={theme.colors.onSurface} />
           <Text style={styles.attributePillText}>3</Text>
         </View>
       </View>
@@ -228,7 +265,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
       <Text style={styles.locationTitle}>{location.title}</Text>
       <Text style={styles.locationSubtitle}>{location.location}</Text>
       <View style={styles.ratingContainer}>
-        <MaterialIcons name="star" size={16} color="#000" />
+        <StarIcon size={14} weight = "fill" color={theme.colors.onSurface} />
         <Text style={styles.ratingText}>{location.rating} ·</Text>
         <Text style={styles.reviewsText}>110 reviews</Text>
         {/* <Text style={styles.cityText}> · Calgary, Canada</Text> */}
@@ -251,6 +288,22 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     </View>
   );
 
+  const getWhatsIncludedIcon = (iconName: string) => {
+    const iconProps = {
+      size: 24,
+      color: theme.colors.onSurface
+    };
+
+    switch (iconName) {
+      case 'BathtubIcon':
+        return <BathtubIcon {...iconProps} />;
+      case 'OvenIcon':
+        return <OvenIcon {...iconProps} />;
+      default:
+        return <BedIcon {...iconProps} />;
+    }
+  };
+
   // NEW: What's included carousel
   const renderWhatsIncluded = () => (
     <View style={styles.section}>
@@ -262,7 +315,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         contentContainerStyle={styles.whatsIncludedContainer}
         renderItem={({ item }) => (
           <View style={styles.whatsIncludedCard}>
-            <MaterialIcons name={item.icon} size={24} color="#333" />
+            {getWhatsIncludedIcon(item.icon)}
             <Text style={styles.whatsIncludedText}>{item.text}</Text>
           </View>
         )}
@@ -270,6 +323,25 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
       />
     </View>
   );
+
+  const getAmenityIcon = (iconName: string) => {
+    const iconProps = {
+      size: 24,
+      color: theme.colors.onSurface
+    };
+
+    switch (iconName) {
+      case 'WifiHighIcon': return <WifiHighIcon {...iconProps} />;
+      case 'CityIcon': return <CityIcon {...iconProps} />;
+      case 'CoffeeIcon': return <CoffeeIcon {...iconProps} />;
+      case 'ForkKnifeIcon': return <ForkKnifeIcon {...iconProps} />;
+      case 'LetterCirclePIcon': return <LetterCirclePIcon {...iconProps} />;
+      case 'SnowflakeIcon': return <SnowflakeIcon {...iconProps} />;
+      case 'TelevisionSimpleIcon': return <TelevisionSimpleIcon {...iconProps} />;
+      case 'SpeakerHighIcon': return <SpeakerHighIcon {...iconProps} />;
+      default: return <WifiHighIcon {...iconProps} />;
+    }
+  };
 
   const renderAmenitiesCarousel = () => (
     <View style={styles.section}>
@@ -280,14 +352,14 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={styles.amenityCard}>
-            <MaterialIcons name={item.icon} size={24} color="#000" />
+            {getAmenityIcon(item.icon)}
             <Text style={styles.amenityCardText}>{item.name}</Text>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
-  );
+  ); 
 
   // MODIFIED: Changed to list with icons and expandable button
   const renderVenueOffers = () => {
@@ -300,7 +372,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         <View style={styles.amenitiesList}>
           {displayedAmenities.map((amenity, index) => (
             <View key={amenity.id} style={styles.amenityItem}>
-              <MaterialIcons name={amenity.icon} size={20} color="#333" />
+              {getAmenityIcon(amenity.icon)}
               <Text style={styles.amenityText}>{amenity.name}</Text>
             </View>
           ))}
@@ -319,6 +391,23 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     );
   };
 
+  const getVenueRuleIcon = (iconName: string) => {
+  const iconProps = {
+    size: 20,
+    color: theme.colors.onSurface
+  };
+
+  switch (iconName) {
+    case 'HamburgerIcon': return <HamburgerIcon {...iconProps} />;
+    case 'BeerSteinIcon': return <BeerSteinIcon {...iconProps} />;
+    case 'CigaretteIcon': return <CigaretteIcon {...iconProps} />;
+    case 'PawPrintIcon': return <PawPrintIcon {...iconProps} />;
+    case 'MusicNotesIcon': return <MusicNotesIcon {...iconProps} />;
+    case 'ArmchairIcon': return <ArmchairIcon {...iconProps} />;
+    default: return <HamburgerIcon {...iconProps} />;
+  }
+};
+
   // MODIFIED: Changed to accordion with +/- buttons
   const renderVenueRules = () => (
     <View style={styles.section}>
@@ -331,7 +420,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
               onPress={() => toggleRuleExpansion(index)}
             >
               <View style={styles.ruleHeaderLeft}>
-                <MaterialIcons name={rule.icon} size={20} color="#333" />
+                {getVenueRuleIcon(rule.icon)}
                 <Text style={styles.ruleTitle}>{rule.title}</Text>
               </View>
               <MaterialIcons 
@@ -382,7 +471,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const renderReviews = () => (
     <View style={styles.section}>
       <View style={styles.reviewsHeader}>
-        <MaterialIcons name="star" size={16} color="#000" />
+        <StarIcon size={16} weight = "fill" color={theme.colors.onSurface} />
         <Text style={styles.reviewsRating}>{location.rating}</Text>
         <Text style={styles.reviewsCount}>· 110 reviews</Text>
       </View>
@@ -398,7 +487,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
                 <Text style={styles.testimonialName}>{item.name}</Text>
                 <View style={styles.testimonialStars}>
                   {[...Array(item.rating)].map((_, i) => (
-                    <MaterialIcons key={i} name="star" size={12} color="#000" />
+                    <StarIcon size={12} weight = "fill" color={theme.colors.onSurface} />
                   ))}
                 </View>
               </View>
@@ -411,13 +500,33 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     </View>
   );
 
+  const getExpandableSectionIcon = (key: string) => {
+  const iconProps = {
+    size: 20,
+    color: theme.colors.onSurface
+  };
+
+  switch (key) {
+    case 'availability':
+      return <CalendarCheckIcon {...iconProps} />;
+    case 'cancellation':
+      return <CalendarXIcon {...iconProps} />;
+    case 'operating':
+      return <ClockIcon {...iconProps} />;
+    case 'cleaning':
+      return <SprayBottleIcon {...iconProps} />;
+    default:
+      return <CalendarCheckIcon {...iconProps} />;
+  }
+};
+
   const renderExpandableSection = (title: string, key: string) => (
     <TouchableOpacity
       style={styles.expandableSection}
       onPress={() => toggleSectionExpansion(key)}
     >
       <View style={styles.expandableHeader}>
-        <MaterialIcons name="event" size={20} color="#000" />
+        {getExpandableSectionIcon(key)}
         <Text style={styles.expandableTitle}>{title}</Text>
         <MaterialIcons 
           name={expandedSections.includes(key) ? "expand-less" : "expand-more"} 
@@ -461,7 +570,6 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         {renderHeader()}
         {renderDescription()}
         {renderWhatsIncluded()}
-        {renderAmenitiesCarousel()}
         {renderVenueOffers()}
         {renderVenueRules()}
         {renderLocationSection()}
