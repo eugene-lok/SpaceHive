@@ -21,132 +21,100 @@ interface SpaceCardProps {
 }
 
 const { width: screenWidth } = Dimensions.get('window');
+const cardWidth = screenWidth * 0.8;
+const cardHeight = 280;
 
 const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // Mock multiple images for pagination - in real app, this would come from space.images array
-  const images = space.images;
 
-  // Auto-rotate images every 3 seconds (you can adjust this)
   useEffect(() => {
-  if (images.length > 1) {
-    // 🚀 Preload next image before switching
-    const preloadAndSwitch = () => {
-      const nextIndex = (currentImageIndex + 1) % images.length;
-      
-      // Preload next image
-      const nextImageUri = Image.resolveAssetSource(images[nextIndex]).uri;
-      Image.prefetch(nextImageUri).then(() => {
-        // Only switch after preloading
-        setCurrentImageIndex(nextIndex);
-      }).catch(() => {
-        // Fallback: switch anyway if preload fails
-        setCurrentImageIndex(nextIndex);
-      });
-    };
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % space.images.length
+      );
+    }, 3000);
 
-    const interval = setInterval(preloadAndSwitch, 15000);
     return () => clearInterval(interval);
-  }
-}, [images, currentImageIndex]);
+  }, [space.images.length]);
 
-  useEffect(() => {
-    // Preload all images when component mounts
-    const preloadAllImages = async () => {
-      try {
-        const preloadPromises = images.map(imageSource => {
-          const uri = Image.resolveAssetSource(imageSource).uri;
-          return Image.prefetch(uri);
-        });
-        await Promise.all(preloadPromises);
-      } catch (error) {
-        console.warn('Image preloading failed:', error);
-      }
-    };
-
-    preloadAllImages();
-  }, [images]);
-
-  // Calculate card width for mobile-first design
-  const cardWidth = screenWidth * 0.5; 
-  const cardHeight = cardWidth * 1; 
   return (
-    <TouchableOpacity 
-      style={[styles.card, { width: cardWidth, height: cardHeight }]} 
-      onPress={onPress}
-      activeOpacity={0.9}
-    >
-      <ImageBackground
-        source={images[currentImageIndex]}
-        style={styles.imageBackground}
-        imageStyle={styles.image}
+    // Shadow wrapper - handles shadows and positioning
+    <View style={styles.shadowContainer}>
+      <TouchableOpacity 
+        style={styles.card}
+        onPress={onPress}
+        activeOpacity={0.9}
       >
-        {/* Gradient overlay from transparent to teal at bottom */}
-        <LinearGradient
-          colors={['transparent', theme.colors.primary, theme.colors.primary]}
-          style={styles.gradient}
-          locations={[0, 1, 1]}
+        <ImageBackground
+          source={space.images[currentImageIndex]}
+          style={styles.imageBackground}
+          imageStyle={styles.image}
         >
-          {/* Content at bottom */}
-          <View style={styles.contentContainer}>
-            {/* Pagination dots */}
-            <View style={styles.paginationContainer}>
-              {images.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.paginationDot,
-                    index === currentImageIndex ? 
-                      styles.paginationDotActive : 
-                      styles.paginationDotInactive
-                  ]}
-                />
-              ))}
-            </View>
-
-            {/* Space information */}
-            <View style={styles.textContainer}>
-              {/* Space name with ellipsis */}
-              <Text 
-                variant="titleMedium" 
-                style={styles.spaceName}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {space.title}
-              </Text>
-
-              {/* Price and rating row */}
-              <View style={styles.priceRatingRow}>
-                <Text variant="bodyMedium" style={styles.price}>
-                  {space.price}
-                </Text>
-                
-                <View style={styles.ratingContainer}>
-                  <MaterialIcons 
-                    name="star" 
-                    size={16} 
-                    color={theme.colors.buttonDisabled} 
+          <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']}
+            style={styles.gradient}
+          >
+            <View style={styles.contentContainer}>
+              {/* Pagination dots */}
+              <View style={styles.paginationContainer}>
+                {space.images.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.paginationDot,
+                      index === currentImageIndex ? 
+                        styles.paginationDotActive : 
+                        styles.paginationDotInactive
+                    ]}
                   />
-                  <Text variant="bodyMedium" style={styles.rating}>
-                    {space.rating}
+                ))}
+              </View>
+
+              {/* Space information */}
+              <View style={styles.textContainer}>
+                {/* Space name with ellipsis */}
+                <Text 
+                  variant="titleMedium" 
+                  style={styles.spaceName}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {space.title}
+                </Text>
+
+                {/* Price and rating row */}
+                <View style={styles.priceRatingRow}>
+                  <Text variant="bodyMedium" style={styles.price}>
+                    {space.price}
                   </Text>
+                  
+                  <View style={styles.ratingContainer}>
+                    <MaterialIcons 
+                      name="star" 
+                      size={16} 
+                      color={theme.colors.buttonDisabled} 
+                    />
+                    <Text variant="bodyMedium" style={styles.rating}>
+                      {space.rating}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
-    </TouchableOpacity>
+          </LinearGradient>
+        </ImageBackground>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
+  // NEW: Shadow container that doesn't clip shadows
+  shadowContainer: {
     marginRight: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
+    width: cardWidth,
+    height: cardHeight,
+    // Apply shadows to the wrapper
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 2 },
@@ -158,6 +126,12 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
+  },
+  card: {
+    flex: 1,
+    borderRadius: theme.borderRadius.md,
+    overflow: 'hidden', // Now safe to use since shadows are on wrapper
+    backgroundColor: 'transparent', // Ensure no background interferes
   },
   imageBackground: {
     flex: 1,
@@ -196,7 +170,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   spaceName: {
-    color: 'rgba(255, 255, 255, 0.95)', // White text for better contrast on dark gradient
+    color: 'rgba(255, 255, 255, 0.95)',
     fontFamily: theme.fonts.semibold,
     fontSize: 16,
   },
@@ -206,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    color: 'rgba(255, 255, 255, 0.95)', // White text for better contrast
+    color: 'rgba(255, 255, 255, 0.95)',
     fontFamily: theme.fonts.medium,
     fontSize: 14,
   },
@@ -216,7 +190,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs / 2,
   },
   rating: {
-    color: 'rgba(255, 255, 255, 0.95)', // White text for better contrast
+    color: 'rgba(255, 255, 255, 0.95)',
     fontSize: 14,
     fontFamily: theme.fonts.semibold,
   },

@@ -70,6 +70,10 @@ const MOCK_IMAGES = [
   'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop', // Conference room
+  'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop', // Wedding venue
+  'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop', // Event hall
+  'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop', // Restaurant space
 ];
 
 // New: What's included mock data
@@ -169,6 +173,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const [expandedTestimonials, setExpandedTestimonials] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
+  const [showAllPhotos, setShowAllPhotos] = useState(false);
 
   // 🚀 PERFORMANCE OPTIMIZATION: Preload all images when component mounts
   useEffect(() => {
@@ -603,15 +608,38 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         <Text style={styles.reviewsCount}>· 110 reviews</Text>
       </View>
       
-      {/* Photos from reviews section - removed extra margin */}
+      {/* Photos from reviews section */}
       <Text style={styles.reviewsSubtitle}>Photos from reviews</Text>
       <FlatList
-        data={MOCK_IMAGES}
+        data={showAllPhotos ? MOCK_IMAGES : MOCK_IMAGES.slice(0, 3)}
         horizontal
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <Image source={{ uri: item }} style={styles.reviewPhoto} />
-        )}
+        renderItem={({ item, index }) => {
+          const isThirdImage = index === 2;
+          const hasMoreImages = MOCK_IMAGES.length > 3;
+          const shouldShowOverlay = isThirdImage && hasMoreImages && !showAllPhotos;
+          const remainingCount = MOCK_IMAGES.length - 3;
+          
+          return (
+            <TouchableOpacity
+              style={styles.reviewPhotoContainer}
+              onPress={() => {
+                if (shouldShowOverlay) {
+                  setShowAllPhotos(true);
+                }
+              }}
+              disabled={!shouldShowOverlay}
+            >
+              <Image source={{ uri: item }} style={styles.reviewPhoto} />
+              {shouldShowOverlay && (
+                <View style={styles.photoOverlay}>
+                  <Text style={styles.photoOverlayText}>+{remainingCount}</Text>
+                  <Text style={styles.photoOverlaySubtext}>Photos</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        }}
         keyExtractor={(item, index) => `review-photo-${index}`}
         contentContainerStyle={{ paddingTop: 12, paddingBottom: 16 }}
       />
@@ -1190,6 +1218,32 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.regular,
     color: theme.colors.onSurfaceVariant,
     marginBottom: 4
+  },
+  reviewPhotoContainer: {
+    position: 'relative',
+    marginRight: 12,
+  },
+  photoOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  photoOverlayText: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: theme.fonts.bold,
+    marginBottom: 2,
+  },
+  photoOverlaySubtext: {
+    color: '#fff',
+    fontSize: 12,
+    fontFamily: theme.fonts.medium,
   },
   testimonialCard: {
     backgroundColor: '#fff',
