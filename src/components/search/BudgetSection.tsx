@@ -270,6 +270,8 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 16,
     marginHorizontal: 8, 
+    borderWidth: 1,
+    borderColor: '#ddd'
   },
   activeSection: {
     backgroundColor: '#fff',
@@ -292,6 +294,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd'
   },
   completedContent: {
     flex: 1,

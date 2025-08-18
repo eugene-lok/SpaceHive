@@ -366,8 +366,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   );
 
   const renderDescription = () => (
-    <>
-    <View style={styles.sectionReduced}>
+    <View style={styles.section}>
       <Text style={styles.aboutStyle}>About this place</Text>
       <Text style={styles.descriptionText} numberOfLines={readMoreExpanded ? undefined : 3}>
         This modern workspace features floor-to-ceiling windows with stunning city views. 
@@ -383,8 +382,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         </Text>
       </TouchableOpacity>
     </View>
-    <View style={styles.customSectionBorder}></View>
-    </>
+
   );
 
   const getWhatsIncludedIcon = (iconName: string) => {

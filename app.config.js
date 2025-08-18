@@ -5,12 +5,12 @@ export default {
     slug: "spacehive-booking",
     version: "1.0.1",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/icon.jpg",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/splash.png",
+      image: "./assets/splash.jpg",
       resizeMode: "contain",
-      backgroundColor: "#4A90A4"
+      backgroundColor: "#ffffff"
     },
     assetBundlePatterns: [
       "**/*"
@@ -26,8 +26,8 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#4A90A4"
+        foregroundImage: "./assets/adaptive-icon.jpg",
+        backgroundColor: "#ffffff"
       },
       permissions: [
         "ACCESS_COARSE_LOCATION",
