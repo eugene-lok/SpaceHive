@@ -3,7 +3,7 @@ export default {
   expo: {
     name: "SpaceHive",
     slug: "spacehive-booking",
-    version: "1.0.0",
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
@@ -22,7 +22,7 @@ export default {
         NSLocationWhenInUseUsageDescription: "This app uses location to show nearby spaces for booking.",
          ITSAppUsesNonExemptEncryption: "false"
       },
-      buildNumber: "1.0.0"
+      buildNumber: "1.0.1"
     },
     android: {
       adaptiveIcon: {
