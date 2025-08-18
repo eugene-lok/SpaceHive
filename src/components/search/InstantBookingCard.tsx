@@ -28,7 +28,7 @@ const InstantBookingCard: React.FC<InstantBookingCardProps> = ({
     >
       {/* Rounded Image Container */}
       <View style={styles.imageContainer}>
-        <Image source={{ uri: location.image }} style={styles.image} />
+        <Image source={location.images[0]} style={styles.image} />
         <TouchableOpacity style={styles.heartButton}>
           <MaterialIcons name="favorite-border" size={20} color="#fff" />
         </TouchableOpacity>

@@ -1,5 +1,5 @@
 // src/screens/search/InstantBookingDetailsScreen.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -167,6 +167,37 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [expandedTestimonials, setExpandedTestimonials] = useState<number[]>([]);
+  const flatListRef = useRef<FlatList>(null);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+
+  // 🚀 PERFORMANCE OPTIMIZATION: Preload all images when component mounts
+  useEffect(() => {
+    const preloadImages = async () => {
+      try {
+        // Preload all images in parallel for instant carousel switching
+        const preloadPromises = location.images.map((imageSource) => {
+          return new Promise((resolve, reject) => {
+            const uri = Image.resolveAssetSource(imageSource).uri;
+            Image.prefetch(uri)
+              .then(() => resolve(imageSource))
+              .catch(reject);
+          });
+        });
+
+        await Promise.all(preloadPromises);
+        setImagesPreloaded(true);
+        console.log('✅ All images preloaded successfully');
+      } catch (error) {
+        console.warn('⚠️ Image preloading failed:', error);
+        // Fallback: Still allow carousel to work
+        setImagesPreloaded(true);
+      }
+    };
+
+    if (location.images && location.images.length > 0) {
+      preloadImages();
+    }
+  }, [location.images]);
 
   const toggleTestimonialExpansion = (testimonialId: number) => {
     setExpandedTestimonials(prev => 
@@ -198,8 +229,17 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
 
   const renderImageCarousel = () => (
     <View style={styles.imageCarouselContainer}>
+      {!imagesPreloaded && (
+        // Show loading indicator while images preload
+        <View style={styles.imageLoadingContainer}>
+          <View style={styles.imageLoadingPlaceholder} />
+          <Text style={styles.imageLoadingText}>Loading images...</Text>
+        </View>
+      )}
+      
       <FlatList
-        data={MOCK_IMAGES}
+        ref={flatListRef}
+        data={location.images}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -207,10 +247,31 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
           const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
           setCurrentImageIndex(index);
         }}
-        renderItem={({ item }) => (
-          <Image source={{ uri: item }} style={styles.carouselImage} />
+        renderItem={({ item, index }) => (
+          <View style={styles.imageWrapper}>
+            <Image 
+              source={item}
+              style={[
+                styles.carouselImage,
+                !imagesPreloaded && styles.hiddenImage // Hide until preloaded
+              ]}
+              resizeMode="cover"
+              // 🚀 Add fade-in effect
+              fadeDuration={200}
+            />
+          </View>
         )}
         keyExtractor={(item, index) => index.toString()}
+        // 🚀 Performance optimizations
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={3}
+        windowSize={5}
+        initialNumToRender={1}
+        getItemLayout={(data, index) => ({
+          length: screenWidth,
+          offset: screenWidth * index,
+          index,
+        })}
       />
       
       {/* Header buttons */}
@@ -228,11 +289,33 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
         </View>
       </View>
 
-      {/* Image indicator */}
-      <View style={styles.imageIndicator}>
-        <Text style={styles.imageIndicatorText}>
-          {currentImageIndex + 1} / {MOCK_IMAGES.length}
-        </Text>
+      {/* Enhanced image indicator with manual navigation */}
+      <View style={styles.imageIndicatorContainer}>
+        <View style={styles.imageIndicator}>
+          <Text style={styles.imageIndicatorText}>
+            {currentImageIndex + 1} / {location.images.length}
+          </Text>
+        </View>
+        
+        {/* 🚀 NEW: Dot indicators for manual navigation */}
+        {location.images.length > 1 && (
+          <View style={styles.dotIndicators}>
+            {location.images.map((_, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.dotIndicator,
+                  index === currentImageIndex && styles.dotIndicatorActive
+                ]}
+                onPress={() => {
+                  setCurrentImageIndex(index);
+                  // Scroll to selected image
+                  flatListRef.current?.scrollToIndex({ index, animated: true });
+                }}
+              />
+            ))}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -1302,6 +1385,60 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: theme.fonts.bold,
     color: '#fff',
+  },
+  imageLoadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    zIndex: 1,
+  },
+  imageLoadingPlaceholder: {
+    width: '80%',
+    height: 200,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  imageLoadingText: {
+    fontSize: 16,
+    color: '#666',
+    fontFamily: theme.fonts.medium,
+  },
+  hiddenImage: {
+    opacity: 0,
+  },
+  imageWrapper: {
+    width: screenWidth,
+    height: 300,
+  },
+  // Enhanced image indicators
+  imageIndicatorContainer: {
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    gap: 12,
+  },
+  dotIndicators: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16
+  },
+  dotIndicator: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#c6f5f4',
+  },
+  dotIndicatorActive: {
+    backgroundColor: theme.colors.buttonSecondary,
+    width: 8, // Elongated active dot
   },
 });
 
