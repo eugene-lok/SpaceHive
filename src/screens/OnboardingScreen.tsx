@@ -4,6 +4,7 @@ import { View, StyleSheet, Dimensions, FlatList, TouchableOpacity, ImageBackgrou
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { OnboardingData } from '../types';
@@ -55,15 +56,19 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate('Home');
   };
 
-  const renderOnboardingItem = ({ item }: { item: OnboardingData }) => (
+  const renderOnboardingItem = ({ item, index }: { item: OnboardingData, index: number }) => {
+  const isLastPage = index === onboardingData.length - 1;
+  
+  return (
     <View style={styles.slide}>
-      <ImageBackground
-        source={item.image}
-        style={styles.imageBackground}
-        resizeMode="cover"
-      >
-        <View style={styles.overlay}>
-          {/* Top Section - Hide close button on last page */}
+      <ImageBackground source={item.image} style={styles.imageBackground}>
+        {/* Updated: Replace solid overlay with gradient */}
+        <LinearGradient
+          colors={['transparent', 'transparent', 'rgba(0,0,0,0.7)', 'rgba(0,0,0,0.9)']}
+          locations={[0, 0.33, 0.67, 1]}
+          style={styles.overlay}
+        >
+          {/* Top Section - Close button */}
           <View style={styles.topSection}>
             {!isLastPage && (
               <IconButton
@@ -73,17 +78,13 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
               />
             )}
           </View>
-          
-          {/* Content */}
+
+          {/* Content Section */}
           <View style={styles.content}>
-            <Text variant="headlineLarge" style={styles.title}>
-              {item.title}
-            </Text>
-            <Text variant="bodyLarge" style={styles.subtitle}>
-              {item.subtitle}
-            </Text>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.subtitle}>{item.subtitle}</Text>
             
-            {/* Pagination Dots - Centered for last page, otherwise in navigation row */}
+            {/* Pagination - Centered for last page, with navigation for others */}
             {isLastPage ? (
               <View style={styles.paginationContainerCentered}>
                 {onboardingData.map((_, index) => (
@@ -136,10 +137,11 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           )}
-        </View>
+        </LinearGradient>
       </ImageBackground>
     </View>
   );
+};
 
   return (
     <SafeAreaView style={styles.container}>
