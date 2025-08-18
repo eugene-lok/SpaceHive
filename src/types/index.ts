@@ -25,7 +25,7 @@ export interface EventCategory {
 }
 
 export interface OnboardingData {
-  image: string;
+  image: ImageSourcePropType;
   title: string;
   subtitle: string;
 }

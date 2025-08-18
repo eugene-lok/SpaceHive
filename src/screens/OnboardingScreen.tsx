@@ -19,17 +19,17 @@ interface Props {
 
 const onboardingData: OnboardingData[] = [
   {
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=600&fit=crop',
+    image: require('assets/images/Tutorial/Tutorial1.jpg'),
     title: 'Find your space.',
     subtitle: 'Browse curated spaces for any occasion —\nquick, easy, and tailored to you.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=600&fit=crop',
+    image: require('assets/images/Tutorial/Tutorial2.jpg'),
     title: 'Rent your way.',
     subtitle: 'Flexible, affordable rentals made simple —\nbook by the hour or day.'
   },
   {
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=600&fit=crop',
+    image: require('assets/images/Tutorial/Tutorial3.jpg'),
     title: 'Discover what\'s nearby.',
     subtitle: 'Start browsing nearby spaces or share your\nown with the SpaceHive community.'
   }
@@ -58,7 +58,7 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
   const renderOnboardingItem = ({ item }: { item: OnboardingData }) => (
     <View style={styles.slide}>
       <ImageBackground
-        source={{ uri: item.image }}
+        source={item.image}
         style={styles.imageBackground}
         resizeMode="cover"
       >
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 24,
     fontFamily: theme.fonts.semibold,
     padding: 8,
   },
@@ -226,9 +226,9 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: theme.colors.primary,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     margin: 0,
   },
   
@@ -242,9 +242,9 @@ const styles = StyleSheet.create({
   
   /* Larger pagination dots */
   paginationDot: {
-    width: 12,      
-    height: 12,     
-    borderRadius: 6,  
+    width: 20,      
+    height: 20,     
+    borderRadius: 12,  
     marginHorizontal: 6, 
   },
   paginationDotActive: {
