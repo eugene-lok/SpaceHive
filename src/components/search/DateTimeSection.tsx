@@ -296,6 +296,22 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
     return `${monthNames[currentMonth]} ${currentYear}`;
   };
 
+  const getModalHeight = (optionCount: number, firstOption: string) => {
+  const itemHeight = 52; // paddingVertical: 16 * 2 + text height
+  const padding = 24; // Modal container padding
+  
+  // Special case: Keep hour selection at current height
+  if (optionCount === 12 && firstOption === '01') {
+    return screenHeight * 0.4; // Keep current height for hours
+  }
+  
+  // Dynamic height for other dropdowns
+  const calculatedHeight = (optionCount * itemHeight) + padding;
+  const maxAllowedHeight = screenHeight * 0.5;
+  
+  return Math.min(calculatedHeight, maxAllowedHeight);
+};
+
   // IMPROVED Modal-based dropdown component for better iOS support
   const Dropdown: React.FC<{
     value: string;
@@ -325,9 +341,13 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
             activeOpacity={1}
             onPress={() => setIsOpen(false)}
           >
-            <View style={styles.modalContent}>
+            <View style={[styles.modalContent, { 
+              maxHeight: getModalHeight(options.length, options[0]) 
+            }]}>
               <ScrollView 
-                style={styles.modalScrollView}
+                style={[styles.modalScrollView, { 
+                  maxHeight: getModalHeight(options.length, options[0]) 
+                }]}
                 showsVerticalScrollIndicator={false}
                 bounces={false}
               >
@@ -574,6 +594,8 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 16,
     marginHorizontal: 8, 
+    borderWidth: 1,
+    borderColor: '#ddd'
   },
   activeSection: {
     backgroundColor: '#fff',
@@ -596,6 +618,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd'
   },
   completedContent: {
     flex: 1,

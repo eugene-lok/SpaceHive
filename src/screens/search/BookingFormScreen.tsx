@@ -267,7 +267,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <View style={[styles.header, { paddingTop: Math.max(insets.top, 16) }]}>
+       <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md || 0 }]}>
         
         <View style={styles.headerTabs}>
           <Text style={styles.activeTab}>Instant Book</Text>

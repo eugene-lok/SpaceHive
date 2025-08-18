@@ -76,6 +76,7 @@ const MOCK_IMAGES = [
 const MOCK_WHATS_INCLUDED = [
   { id: 1, icon: 'BathtubIcon', text: '1 Bathroom' },
   { id: 2, icon: 'OvenIcon', text: '1 Kitchen' },
+  { id: 3, icon: 'BedIcon', text: '1 Bedroom'}
 ];
 
 // Replace MOCK_AMENITIES  
@@ -83,11 +84,10 @@ const MOCK_AMENITIES = [
   { id: 1, name: 'WiFi', icon: 'WifiHighIcon' },
   { id: 2, name: 'City skyline view', icon: 'CityIcon' },
   { id: 3, name: 'Coffee', icon: 'CoffeeIcon' },
-  { id: 4, name: 'Kitchen', icon: 'ForkKnifeIcon' },
-  { id: 5, name: 'Parking', icon: 'LetterCirclePIcon' },
-  { id: 6, name: 'Air Conditioning', icon: 'SnowflakeIcon' },
-  { id: 7, name: 'TV', icon: 'TelevisionSimpleIcon' },
-  { id: 8, name: 'Sound system', icon: 'SpeakerHighIcon' },
+  { id: 4, name: 'Parking', icon: 'LetterCirclePIcon' },
+  { id: 5, name: 'Air Conditioning', icon: 'SnowflakeIcon' },
+  { id: 6, name: 'TV', icon: 'TelevisionSimpleIcon' },
+  { id: 7, name: 'Sound system', icon: 'SpeakerHighIcon' },
 ];
 
 const MOCK_VENUE_OFFERS = [
@@ -418,6 +418,7 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     case 'BeerSteinIcon': return <BeerSteinIcon {...iconProps} />;
     case 'CigaretteIcon': return <CigaretteIcon {...iconProps} />;
     case 'PawPrintIcon': return <PawPrintIcon {...iconProps} />;
+    case 'ConfettiIcon': return <ConfettiIcon {...iconProps} />;
     case 'MusicNotesIcon': return <MusicNotesIcon {...iconProps} />;
     case 'ArmchairIcon': return <ArmchairIcon {...iconProps} />;
     default: return <HamburgerIcon {...iconProps} />;
@@ -815,7 +816,9 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
   sectionTitle: {
     fontSize: 28,
@@ -1100,9 +1103,10 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   reviewsSubtitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.regular,
     color: theme.colors.onSurfaceVariant,
+    marginBottom: 4
   },
   testimonialCard: {
     backgroundColor: '#fff',
@@ -1143,10 +1147,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   testimonialTextNew: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: '#333',
-    lineHeight: 20,
+    color: theme.colors.onSurface,
+    lineHeight: 24,
     marginBottom: 0, // Remove margin, let show more button handle spacing
   },
   testimonialCardNew: {
@@ -1239,11 +1243,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   expandableContent: {
-    marginTop: 12,
+    marginTop: 8,
     fontSize: 16,
     fontFamily: theme.fonts.regular,
     color: '#666',
     lineHeight: 24,
+    marginBottom: 24
   },
   bottomPadding: {
     height: 100,
@@ -1261,11 +1266,14 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   priceInfo: {
-    flex: 1,
+    flex: 0,
   },
   priceText: {
     flexDirection: 'row',
     alignItems: 'baseline',
+  },
+  price: {
+    flexDirection: 'row'
   },
   priceAmount: {
     fontSize: 20,

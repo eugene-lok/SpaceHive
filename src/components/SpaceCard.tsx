@@ -5,7 +5,8 @@ import {
   StyleSheet, 
   TouchableOpacity, 
   ImageBackground, 
-  Dimensions 
+  Dimensions,
+  Platform
 } from 'react-native';
 import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -40,9 +41,8 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
   }, [images.length]);
 
   // Calculate card width for mobile-first design
-  const cardWidth = screenWidth * 0.75; // 75% of screen width for horizontal scroll
-  const cardHeight = cardWidth * 0.8; // 4:5 aspect ratio
-
+  const cardWidth = screenWidth * 0.5; 
+  const cardHeight = cardWidth * 1; 
   return (
     <TouchableOpacity 
       style={[styles.card, { width: cardWidth, height: cardHeight }]} 
@@ -99,7 +99,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
                   <MaterialIcons 
                     name="star" 
                     size={16} 
-                    color={theme.colors.accent} 
+                    color={theme.colors.buttonDisabled} 
                   />
                   <Text variant="bodyMedium" style={styles.rating}>
                     {space.rating}
@@ -119,7 +119,17 @@ const styles = StyleSheet.create({
     marginRight: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
-    ...theme.elevation.medium,
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        shadowColor: theme.colors.shadowDark,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   imageBackground: {
     flex: 1,
@@ -135,7 +145,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: theme.spacing.md,
-    paddingBottom: theme.spacing.lg,
+    paddingBottom: theme.spacing.md,
   },
   paginationContainer: {
     flexDirection: 'row',

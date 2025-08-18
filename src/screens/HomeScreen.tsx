@@ -9,6 +9,7 @@ import { RootStackParamList } from '../../App';
 import { Space, EventCategory } from '../types';
 import SearchBar from '../components/SearchBar';
 import SpaceCard from '../components/SpaceCard';
+import IdeaCard from '../components/IdeaCard';
 import EventCategoryCard from '../components/EventCategoryCard';
 import BottomNavigation from '../components/BottomNavigation';
 import BookingOptionsScreen from './search/BookingOptionsScreen';
@@ -16,9 +17,15 @@ import BookingFormScreen from './search/BookingFormScreen';
 import { theme } from '../theme/theme';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
-
 interface Props {
   navigation: HomeScreenNavigationProp;
+}
+interface IdeaCardData {
+  id: number;
+  title: string;
+  subtitle?: string;
+  image: string;
+  tag: string;
 }
 
 // Mock data for event categories (filter buttons)
@@ -110,6 +117,37 @@ const justForYouSpaces: Space[] = [
   }
 ];
 
+const ideaCards: IdeaCardData[] = [
+  {
+    id: 1,
+    title: '5 Hidden Gems for Your Next Birthday',
+    subtitle: 'Unique venues you haven\'t discovered yet',
+    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop',
+    tag: 'New',
+  },
+  {
+    id: 2,
+    title: 'Spaces With Killer Views Under $30/Hour',
+    subtitle: 'Budget-friendly options that don\'t compromise on style',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    tag: 'Hot',
+  },
+  {
+    id: 3,
+    title: 'Perfect Last Minute Meeting Rooms',
+    subtitle: 'Professional venues for your next big presentation',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400&h=300&fit=crop',
+    tag: 'New',
+  },
+  {
+    id: 4,
+    title: 'Why Rooftop Views Make Every Event Extraordinary',
+    subtitle: 'Stunning city views for memorable events',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
+    tag: 'Hot',
+  },
+];
+
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('search');
 
@@ -148,6 +186,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     console.log('Category selected:', category.title);
     // TODO: Implement filtering logic here
     // This would filter the spaces based on the selected category
+  };
+
+  const handleIdeaPress = (idea: IdeaCardData) => {
+    console.log('Idea pressed:', idea.title);
+    // Navigate to idea details or open relevant content
   };
 
   const handleTabPress = (tabId: string) => {
@@ -242,6 +285,44 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             contentContainerStyle={styles.horizontalList}
           />
         </View>
+
+        {/* Available this week */}
+        <View style={styles.section}>
+          <Text variant="headlineSmall" style={styles.sectionTitle}>
+            Available this week
+          </Text>
+          <FlatList
+            data={justForYouSpaces}
+            renderItem={({ item }) => (
+              <SpaceCard
+                space={item}
+                onPress={() => handleSpacePress(item)}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
+
+        {/* Need Ideas? */}
+        <View style={styles.section}>
+          <Text variant="headlineSmall" style={styles.sectionTitle}>
+            Need Ideas?
+          </Text>
+          <FlatList
+            data={ideaCards}
+            renderItem={({ item }) => (
+              <IdeaCard
+                idea={item}
+                onPress={() => handleIdeaPress(item)}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        </View>
         
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -287,7 +368,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.semibold,
     color: theme.colors.onSurface,
     marginHorizontal: theme.spacing.md,
-    marginBottom: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
     marginTop: 2, 
   },
   horizontalList: {

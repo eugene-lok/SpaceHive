@@ -36,7 +36,7 @@ export const MOCK_LOCATIONS: Location[] = [
     rating: 4.96,
     recentBookings: 5,
     price: 30,
-    priceUnit: 'hour',
+    priceUnit: 'hr',
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
     instantBooking: true,
     coordinates: {
@@ -52,7 +52,7 @@ export const MOCK_LOCATIONS: Location[] = [
     rating: 4.82,
     recentBookings: 8,
     price: 25,
-    priceUnit: 'hour',
+    priceUnit: 'hr',
     image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
     instantBooking: true,
     coordinates: {
@@ -68,7 +68,7 @@ export const MOCK_LOCATIONS: Location[] = [
     rating: 4.74,
     recentBookings: 3,
     price: 22,
-    priceUnit: 'hour',
+    priceUnit: 'hr',
     image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
     instantBooking: false,
     coordinates: {

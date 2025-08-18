@@ -150,12 +150,14 @@ const GuestsSection: React.FC<GuestsSectionProps> = ({
 };
 
 const styles = StyleSheet.create({
-  section: {
-  backgroundColor: '#fff',
-  borderRadius: 16,
-  padding: 20,
-  marginBottom: 16,
-  marginHorizontal: 8, 
+section: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: '#ddd'
 },
 
 activeSection: {
@@ -180,6 +182,8 @@ completedSection: {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#ddd'
 },
   completedContent: {
     flex: 1,

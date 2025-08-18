@@ -30,7 +30,7 @@ const BookingOptionsScreen: React.FC<BookingOptionsScreenProps> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <View style={[styles.header, { paddingTop: Math.max(insets.top, 20) }]}>
+      <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md || 0 }]}>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           {/* FIXED: Use icon instead of text character */}
           <MaterialIcons name="close" size={18} color="#fff" />
