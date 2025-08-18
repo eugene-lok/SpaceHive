@@ -24,7 +24,7 @@ interface IdeaCardData {
   id: number;
   title: string;
   subtitle?: string;
-  image: string;
+  image: any;
   tag: string;
 }
 
@@ -33,32 +33,32 @@ const eventCategories: EventCategory[] = [
   {
     id: 1,
     title: 'Party',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/party.jpg'),
   },
   {
     id: 2,
     title: 'Anniversary',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/anniversary.jpg'),
   },
   {
     id: 3,
     title: 'Hobby Club',
-    image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/hobbyclub.jpg'),
   },
   {
     id: 4,
     title: 'Workshop',
-    image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/workshop.jpg'),
   },
   {
     id: 5,
     title: 'Meeting',
-    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/meeting.jpg'),
   },
   {
     id: 6,
     title: 'Pop-up',
-    image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=300&h=400&fit=crop&crop=center',
+    image: require('../../assets/images/EventCategories/workshop.jpg'),
   },
 ];
 

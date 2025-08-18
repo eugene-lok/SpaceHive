@@ -20,7 +20,7 @@ export interface PlanningOption {
 export interface EventCategory {
   id: number;
   title: string;
-  image: string;
+  image: any;
 }
 
 export interface OnboardingData {

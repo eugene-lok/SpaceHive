@@ -16,7 +16,7 @@ export interface IdeaCardData {
   id: number;
   title: string;
   subtitle?: string;
-  image: string;
+  image: any;
   tag: string;
 }
 
