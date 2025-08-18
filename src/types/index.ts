@@ -1,10 +1,11 @@
 // src/types/index.ts
+import { ImageSourcePropType } from 'react-native';
 export interface Space {
   id: number;
   title: string;
   price: string;
   rating: number;
-  image: string;
+  images: ImageSourcePropType[];
   location?: string;
   capacity?: number;
   amenities?: string[];
@@ -20,7 +21,7 @@ export interface PlanningOption {
 export interface EventCategory {
   id: number;
   title: string;
-  image: any;
+  image: ImageSourcePropType;
 }
 
 export interface OnboardingData {

@@ -58,7 +58,7 @@ const eventCategories: EventCategory[] = [
   {
     id: 6,
     title: 'Pop-up',
-    image: require('../../assets/images/EventCategories/workshop.jpg'),
+    image: require('../../assets/images/EventCategories/popup.jpg'),
   },
 ];
 
@@ -69,52 +69,82 @@ const trendingSpaces: Space[] = [
     title: 'Modern Condo with Skyline View',
     price: '$35 hour',
     rating: 4.92,
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+    images: [
+      require('../../assets/images/TrendingSpaces/ModernCondo/pexels-heyho-6890392.jpg'),
+      require('../../assets/images/TrendingSpaces/ModernCondo/pexels-heyho-6890394.jpg'),
+      require('../../assets/images/TrendingSpaces/ModernCondo/pexels-heyho-6890395.jpg'),
+    ],
     location: 'Downtown, Calgary',
+    capacity: 8,
+    instantBooking: true,
   },
   {
     id: 2,
     title: 'Bright Room with Balcony',
     price: '$30 hour',
     rating: 4.66,
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+    images: [
+      require('../../assets/images/TrendingSpaces/BrightRoom/pexels-rachel-claire-5490295.jpg'),
+      require('../../assets/images/TrendingSpaces/BrightRoom/pexels-rachel-claire-5490363.jpg'),
+      require('../../assets/images/TrendingSpaces/BrightRoom/pexels-rachel-claire-5490364.jpg'),
+    ],
     location: 'Kensington, Calgary',
+    capacity: 6,
+    instantBooking: false,
   },
   {
     id: 3,
     title: 'Upscale Meeting Room',
-    price: '$40 hour',
-    rating: 4.70,
-    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
-    location: 'Beltline, Calgary',
-  },
-  {
-    id: 4,
-    title: 'Sunlit Garden Room with Plants',
     price: '$28 hour',
-    rating: 4.88,
-    image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&h=300&fit=crop',
-    location: 'Hillhurst, Calgary',
-  }
+    rating: 4.85,
+    images: [
+      require('../../assets/images/TrendingSpaces/UpscaleMeeting/pexels-ansar-muhammad-380085065-27562206.jpg'),
+      require('../../assets/images/TrendingSpaces/UpscaleMeeting/pexels-ansar-muhammad-380085065-27562207.jpg'),
+      require('../../assets/images/TrendingSpaces/UpscaleMeeting/pexels-ansar-muhammad-380085065-27562218.jpg'),
+    ],
+    location: 'Beltline, Calgary',
+    capacity: 10,
+    instantBooking: true,
+  },
 ];
 
 const justForYouSpaces: Space[] = [
   {
     id: 5,
-    title: 'Cozy Living Room',
+    title: 'Higher Ground Cafe',
     price: '$32 hour',
     rating: 4.85,
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop',
+    images: [
+      require('../../assets/images/JustForYou/HigherGroundCafe/pexels-rachel-claire-5490827.jpg'),
+      require('../../assets/images/JustForYou/HigherGroundCafe/pexels-rachel-claire-5490830.jpg'),
+      require('../../assets/images/JustForYou/HigherGroundCafe/pexels-rachel-claire-5865071.jpg'),
+    ],
     location: 'Mission, Calgary',
   },
   {
     id: 6,
-    title: 'Modern Office Space',
+    title: 'Rooftop Gathering Spot',
     price: '$45 hour',
     rating: 4.91,
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop',
+    images: [
+      require('../../assets/images/JustForYou/RooftopGatheringSpot/pexels-heyho-7546603.jpg'),
+      require('../../assets/images/JustForYou/RooftopGatheringSpot/pexels-heyho-7546605.jpg'),
+      require('../../assets/images/JustForYou/RooftopGatheringSpot/pexels-heyho-7546778.jpg'),
+    ],
     location: 'Eau Claire, Calgary',
-  }
+  },
+  {
+    id: 7,
+    title: 'Sunlit Garden House',
+    price: '$32 hour',
+    rating: 4.85,
+    images: [
+      require('../../assets/images/JustForYou/SunlitGardenHouse/pexels-curtis-adams-1694007-5008400.jpg'),
+      require('../../assets/images/JustForYou/SunlitGardenHouse/pexels-heyho-7061660.jpg'),
+      require('../../assets/images/JustForYou/SunlitGardenHouse/pexels-heyho-7061663.jpg'),
+    ],
+    location: 'Mission, Calgary',
+  },
 ];
 
 const ideaCards: IdeaCardData[] = [
@@ -287,7 +317,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         {/* Available this week */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>
             Available this week
           </Text>
@@ -303,7 +333,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
           />
-        </View>
+        </View> */}
 
         {/* Need Ideas? */}
         <View style={styles.section}>

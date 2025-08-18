@@ -33,7 +33,7 @@ const EventCategoryCard: React.FC<EventCategoryCardProps> = ({
       activeOpacity={0.8}
     >
       <ImageBackground
-        source={{ uri: category.image }}
+        source={category.image} 
         style={styles.imageBackground}
         imageStyle={styles.image}
         resizeMode="cover"

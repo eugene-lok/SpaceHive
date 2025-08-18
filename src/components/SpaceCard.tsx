@@ -6,7 +6,8 @@ import {
   TouchableOpacity, 
   ImageBackground, 
   Dimensions,
-  Platform
+  Platform,
+  Image
 } from 'react-native';
 import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,20 +26,47 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Mock multiple images for pagination - in real app, this would come from space.images array
-  const images = [
-    space.image,
-    space.image, // For demo purposes, using same image
-    space.image, // In real implementation, you'd have space.images array
-  ];
+  const images = space.images;
 
   // Auto-rotate images every 3 seconds (you can adjust this)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+  if (images.length > 1) {
+    // 🚀 Preload next image before switching
+    const preloadAndSwitch = () => {
+      const nextIndex = (currentImageIndex + 1) % images.length;
+      
+      // Preload next image
+      const nextImageUri = Image.resolveAssetSource(images[nextIndex]).uri;
+      Image.prefetch(nextImageUri).then(() => {
+        // Only switch after preloading
+        setCurrentImageIndex(nextIndex);
+      }).catch(() => {
+        // Fallback: switch anyway if preload fails
+        setCurrentImageIndex(nextIndex);
+      });
+    };
 
+    const interval = setInterval(preloadAndSwitch, 15000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }
+}, [images, currentImageIndex]);
+
+  useEffect(() => {
+    // Preload all images when component mounts
+    const preloadAllImages = async () => {
+      try {
+        const preloadPromises = images.map(imageSource => {
+          const uri = Image.resolveAssetSource(imageSource).uri;
+          return Image.prefetch(uri);
+        });
+        await Promise.all(preloadPromises);
+      } catch (error) {
+        console.warn('Image preloading failed:', error);
+      }
+    };
+
+    preloadAllImages();
+  }, [images]);
 
   // Calculate card width for mobile-first design
   const cardWidth = screenWidth * 0.5; 
@@ -50,7 +78,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
       activeOpacity={0.9}
     >
       <ImageBackground
-        source={{ uri: images[currentImageIndex] }}
+        source={images[currentImageIndex]}
         style={styles.imageBackground}
         imageStyle={styles.image}
       >
