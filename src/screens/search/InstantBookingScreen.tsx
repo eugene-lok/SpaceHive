@@ -98,13 +98,13 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
         navigation.navigate('Bookings');
         break;
       case 'saved':
-        console.log('Navigate to Saved');
+        navigation.navigate('Placeholder', { activeTab: 'saved' });
         break;
       case 'messages':
-        console.log('Navigate to Messages');
+        navigation.navigate('Placeholder', { activeTab: 'messages' });
         break;
       case 'profile':
-        console.log('Navigate to Profile');
+        navigation.navigate('Placeholder', { activeTab: 'profile' });
         break;
       default:
         break;

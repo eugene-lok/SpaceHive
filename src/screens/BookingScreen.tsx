@@ -47,7 +47,7 @@ const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) => {
   };
 
   const handleTabPress = (tabId: string) => {
-    setActiveTab(tabId);
+  setActiveTab(tabId);
     console.log('Tab pressed:', tabId);
     
     switch (tabId) {
@@ -55,16 +55,16 @@ const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) => {
         navigation.navigate('Home');
         break;
       case 'bookings':
-        // Already on bookings screen
+        navigation.navigate('Bookings');
         break;
       case 'saved':
-        console.log('Navigate to Saved');
+        navigation.navigate('Placeholder', { activeTab: 'saved' });
         break;
       case 'messages':
-        console.log('Navigate to Messages');
+        navigation.navigate('Placeholder', { activeTab: 'messages' });
         break;
       case 'profile':
-        console.log('Navigate to Profile');
+        navigation.navigate('Placeholder', { activeTab: 'profile' });
         break;
       default:
         break;

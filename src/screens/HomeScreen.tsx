@@ -217,34 +217,29 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleTabPress = (tabId: string) => {
-    setActiveTab(tabId);
-    console.log('Tab pressed:', tabId);
-    
-    // Navigation logic for different tabs
-    switch (tabId) {
-      case 'search':
-        // Already on home/search screen
-        break;
-      case 'bookings':
-        // Navigate to bookings screen
-        navigation.navigate('Bookings');
-        break;
-      case 'saved':
-        // Navigate to saved/favorites screen
-        console.log('Navigate to Saved');
-        break;
-      case 'messages':
-        // Navigate to messages screen
-        console.log('Navigate to Messages');
-        break;
-      case 'profile':
-        // Navigate to profile screen
-        console.log('Navigate to Profile');
-        break;
-      default:
-        break;
-    }
-  };
+  setActiveTab(tabId);
+  console.log('Tab pressed:', tabId);
+  
+  switch (tabId) {
+    case 'search':
+      navigation.navigate('Home');
+      break;
+    case 'bookings':
+      navigation.navigate('Bookings');
+      break;
+    case 'saved':
+      navigation.navigate('Placeholder', { activeTab: 'saved' });
+      break;
+    case 'messages':
+      navigation.navigate('Placeholder', { activeTab: 'messages' });
+      break;
+    case 'profile':
+      navigation.navigate('Placeholder', { activeTab: 'profile' });
+      break;
+    default:
+      break;
+  }
+};
 
   return (
     <SafeAreaView style={styles.container}>

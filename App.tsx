@@ -11,18 +11,20 @@ import HomeScreen from './src/screens/HomeScreen';
 import InstantBookingScreen from './src/screens/search/InstantBookingScreen';
 import InstantBookingDetailsScreen from './src/screens/search/InstantBookingDetailsScreen';
 import BookingsScreen from './src/screens/BookingScreen';
+import PlaceholderScreen from './src/screens/PlaceholderScreen'; 
 
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
 import { BookingFormData } from './src/types/booking';
 import { Location } from './src/types/instantBooking';
+
 export interface SerializableBookingFormData {
   location: {
-    value: string | null; // ← Fixed: now matches original BookingFormData
+    value: string | null;
     isFlexible: boolean;
   };
   dateTime: {
-    date: string | null; // ← Only this changes from Date to string
+    date: string | null;
     time: {
       start: { time: string; period: 'AM' | 'PM' };
       end: { time: string; period: 'AM' | 'PM' };
@@ -50,12 +52,15 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Home: undefined;
   InstantBooking: {
-    formData: SerializableBookingFormData; // ← Use serializable version
+    formData: SerializableBookingFormData;
   };
   InstantBookingDetails: {
     location: Location;
   };
   Bookings: undefined;
+  Placeholder: {
+    activeTab: string; // Add this new screen
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -72,6 +77,7 @@ const App: React.FC = () => {
   if (!fontsLoaded) {
     return null;
   }
+  
   return (
     <NavigationContainer>
       <StatusBar style="dark" backgroundColor="white" />
@@ -92,6 +98,7 @@ const App: React.FC = () => {
           }}
         />
         <Stack.Screen name="Bookings" component={BookingsScreen} />
+        <Stack.Screen name="Placeholder" component={PlaceholderScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
