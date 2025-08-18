@@ -817,12 +817,12 @@ const styles = StyleSheet.create({
   },
   imageIndicator: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 8,
     right: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 4,
   },
   imageIndicatorText: {
     color: '#fff',
@@ -833,7 +833,9 @@ const styles = StyleSheet.create({
   attributesContainer: {
     paddingHorizontal: 16,
     paddingTop: 32,
-    paddingBottom: 8,
+    paddingBottom: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
   attributePills: {
     flexDirection: 'row',
@@ -858,7 +860,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 0,
   },
   locationTitle: {
     fontSize: 26,

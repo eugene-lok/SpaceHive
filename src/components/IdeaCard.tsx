@@ -6,17 +6,19 @@ import {
   TouchableOpacity, 
   ImageBackground, 
   Platform,
-  Dimensions
+  Dimensions,
+  ImageSourcePropType
 } from 'react-native';
 import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../theme/theme';
 
+const { width: screenWidth } = Dimensions.get('window');
 export interface IdeaCardData {
   id: number;
   title: string;
   subtitle?: string;
-  image: any;
+  image: ImageSourcePropType;
   tag: string;
 }
 
@@ -24,8 +26,6 @@ interface IdeaCardProps {
   idea: IdeaCardData;
   onPress?: () => void;
 }
-
-const { width: screenWidth } = Dimensions.get('window');
 
 const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onPress }) => {
   const cardWidth = screenWidth * 0.7; 
@@ -48,7 +48,7 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onPress }) => {
       activeOpacity={0.9}
     >
       <ImageBackground
-        source={{ uri: idea.image }}
+        source={idea.image}
         style={styles.imageBackground}
         imageStyle={styles.image}
       >

@@ -152,29 +152,22 @@ const ideaCards: IdeaCardData[] = [
     id: 1,
     title: '5 Hidden Gems for Your Next Birthday',
     subtitle: 'Unique venues you haven\'t discovered yet',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop',
+    image: require('../../assets/images/Blog/birthday.jpg'),
     tag: 'New',
   },
   {
     id: 2,
     title: 'Spaces With Killer Views Under $30/Hour',
     subtitle: 'Budget-friendly options that don\'t compromise on style',
-    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    image: require('../../assets/images/Blog/cityviewkiller.jpg'),
     tag: 'Hot',
   },
   {
     id: 3,
     title: 'Perfect Last Minute Meeting Rooms',
     subtitle: 'Professional venues for your next big presentation',
-    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400&h=300&fit=crop',
+    image: require('../../assets/images/Blog/meetingroom.jpg'),
     tag: 'New',
-  },
-  {
-    id: 4,
-    title: 'Why Rooftop Views Make Every Event Extraordinary',
-    subtitle: 'Stunning city views for memorable events',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
-    tag: 'Hot',
   },
 ];
 
