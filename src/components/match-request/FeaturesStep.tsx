@@ -117,50 +117,37 @@ const FeaturesStep: React.FC<FeaturesStepProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   content: {
     flex: 1,
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 20,
   },
   title: {
     fontSize: 28,
     fontFamily: theme.fonts.bold,
     color: '#000',
-    marginBottom: 32,
+    marginBottom: 24,
     lineHeight: 34,
   },
   featuresContainer: {
-    gap: 16,
+    
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingVertical: 12,
   },
   featureItemSelected: {
-    borderColor: theme.colors.primary,
+    /* borderColor: theme.colors.primary,
     backgroundColor: '#F0F8F8',
+    borderRadius: 8 */
   },
   checkbox: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     borderRadius: 4,
     borderWidth: 2,
     borderColor: '#D0D0D0',
@@ -176,7 +163,7 @@ const styles = StyleSheet.create({
   featureText: {
     fontSize: 16,
     fontFamily: theme.fonts.medium,
-    color: '#000',
+    color: theme.colors.onSurface,
     flex: 1,
   },
   featureTextSelected: {
@@ -195,8 +182,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   nextButtonText: {
-    fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontSize: 22,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
@@ -205,12 +192,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     backgroundColor: '#000',
-    paddingVertical: 18,
+    paddingVertical: 20,
     borderRadius: 12,
   },
   backButtonText: {
     fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
