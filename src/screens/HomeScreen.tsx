@@ -173,7 +173,8 @@ const ideaCards: IdeaCardData[] = [
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('search');
-
+  const [bookingFormInitialTab, setBookingFormInitialTab] = useState<'instant-book' | 'match-request'>('instant-book');
+  const [formInitialTab, setFormInitialTab] = useState<'instant-book' | 'match-request'>('instant-book');
   const [showBookingFlow, setShowBookingFlow] = useState(false);
   const [bookingStep, setBookingStep] = useState<'options' | 'form'>('options');
 
@@ -189,12 +190,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleBookRightAway = () => {
+    setFormInitialTab('instant-book');
     setBookingStep('form');
   };
 
   const handleRequestMatch = () => {
-    // Placeholder for future implementation
-    console.log('Request a Match - Coming Soon!');
+    setFormInitialTab('match-request');
+    setBookingStep('form');
   };
 
   const handleCloseBookingFlow = () => {
@@ -363,6 +365,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             <BookingFormScreen
               onBack={() => setBookingStep('options')}
               onClose={handleCloseBookingFlow}
+              initialTab={formInitialTab}
             />
           )}
         </View>
