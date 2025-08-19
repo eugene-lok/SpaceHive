@@ -145,14 +145,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   optionItemSelected: {
     borderColor: theme.colors.primary,
@@ -200,19 +192,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   nextButtonText: {
-    fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontSize: 22,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
   backButton: {
     backgroundColor: '#000',
-    paddingVertical: 18,
+    paddingVertical: 20,
     borderRadius: 12,
   },
   backButtonText: {
     fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },

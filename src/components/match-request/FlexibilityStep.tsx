@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#B2B2B2',
   },
   nextButtonText: {
-    fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontSize: 22,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
@@ -214,12 +214,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     backgroundColor: '#000',
-    paddingVertical: 18,
+    paddingVertical: 20,
     borderRadius: 12,
   },
   backButtonText: {
     fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },

@@ -11,12 +11,18 @@ import {
   MapPinIcon, 
   CalendarIcon, 
   UsersIcon, 
-  CurrencyDollarIcon,
+  CurrencyCircleDollarIcon,
   CakeIcon,
   PaintBrushIcon,
   ScalesIcon,
   ClockIcon,
   PencilIcon,
+  CalendarStarIcon,
+  WavesIcon,
+  LightbulbIcon,
+  NotepadIcon,
+  UsersThreeIcon,
+  CalendarCheckIcon
 } from 'phosphor-react-native';
 import { MatchRequestData } from '../../screens/search/MatchRequestScreen';
 import { BookingFormData } from '../../types/booking';
@@ -44,7 +50,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   buttonText,
 }) => {
   const formatDate = (date: Date | null) => {
-    if (!date) return 'Not specified';
+    if (!date) return 'Flexible';
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -115,7 +121,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
           <View style={styles.sectionContent}>
             
             <View style={styles.detailRow}>
-              <MapPinIcon size={20} color="#666" weight="fill" />
+              <MapPinIcon size={24} color={theme.colors.onSurface} />
               <View style={styles.detailText}>
                 <Text style={styles.detailLabel}>Location</Text>
                 <Text style={styles.detailValue}>
@@ -125,7 +131,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             </View>
             
             <View style={styles.detailRow}>
-              <CalendarIcon size={20} color="#666" weight="fill" />
+              <CalendarCheckIcon size={24} color={theme.colors.onSurface} />
               <View style={styles.detailText}>
                 <Text style={styles.detailLabel}>Date & Time</Text>
                 <Text style={styles.detailValue}>
@@ -135,7 +141,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             </View>
             
             <View style={styles.detailRow}>
-              <UsersIcon size={20} color="#666" weight="fill" />
+              <UsersThreeIcon size={24} color={theme.colors.onSurface} />
               <View style={styles.detailText}>
                 <Text style={styles.detailLabel}>Guests</Text>
                 <Text style={styles.detailValue}>{formatGuests()}</Text>
@@ -143,7 +149,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             </View>
             
             <View style={styles.detailRow}>
-              <CurrencyDollarIcon size={20} color="#666" weight="fill" />
+              <CurrencyCircleDollarIcon size={24} color={theme.colors.onSurface} />
               <View style={styles.detailText}>
                 <Text style={styles.detailLabel}>Budget</Text>
                 <Text style={styles.detailValue}>{formatBudget()}</Text>
@@ -155,11 +161,11 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         {/* Match Request Details */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <CakeIcon size={20} color="#666" weight="fill" />
+            <CalendarStarIcon size={24} color={theme.colors.onSurface} />
             <Text style={styles.sectionLabel}>Event Type</Text>
             <TouchableOpacity style={styles.editButton}>
               <Text style={styles.editText}>Edit</Text>
-              <PencilIcon size={16} color="#666" weight="regular" />
+              <PencilIcon size={16} color={theme.colors.onSurface} />
             </TouchableOpacity>
           </View>
           <Text style={styles.sectionValue}>• {data.eventType || 'Birthday'}</Text>
@@ -167,11 +173,11 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <UsersIcon size={20} color="#666" weight="fill" />
+            <LightbulbIcon size={24} color={theme.colors.onSurface} />
             <Text style={styles.sectionLabel}>Preferred venue features</Text>
             <TouchableOpacity style={styles.editButton}>
               <Text style={styles.editText}>Edit</Text>
-              <PencilIcon size={16} color="#666" weight="regular" />
+              <PencilIcon size={16} color={theme.colors.onSurface} />
             </TouchableOpacity>
           </View>
           {data.features && data.features.length > 0 ? (
@@ -185,7 +191,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <PaintBrushIcon size={20} color="#666" weight="fill" />
+            <PaintBrushIcon size={24} color={theme.colors.onSurface} />
             <Text style={styles.sectionLabel}>Vibe</Text>
             <TouchableOpacity style={styles.editButton}>
               <Text style={styles.editText}>Edit</Text>
@@ -197,7 +203,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ScalesIcon size={20} color="#666" weight="fill" />
+            <WavesIcon size={24} color={theme.colors.onSurface} />
             <Text style={styles.sectionLabel}>Flexibility</Text>
             <TouchableOpacity style={styles.editButton}>
               <Text style={styles.editText}>Edit</Text>
@@ -210,7 +216,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         {data.timeline && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <ClockIcon size={20} color="#666" weight="fill" />
+              <ClockIcon size={20}color={theme.colors.onSurface} />
               <Text style={styles.sectionLabel}>Timeline</Text>
               <TouchableOpacity style={styles.editButton}>
                 <Text style={styles.editText}>Edit</Text>
@@ -224,7 +230,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         {data.notes && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <PencilIcon size={20} color="#666" weight="fill" />
+              <NotepadIcon size={24} color={theme.colors.onSurface} />
               <Text style={styles.sectionLabel}>Additional Notes</Text>
               <TouchableOpacity style={styles.editButton}>
                 <Text style={styles.editText}>Edit</Text>
@@ -278,21 +284,15 @@ const styles = StyleSheet.create({
     lineHeight: 34,
   },
   section: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.outlineDisabled,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: theme.colors.buttonDisabled
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: theme.colors.primary,
     marginBottom: 16,
@@ -310,8 +310,8 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    fontFamily: theme.fonts.medium,
-    color: '#666',
+    fontFamily: theme.fonts.regular,
+    color: theme.colors.onSurface,
     marginBottom: 2,
   },
   detailValue: {
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 16,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.regular,
     color: '#666',
     flex: 1,
     marginLeft: 8,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.medium,
     color: '#000',
     lineHeight: 20,
-    marginLeft: 4,
+    marginLeft: 36,
   },
   bottomButtons: {
     padding: 20,
@@ -360,19 +360,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sendButtonText: {
-    fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontSize: 22,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
   backButton: {
     backgroundColor: '#000',
-    paddingVertical: 18,
+    paddingVertical: 20,
     borderRadius: 12,
   },
   backButtonText: {
     fontSize: 18,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.bold,
     color: '#fff',
     textAlign: 'center',
   },
