@@ -10,6 +10,7 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import InstantBookingScreen from './src/screens/search/InstantBookingScreen';
 import InstantBookingDetailsScreen from './src/screens/search/InstantBookingDetailsScreen';
+import MatchRequestScreen from './src/screens/search/MatchRequestScreen';
 import BookingsScreen from './src/screens/BookingScreen';
 import PlaceholderScreen from './src/screens/PlaceholderScreen'; 
 
@@ -57,6 +58,9 @@ export type RootStackParamList = {
   InstantBookingDetails: {
     location: Location;
   };
+  MatchRequest: {
+    formData: BookingFormData;
+  };
   Bookings: undefined;
   Placeholder: {
     activeTab: string; // Add this new screen
@@ -92,6 +96,14 @@ const App: React.FC = () => {
         <Stack.Screen 
           name="InstantBookingDetails" 
           component={InstantBookingDetailsScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="MatchRequest" 
+          component={MatchRequestScreen}
           options={{
             presentation: 'modal',
             animationTypeForReplace: 'push',

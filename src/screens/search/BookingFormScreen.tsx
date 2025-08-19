@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { XIcon } from 'phosphor-react-native';
 import { BookingFormData, FormSection, FormState, INITIAL_FORM_DATA } from '../../types/booking';
 import { SerializableBookingFormData } from '../../../App';
 import LocationSection from '../../components/search/LocationSection';
@@ -28,6 +29,7 @@ type BookingFormNavigationProp = StackNavigationProp<RootStackParamList>;
 interface BookingFormScreenProps {
   onBack: () => void;
   onClose: () => void;
+  initialTab?: 'instant-book' | 'match-request'; 
 }
 interface StepIndicatorProps {
   isActive: boolean;
@@ -40,6 +42,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   isCompleted,
   height,
 }) => {
+
   const getBarColor = () => {
     if (isCompleted) return theme.colors.success;
     return '#e0e0e0'; // Grey for incomplete
@@ -96,8 +99,10 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
 
 const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
   onClose,
+  initialTab = 'instant-book'
 }) => {
   const insets = useSafeAreaInsets();
+  const [activeTab, setActiveTab] = useState<'instant-book' | 'match-request'>(initialTab);
 
   const [formState, setFormState] = useState<FormState>({
     activeSection: 'location',
@@ -244,40 +249,60 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
 
   const handleSearchPress = () => {
     if (allSectionsComplete()) {
-      const serializableFormData: SerializableBookingFormData = {
-        location: formState.formData.location, // ✅ Now works - types match
-        dateTime: {
-          ...formState.formData.dateTime,
-          date: formState.formData.dateTime.date 
-            ? formState.formData.dateTime.date.toISOString() 
-            : null,
-        },
-        guests: formState.formData.guests,
-        budget: formState.formData.budget,
-      };
+      if (activeTab === 'instant-book') {
+        // Existing navigation code
+        const serializableFormData: SerializableBookingFormData = {
+          location: formState.formData.location,
+          dateTime: {
+            ...formState.formData.dateTime,
+            date: formState.formData.dateTime.date 
+              ? formState.formData.dateTime.date.toISOString() 
+              : null,
+          },
+          guests: formState.formData.guests,
+          budget: formState.formData.budget,
+        };
 
-      navigation.navigate('InstantBooking', {
-        formData: serializableFormData, // ✅ No more type errors
-      });
+        navigation.navigate('InstantBooking', {
+          formData: serializableFormData,
+        });
+      } else {
+        // New MatchRequest navigation
+        navigation.navigate('MatchRequest', {
+          formData: formState.formData,
+        });
+      }
     }
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-       <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md || 0 }]}>
-        
-        <View style={styles.headerTabs}>
-          <Text style={styles.activeTab}>Instant Book</Text>
-          <Text style={styles.inactiveTab}>Match Request</Text>
-        </View>
-        
+      <SafeAreaView style={styles.header}>
+        {/* Replace the existing headerTabs View with this: */}
+          <View style={styles.headerTabs}>
+            <TouchableOpacity onPress={() => setActiveTab('instant-book')}>
+              <Text style={[
+                activeTab === 'instant-book' ? styles.activeTab : styles.inactiveTab
+              ]}>
+                Instant Book
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveTab('match-request')}>
+              <Text style={[
+                activeTab === 'match-request' ? styles.activeTab : styles.inactiveTab
+              ]}>
+                Match Request
+              </Text>
+            </TouchableOpacity>
+          </View>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <MaterialIcons name="close" size={18} color="#fff" />
+          <XIcon size={18} color="#fff" weight="bold" />
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 
@@ -384,7 +409,10 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
             style={styles.floatingSaveButton}
             onPress={handleSearchPress} 
           >
-            <Text style={styles.floatingSaveText}>Search</Text>
+            {/* In the existing floatingSaveButton, change this line: */}
+              <Text style={styles.floatingSaveText}>
+                {activeTab === 'instant-book' ? 'Search' : 'Continue'}
+              </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -402,7 +430,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 15,
   },
   backButton: {
     width: 36,
