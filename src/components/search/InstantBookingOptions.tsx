@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Location } from '../../types/instantBooking';
 import InstantBookingCard from './InstantBookingCard';
+import {theme} from '../../theme/theme';
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -273,12 +274,12 @@ const styles = StyleSheet.create({
   },
   // NEW: Enhanced handle style when active/dragging
   handleActive: {
-    backgroundColor: '#007AFF', // iOS blue or use your theme color
+    backgroundColor: theme.colors.buttonPrimary, // iOS blue or use your theme color
     height: 6, // Slightly taller
     width: 100, // Slightly wider
     borderRadius: 3,
     // Add shadow for more prominence
-    shadowColor: '#007AFF',
+    shadowColor: theme.colors.buttonPrimary,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   // NEW: Optional drag hint text
   dragHint: {
     fontSize: 12,
-    color: '#007AFF',
+    color: theme.colors.buttonPrimary,
     marginTop: 4,
     fontWeight: '500',
   },
