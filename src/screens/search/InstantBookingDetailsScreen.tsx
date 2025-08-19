@@ -51,7 +51,7 @@ import {
   CaretDownIcon,
   CaretUpIcon
 } from 'phosphor-react-native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList, SerializableBookingFormData } from '../../../App';
 import { Location } from '../../types/instantBooking';
 import { theme } from '../../theme/theme';
 
@@ -750,20 +750,35 @@ const InstantBookingDetailsScreen: React.FC<InstantBookingDetailsProps> = ({
     </TouchableOpacity>
   );
 
-  const renderBookingBar = () => (
-    <View style={styles.bookingBar}>
-      <View style={styles.priceInfo}>
-        <Text style={styles.priceText}>
-          <Text style={styles.priceAmount}>${location.price}</Text>
-          <Text style={styles.priceUnit}>/{location.priceUnit}</Text>
-        </Text>
-        <Text style={styles.minimumText}>Min 2hrs</Text>
+  const renderBookingBar = () => {
+    const handleBookNow = () => {
+      const { formData } = route.params;
+        navigation.navigate('InstantBookingReview', { 
+          location, 
+          formData // Use real form data
+        });
+
+      navigation.navigate('InstantBookingReview', { location, formData: formData });
+    };
+
+    return (
+      <View style={styles.bookingBar}>
+        <View style={styles.priceInfo}>
+          <Text style={styles.priceText}>
+            <Text style={styles.priceAmount}>${location.price}</Text>
+            <Text style={styles.priceUnit}>/{location.priceUnit}</Text>
+          </Text>
+          <Text style={styles.minimumText}>Min 2hrs</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.bookNowButton}
+          onPress={handleBookNow}
+        >
+          <Text style={styles.bookNowText}>Book Now</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.bookNowButton}>
-        <Text style={styles.bookNowText}>Book Now</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>

@@ -79,6 +79,7 @@ const InstantBookingScreen: React.FC<InstantBookingScreenProps> = ({
     // Navigate to InstantBookingDetails screen
     navigation.navigate('InstantBookingDetails', {
       location: location,
+      formData: route.params.formData
     });
   }, [navigation]);
 

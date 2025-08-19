@@ -99,13 +99,13 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+      {/* <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
         <MaterialIcons 
           name="arrow-back" 
           size={24} 
           color={color('onSurface')}    
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       
       {/* Main Content */}
       <View style={styles.content}>

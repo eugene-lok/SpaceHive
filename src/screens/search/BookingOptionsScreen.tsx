@@ -5,10 +5,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import {theme} from '../../theme/theme'
 
@@ -26,11 +25,11 @@ const BookingOptionsScreen: React.FC<BookingOptionsScreenProps> = ({
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <SafeAreaView style={styles.header}>
+      <SafeAreaView edges={['top']} style={styles.header}>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           {/* FIXED: Use icon instead of text character */}
           <MaterialIcons name="close" size={18} color="#fff" />
@@ -63,7 +62,7 @@ const BookingOptionsScreen: React.FC<BookingOptionsScreenProps> = ({
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,

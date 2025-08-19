@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   StatusBar,
 } from 'react-native';
@@ -19,7 +18,7 @@ import DateTimeSection from '../../components/search/DateTimeSection';
 import GuestsSection from '../../components/search/GuestsSection';
 import BudgetSection from '../../components/search/BudgetSection';
 import {theme} from '../../theme/theme'
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../App';
@@ -277,11 +276,11 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <SafeAreaView style={styles.header}>
+      <SafeAreaView edges={['top']} style={styles.header}>
         {/* Replace the existing headerTabs View with this: */}
           <View style={styles.headerTabs}>
             <TouchableOpacity onPress={() => setActiveTab('instant-book')}>
@@ -416,7 +415,7 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
           </TouchableOpacity>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -460,7 +459,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#999',
-  },
+    marginRight: 20, 
+ },
   closeButton: {
     width: 32,
     height: 32,

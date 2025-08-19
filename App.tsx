@@ -14,6 +14,12 @@ import MatchRequestScreen from './src/screens/search/MatchRequestScreen';
 import BookingsScreen from './src/screens/BookingScreen';
 import PlaceholderScreen from './src/screens/PlaceholderScreen'; 
 
+// Booking flow screens
+import InstantBookingReviewScreen from './src/screens/booking/InstantBookingReviewScreen';
+import InstantBookingPaymentScreen from './src/screens/booking/InstantBookingPaymentScreen';
+import PaymentProcessingScreen from './src/screens/booking/PaymentProcessingScreen';
+import InstantBookingConfirmationScreen from './src/screens/booking/InstantBookingConfirmationScreen';
+
 import { useCustomFonts } from "./src/hooks/useFonts"
 import * as SplashScreen from 'expo-splash-screen';
 import { BookingFormData } from './src/types/booking';
@@ -44,6 +50,12 @@ export interface SerializableBookingFormData {
   };
 }
 
+// NEW: Interface for custom details from the review screen
+export interface CustomBookingDetails {
+  eventType: string | null;
+  extraServices: string[];
+}
+
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
@@ -57,6 +69,7 @@ export type RootStackParamList = {
   };
   InstantBookingDetails: {
     location: Location;
+    formData: SerializableBookingFormData; // ADD THIS
   };
   MatchRequest: {
     formData: BookingFormData;
@@ -64,6 +77,26 @@ export type RootStackParamList = {
   Bookings: undefined;
   Placeholder: {
     activeTab: string; // Add this new screen
+  };
+  InstantBookingReview: {
+    location: Location;
+    formData: SerializableBookingFormData;
+  };
+  InstantBookingPayment: {
+    location: Location;
+    formData: SerializableBookingFormData;
+    customDetails: CustomBookingDetails;
+  };
+  PaymentProcessing: {
+    location: Location;
+    formData: SerializableBookingFormData;
+    customDetails: CustomBookingDetails;
+  };
+  InstantBookingConfirmation: {
+    location: Location;
+    formData: SerializableBookingFormData;
+    customDetails: CustomBookingDetails;
+    paymentMethod: string;
   };
 };
 
@@ -111,6 +144,38 @@ const App: React.FC = () => {
         />
         <Stack.Screen name="Bookings" component={BookingsScreen} />
         <Stack.Screen name="Placeholder" component={PlaceholderScreen} />
+        <Stack.Screen 
+          name="InstantBookingReview" 
+          component={InstantBookingReviewScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="InstantBookingPayment" 
+          component={InstantBookingPaymentScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="PaymentProcessing" 
+          component={PaymentProcessingScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
+        <Stack.Screen 
+          name="InstantBookingConfirmation" 
+          component={InstantBookingConfirmationScreen}
+          options={{
+            presentation: 'modal',
+            animationTypeForReplace: 'push',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
