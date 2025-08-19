@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { XIcon, StarIcon, MapPinIcon, CalendarIcon, UsersIcon, PencilIcon } from 'phosphor-react-native';
+import { XIcon, StarIcon, MapPinIcon, CalendarIcon, UsersIcon, PencilIcon, CalendarStarIcon } from 'phosphor-react-native';
 import { RootStackParamList } from '../../../App';
 import { theme } from '../../theme/theme';
 
@@ -141,7 +141,7 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
               <Text style={styles.sectionTitle}>Your Booking Details</Text>
               <TouchableOpacity style={styles.editButton}>
                 <Text style={styles.editText}>Edit</Text>
-                <PencilIcon size={16} color={theme.colors.primary} weight="bold" />
+                <PencilIcon size={16} color={'#666'} weight="bold" />
               </TouchableOpacity>
             </View>
             
@@ -177,13 +177,13 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
                 <Text style={styles.sectionTitle}>Your Custom Details</Text>
                 <TouchableOpacity style={styles.editButton}>
                   <Text style={styles.editText}>Edit</Text>
-                  <PencilIcon size={16} color={theme.colors.primary} weight="bold" />
+                  <PencilIcon size={16} color={'#666'} weight="bold" />
                 </TouchableOpacity>
               </View>
               
               {customDetails.eventType && (
                 <View style={styles.detailRow}>
-                  <MapPinIcon size={20} color="#666" weight="regular" />
+                  <CalendarStarIcon size={20} color="#666" weight="regular" />
                   <View style={styles.detailContent}>
                     <Text style={styles.detailLabel}>Event Type</Text>
                     <Text style={styles.detailValue}>• {customDetails.eventType}</Text>
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -281,12 +281,15 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   closeButton: {
+    top: 40,
+    right: 20,
     width: 32,
     height: 32,
     borderRadius: 16,
     backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute'
   },
   content: {
     flex: 1,
@@ -357,6 +360,9 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.onSurfaceDisabled,
+    borderStyle: 'dashed'
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -376,7 +382,7 @@ const styles = StyleSheet.create({
   editText: {
     fontSize: 14,
     fontFamily: theme.fonts.medium,
-    color: theme.colors.primary,
+    color: '#666',
     marginRight: 4,
   },
   detailRow: {

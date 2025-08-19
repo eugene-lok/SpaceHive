@@ -133,17 +133,30 @@ const styles = StyleSheet.create({
     lineHeight: 34,
   },
   featuresContainer: {
-    
+    gap: 16,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   featureItemSelected: {
-    /* borderColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
     backgroundColor: '#F0F8F8',
-    borderRadius: 8 */
+    borderRadius: 8 
   },
   checkbox: {
     width: 24,

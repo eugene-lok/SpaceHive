@@ -78,9 +78,10 @@ const MOCK_IMAGES = [
 
 // New: What's included mock data
 const MOCK_WHATS_INCLUDED = [
-  { id: 1, icon: 'BathtubIcon', text: '1 Bathroom' },
-  { id: 2, icon: 'OvenIcon', text: '1 Kitchen' },
-  { id: 3, icon: 'BedIcon', text: '1 Bedroom'}
+  { id: 1, icon: 'BedIcon', text: '1 Bedroom'},
+  { id: 2, icon: 'BathtubIcon', text: '1 Bathroom' },
+  { id: 3, icon: 'OvenIcon', text: '1 Kitchen' },
+  
 ];
 
 // Replace MOCK_AMENITIES  
@@ -903,7 +904,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 0,
+    paddingVertical: 24,
   },
   locationTitle: {
     fontSize: 26,

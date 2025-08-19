@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 16,
     fontFamily: theme.fonts.regular,
-    color: '#666',
+    color: theme.colors.onSurface,
     flex: 1,
     marginLeft: 8,
   },

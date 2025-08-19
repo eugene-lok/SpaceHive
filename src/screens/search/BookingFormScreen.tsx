@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -462,6 +462,9 @@ const styles = StyleSheet.create({
     marginRight: 20, 
  },
   closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,  
     width: 32,
     height: 32,
     borderRadius: 16,

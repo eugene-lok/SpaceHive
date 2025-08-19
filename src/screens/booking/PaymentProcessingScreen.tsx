@@ -49,7 +49,7 @@ const PAYMENT_METHODS: PaymentMethod[] = [
   {
     id: 'google_pay',
     name: 'Google Pay', 
-    displayName: 'Apple Pay', // Note: In the design this shows "Apple Pay" for Google Pay
+    displayName: 'Google Pay', 
     icon: 'G',
   },
   {
@@ -284,11 +284,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#f5f5f5',
+    position: 'relative'
   },
   headerTabs: {
     flexDirection: 'row',
@@ -308,12 +309,15 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   closeButton: {
+    top: 40,
+    right: 20,
     width: 32,
     height: 32,
     borderRadius: 16,
     backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute'
   },
   content: {
     flex: 1,

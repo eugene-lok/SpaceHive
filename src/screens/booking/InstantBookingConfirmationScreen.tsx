@@ -123,7 +123,7 @@ const InstantBookingConfirmationScreen: React.FC<InstantBookingConfirmationScree
           
           <Text style={styles.confirmationTitle}>Booking Complete!</Text>
           <Text style={styles.confirmationSubtitle}>
-            Your payment has been successfully done.
+            Your payment was sucessful.
           </Text>
           
           {/* Location Info */}
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,

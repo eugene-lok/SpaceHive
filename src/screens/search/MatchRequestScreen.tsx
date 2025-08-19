@@ -261,11 +261,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: '#f5f5f5',
+    position: 'relative', 
   },
   headerTabs: {
     flexDirection: 'row',
@@ -285,6 +286,9 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   closeButton: {
+    position: 'absolute', 
+    top: 40,           
+    right: 20,  
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -348,7 +352,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: theme.fonts.medium,
     color: '#666',
     textAlign: 'center',

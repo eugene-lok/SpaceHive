@@ -32,7 +32,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onPress }) => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % space.images.length
       );
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [space.images.length]);
