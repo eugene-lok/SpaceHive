@@ -280,8 +280,8 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <SafeAreaView edges={['top']} style={styles.header}>
-        {/* Replace the existing headerTabs View with this: */}
+      <SafeAreaView edges={['top']} style={styles.headerContainer}>
+        <View style={styles.headerContent}>
           <View style={styles.headerTabs}>
             <TouchableOpacity onPress={() => setActiveTab('instant-book')}>
               <Text style={[
@@ -298,9 +298,10 @@ const BookingFormScreen: React.FC<BookingFormScreenProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <XIcon size={18} color="#fff" weight="bold" />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <XIcon size={18} color="#fff" weight="bold" />
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -444,26 +445,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  headerContainer: {
+    backgroundColor: '#f5f5f5',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    position: 'relative', 
+    minHeight: 60, 
+  },
   headerTabs: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 24
   },
   activeTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     textDecorationLine: 'underline',
-    marginRight: 20,
   },
   inactiveTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#999',
-    marginRight: 20, 
  },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    top: '50%',
     right: 20,  
     width: 32,
     height: 32,

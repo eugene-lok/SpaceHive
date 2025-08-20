@@ -225,18 +225,20 @@ const PaymentProcessingScreen: React.FC<PaymentProcessingScreenProps> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <SafeAreaView style={styles.header}>
-        <View style={styles.headerTabs}>
-          <TouchableOpacity>
-            <Text style={styles.activeTab}>Instant Book</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleMatchRequest}>
-            <Text style={styles.inactiveTab}>Match Request</Text>
+      <SafeAreaView style={styles.headerContainer}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerTabs}>
+            <TouchableOpacity>
+              <Text style={styles.activeTab}>Instant Book</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleMatchRequest}>
+              <Text style={styles.inactiveTab}>Match Request</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+            <XIcon size={18} color="#fff" weight="bold" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <XIcon size={18} color="#fff" weight="bold" />
-        </TouchableOpacity>
       </SafeAreaView>
 
       {/* Content */}
@@ -291,25 +293,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     position: 'relative'
   },
+  headerContainer: {
+    backgroundColor: '#f5f5f5',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    position: 'relative', 
+    minHeight: 60, 
+  },
   headerTabs: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 24
   },
   activeTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     textDecorationLine: 'underline',
-    marginRight: 20,
   },
   inactiveTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#999',
-    marginRight: 20,
   },
   closeButton: {
-    top: 40,
+    top: '50%',
     right: 20,
     width: 32,
     height: 32,

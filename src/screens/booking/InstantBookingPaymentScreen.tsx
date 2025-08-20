@@ -1,5 +1,7 @@
 // src/screens/booking/InstantBookingPaymentScreen.tsx
 import React from 'react';
+import { Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   View,
   Text,
@@ -12,11 +14,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { XIcon, StarIcon, MapPinIcon, CalendarIcon, UsersIcon, PencilIcon, CalendarStarIcon } from 'phosphor-react-native';
+import { XIcon, StarIcon, MapPinIcon, CalendarIcon, UsersIcon, PencilIcon,CirclesFourIcon, CalendarStarIcon } from 'phosphor-react-native';
 import { RootStackParamList } from '../../../App';
 import { theme } from '../../theme/theme';
 
 import { calculateBookingHours, formatDateTime, formatGuests } from '../../utils/bookingUtils';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 type InstantBookingPaymentNavigationProp = StackNavigationProp<RootStackParamList, 'InstantBookingPayment'>;
 type InstantBookingPaymentRouteProp = RouteProp<RootStackParamList, 'InstantBookingPayment'>;
@@ -32,7 +36,8 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
 }) => {
   const { location, formData, customDetails } = route.params;
   
-  
+  const insets = useSafeAreaInsets();
+  const bottomButtonHeight = 140 + insets.bottom;
 
   const handleClose = () => {
     navigation.navigate('Home');
@@ -103,22 +108,32 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
       {/* Header */}
-      <SafeAreaView style={styles.header}>
-        <View style={styles.headerTabs}>
-          <TouchableOpacity>
-            <Text style={styles.activeTab}>Instant Book</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleMatchRequest}>
-            <Text style={styles.inactiveTab}>Match Request</Text>
+      <SafeAreaView style={styles.headerContainer}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerTabs}>
+            <TouchableOpacity>
+              <Text style={styles.activeTab}>Instant Book</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleMatchRequest}>
+              <Text style={styles.inactiveTab}>Match Request</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+            <XIcon size={18} color="#fff" weight="bold" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <XIcon size={18} color="#fff" weight="bold" />
-        </TouchableOpacity>
       </SafeAreaView>
 
       {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: bottomButtonHeight }
+        ]}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+      >
         <Text style={styles.title}>Review booking details</Text>
         
         {/* Location Card */}
@@ -193,7 +208,7 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
               
               {customDetails.extraServices.length > 0 && (
                 <View style={styles.detailRow}>
-                  <MapPinIcon size={20} color="#666" weight="regular" />
+                  <CirclesFourIcon size={20} color="#666" weight="regular" />
                   <View style={styles.detailContent}>
                     <Text style={styles.detailLabel}>Extra Services</Text>
                     <Text style={styles.detailValue}>• {getExtraServicesDisplay()}</Text>
@@ -231,7 +246,10 @@ const InstantBookingPaymentScreen: React.FC<InstantBookingPaymentScreenProps> = 
       </ScrollView>
 
       {/* Floating Bottom Buttons */}
-      <View style={styles.bottomButtons}>
+      <View style={[
+        styles.bottomButtons,
+        { paddingBottom: Math.max(insets.bottom, 20) }
+      ]}>
         <TouchableOpacity 
           style={styles.nextButton}
           onPress={handleNext}
@@ -263,25 +281,37 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#f5f5f5',
   },
+  headerContainer: {
+    backgroundColor: '#f5f5f5',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', 
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    position: 'relative', 
+    minHeight: 60, 
+  },
   headerTabs: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 24
   },
   activeTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     textDecorationLine: 'underline',
-    marginRight: 20,
   },
   inactiveTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#999',
-    marginRight: 20,
+
   },
   closeButton: {
-    top: 40,
+    top: '50%',
     right: 20,
     width: 32,
     height: 32,
@@ -293,7 +323,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
@@ -348,7 +377,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
-    marginBottom: 120, // Space for floating buttons
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -357,6 +385,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  contentContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   section: {
     marginBottom: 32,
