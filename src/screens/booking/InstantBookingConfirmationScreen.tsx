@@ -8,8 +8,9 @@ import {
   StatusBar,
   ScrollView,
   Image,
+  Dimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { 
@@ -36,6 +37,9 @@ const InstantBookingConfirmationScreen: React.FC<InstantBookingConfirmationScree
   route,
 }) => {
   const { location, formData, customDetails, paymentMethod } = route.params;
+
+  const insets = useSafeAreaInsets();
+  const bottomPadding = 180 + insets.bottom;
 
   const handleGoToBookings = () => {
     navigation.navigate('Bookings');
@@ -97,23 +101,29 @@ const InstantBookingConfirmationScreen: React.FC<InstantBookingConfirmationScree
       {/* Header */}
       <SafeAreaView style={styles.header}>
         <View style={styles.headerTabs}>
-          <TouchableOpacity>
-            <Text style={styles.activeTab}>Instant Book</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.inactiveTab}>Match Request</Text>
+          <View style={styles.headerTabs}>
+            <TouchableOpacity>
+              <Text style={styles.activeTab}>Instant Book</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.inactiveTab}>Match Request</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
+            <ShareIcon size={18} color="#000" weight="bold" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
-          <ShareIcon size={18} color="#000" weight="bold" />
-        </TouchableOpacity>
       </SafeAreaView>
 
       {/* Content */}
       <ScrollView 
         style={styles.content} 
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: bottomPadding }
+        ]}
         showsVerticalScrollIndicator={false}
+        bounces={true}
       >
         {/* Success Modal-like Card */}
         <View style={styles.confirmationCard}>
@@ -170,7 +180,10 @@ const InstantBookingConfirmationScreen: React.FC<InstantBookingConfirmationScree
       </ScrollView>
 
       {/* Bottom Buttons */}
-      <View style={styles.bottomButtons}>
+      <View style={[
+        styles.bottomButtons,
+        { paddingBottom: Math.max(insets.bottom, 20) }
+      ]}>
         <TouchableOpacity 
           style={styles.bookingsButton}
           onPress={handleGoToBookings}
@@ -202,22 +215,33 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#f5f5f5',
   },
+  headerContainer: {
+    backgroundColor: '#f5f5f5',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    position: 'relative', 
+    minHeight: 60, 
+  },
   headerTabs: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 24
   },
   activeTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
     textDecorationLine: 'underline',
-    marginRight: 20,
   },
   inactiveTab: {
     fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#999',
-    marginRight: 20,
   },
   shareButton: {
     width: 32,
@@ -241,12 +265,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 120, // Space for floating buttons
+    paddingBottom: 240,
   },
   confirmationCard: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 32,
+    padding: 24,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -258,10 +282,10 @@ const styles = StyleSheet.create({
     elevation: 16,
   },
   successIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#27B837',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: theme.colors.success,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -279,17 +303,20 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 32,
-    width: '100%',
+    width: '100%',        
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 24
   },
   locationImage: {
-    width: 60,
-    height: 60,
+    width: 100,
+    height: 100,
     borderRadius: 8,
     marginRight: 16,
   },
@@ -314,29 +341,36 @@ const styles = StyleSheet.create({
   },
   detailsGrid: {
     width: '100%',
-    gap: 16,
-    marginBottom: 32,
-  },
-  detailItem: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
+    marginBottom: 32,
+    gap: 12, 
+},
+  detailItem: {
+    width: '48%', // Takes roughly half the width with gap
+    flexDirection: 'column', // Stack label and value vertically
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingVertical: 16,
     paddingHorizontal: 16,
-    backgroundColor: '#F8F8F8',
-    borderRadius: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    minHeight: 60, 
+    borderWidth: 1,
+    borderColor: theme.colors.buttonDisabled
   },
   detailLabel: {
     fontSize: 14,
     fontFamily: theme.fonts.medium,
     color: '#666',
-    flex: 1,
+    marginBottom: 8, // Space between label and value
   },
   detailValue: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: theme.fonts.semibold,
     color: '#000',
-    textAlign: 'right',
+    flexWrap: 'wrap', // Allow text to wrap if needed
   },
   receiptButton: {
     flexDirection: 'row',
@@ -360,9 +394,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 20,
-    paddingBottom: 40,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'transparent', 
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   bookingsButton: {
     backgroundColor: theme.colors.primary,

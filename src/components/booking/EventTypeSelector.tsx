@@ -103,10 +103,6 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 16,
   },
-  dropdownContainer: {
-    position: 'relative',
-    zIndex: 1000,
-  },
   dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -133,33 +129,27 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: theme.fonts.medium,
   },
-  dropdown: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
+    dropdownContainer: {
+    position: 'relative',
+    zIndex: 1000,
+    elevation: 1000, // For Android
+  },
+    dropdown: {
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      backgroundColor: '#fff',
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#e0e0e0',
+      zIndex: 1001,
+      elevation: 1001,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
-    zIndex: 1001,
-  },
-  dropdownItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
   dropdownItemLast: {
     borderBottomWidth: 0,
   },
@@ -170,6 +160,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: theme.fonts.medium,
     color: '#000',
+    paddingVertical: 12,
+    marginLeft: 16
   },
   dropdownItemTextSelected: {
     color: theme.colors.primary,

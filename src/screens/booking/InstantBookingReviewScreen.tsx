@@ -1,13 +1,7 @@
 // src/screens/booking/InstantBookingReviewScreen.tsx
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { SafeAreaView,useSafeAreaInsets  } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { XIcon } from 'phosphor-react-native';
@@ -36,6 +30,8 @@ const InstantBookingReviewScreen: React.FC<InstantBookingReviewScreenProps> = ({
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const bookingHours = calculateBookingHours(formData);
+
+  const insets = useSafeAreaInsets();
 
   const handleClose = () => {
     navigation.navigate('Home');
@@ -95,43 +91,59 @@ const InstantBookingReviewScreen: React.FC<InstantBookingReviewScreenProps> = ({
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
       
-      {/* Header */}
-      <SafeAreaView style={styles.headerContainer}>
-        <View style={styles.headerContent}>
-          <View style={styles.headerTabs}>
-            <TouchableOpacity>
-              <Text style={styles.activeTab}>Instant Book</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleMatchRequest}>
-              <Text style={styles.inactiveTab}>Match Request</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <XIcon size={18} color="#fff" weight="bold" />
+      {/* Header - keep as is */}
+      <SafeAreaView style={styles.header}>
+        <View style={styles.headerTabs}>
+          <TouchableOpacity>
+            <Text style={styles.activeTab}>Instant Book</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleMatchRequest}>
+            <Text style={styles.inactiveTab}>Match Request</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <XIcon size={18} color="#fff" weight="bold" />
+        </TouchableOpacity>
       </SafeAreaView>
 
-      {/* Content */}
-      <View style={styles.content}>
+      {/* ScrollView Content */}
+      <ScrollView 
+        style={{ flex: 1 }}
+        contentContainerStyle={{ 
+          paddingHorizontal: 20, 
+          paddingTop: 20, 
+          paddingBottom: 200,
+          // Remove any overflow constraints
+        }}
+        showsVerticalScrollIndicator={false}
+        // ADD these properties to prevent clipping:
+        nestedScrollEnabled={true}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text style={styles.title}>Customize your event{'\n'}(Optional)</Text>
         
-        <EventTypeSelector
-          selectedEventType={selectedEventType}
-          onEventTypeSelect={setSelectedEventType}
-        />
+        <View style={{ 
+          zIndex: 1000, 
+          elevation: 1000,
+          marginBottom: 20 // Extra space for dropdown
+        }}>
+          <EventTypeSelector
+            selectedEventType={selectedEventType}
+            onEventTypeSelect={setSelectedEventType}
+          />
+        </View>
         
         {selectedEventType && (
-        <ExtraServicesSelector
+          <ExtraServicesSelector
             eventType={selectedEventType}
             selectedServices={selectedServices}
             onServicesSelect={setSelectedServices}
             bookingHours={bookingHours}
-        />
+          />
         )}
-      </View>
+      </ScrollView>
 
-      {/* Bottom Buttons */}
+      {/* Bottom Buttons - keep as is */}
       <View style={styles.bottomButtons}>
         <TouchableOpacity 
           style={styles.nextButton}
@@ -206,8 +218,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  content: {
-    flex: 1,
+    // Add new style:
+  contentContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,
   },
